@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apt Engineering - Executive KPI Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9fc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    header {
+      background: #1a3b5d;
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .logo {
+      max-height: 60px;
+      margin-bottom: 5px;
+    }
+    h1, h2, h3 {
+      margin: 0;
+      font-weight: 600;
+    }
+    h1 { font-size: 22px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 18px; color: #2c5282; }
+    .subtitle {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-top: 5px;
+    }
+    .section {
+      padding: 20px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .info-item {
+      display: flex;
+    }
+    .info-label {
+      font-weight: 600;
+      min-width: 180px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+      font-size: 12px;
+    }
+    th {
+      background-color: #f0f4f8;
+      color: #1a3b5d;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .editable {
+      background-color: #f9f9f9;
+      border: 1px dashed #ccc;
+      padding: 4px;
+      border-radius: 3px;
+    }
+    .btn-container {
+      text-align: center;
+      padding: 20px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #0055aa;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 12px;
+      color: #777;
+      background: #f0f0f0;
+      border-top: 1px solid #ddd;
+    }
+    .print-only {
+      display: none;
+    }
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .dashboard-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .metric-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      border-left: 4px solid #0066cc;
+    }
+    .metric-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .metric-label {
+      color: #6c757d;
+      font-size: 14px;
+    }
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 20px 0;
+    }
+    .risk-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .risk-card {
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .risk-high {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+    .risk-medium {
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+    }
+    .risk-low {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+    }
+    .action-plan {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    /* Print Styles */
+    @media print {
+      body, .container {
+        background: white;
+        color: black;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print, .btn-container {
+        display: none !important;
+      }
+      .page-break {
+        page-break-before: always;
+        break-before: page;
+      }
+      .section {
+        page-break-inside: avoid;
+      }
+      table {
+        page-break-inside: avoid;
+        font-size: 11px;
+      }
+      h1 { font-size: 20px; }
+      h2 { font-size: 18px; }
+      h3 { font-size: 16px; }
+      .info-grid {
+        font-size: 14px;
+      }
+      .info-label {
+        min-width: 160px;
+      }
+      .print-only {
+        display: block;
+        text-align: center;
+        font-size: 14px;
+        margin: 10px 0;
+        color: #0066cc;
+      }
+      .dashboard-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .risk-summary {
+        grid-template-columns: 1fr;
+      }
+      .chart-container {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PRINT-ONLY COVER PAGE -->
+  <div class="print-only">
+    <div style="text-align:center; margin-top:100px;">
+      <h2>Apt Engineering</h2>
+      <p style="font-size:18px;">Excellence in Modular Construction</p>
+      <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Apt Engineering Logo" style="margin:20px 0; border:1px solid #ccc; border-radius:4px;">
+      <h3>Executive KPI Dashboard</h3>
+      <p><strong>Month:</strong> <span class="editable" contenteditable="true" data-kpi-key="coverMonth">[Insert Month & Year]</span></p>
+      <p style="margin-top:80px;">Prepared for: <strong><span class="editable" contenteditable="true" data-kpi-key="preparedFor">Managing Director</span></strong></p>
+      <p style="margin-top:60px; font-size:14px;">System: Project Board | Generated: <span id="printDate"></span></p>
+    </div>
+  </div>
+  <!-- EXECUTIVE DASHBOARD -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Executive KPI Dashboard</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" id="dashboardMonth" data-kpi-key="dashboardMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="dashboard-header">
+        <h2>Organizational Performance Summary</h2>
+        <div>
+          <strong>Reporting Period:</strong>
+          <span class="editable" contenteditable="true" id="reportingPeriod" data-kpi-key="reportingPeriod">[Insert Month & Year]</span>
+        </div>
+      </div>
+      <div class="dashboard-metrics">
+        <div class="metric-card">
+          <div class="metric-label">Overall Performance</div>
+          <div class="metric-value" id="overallScore">7.8</div>
+          <div>Out of 10</div>
+        </div>
+        <div class="metric-card" style="border-left-color: #28a745;">
+          <div class="metric-label">Knowledge Revenue</div>
+          <div class="metric-value">18%</div>
+          <div>Target: 20% by EOY</div>
+        </div>
+        <div class="metric-card" style="border-left-color: #ffc107;">
+          <div class="metric-label">On-Time Delivery</div>
+          <div class="metric-value">92%</div>
+          <div>Target: 95%</div>
+        </div>
+        <div class="metric-card" style="border-left-color: #dc3545;">
+          <div class="metric-label">Risk Exposure</div>
+          <div class="metric-value">2.3</div>
+          <div>Scale: 1-5 (Lower is better)</div>
+        </div>
+      </div>
+      <h3>Departmental Performance Overview</h3>
+      <div class="chart-container">
+        <canvas id="departmentChart"></canvas>
+      </div>
+      <div class="risk-summary">
+        <div class="risk-card risk-high">
+          <h3>High Priority Areas</h3>
+          <ul>
+            <li class="editable" contenteditable="true" data-kpi-key="highRisk1">Knowledge Revenue Framework development (Score: 3/10)</li>
+            <li class="editable" contenteditable="true" data-kpi-key="highRisk2">Negative business indicator forecasting (Score: 4/10)</li>
+            <li class="editable" contenteditable="true" data-kpi-key="highRisk3">Team lead coordination (Score: 6/10)</li>
+          </ul>
+        </div>
+        <div class="risk-card risk-medium">
+          <h3>Medium Priority Areas</h3>
+          <ul>
+            <li class="editable" contenteditable="true" data-kpi-key="medRisk1">Training program implementation (Score: 7/10)</li>
+            <li class="editable" contenteditable="true" data-kpi-key="medRisk2">Design error rate (Score: 7/10)</li>
+            <li class="editable" contenteditable="true" data-kpi-key="medRisk3">Change order approval time (Score: 7/10)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="action-plan">
+        <h3>Executive Action Plan</h3>
+        <p><strong>Immediate Focus (Next 30 Days):</strong></p>
+        <ul>
+          <li class="editable" contenteditable="true" data-kpi-key="actionImmediate1">Complete Knowledge Revenue Framework draft and secure stakeholder approval</li>
+          <li class="editable" contenteditable="true" data-kpi-key="actionImmediate2">Implement enhanced risk forecasting process with 14-day warning requirement</li>
+          <li class="editable" contenteditable="true" data-kpi-key="actionImmediate3">Conduct CAB meeting focused on team lead coordination improvements</li>
+        </ul>
+        <p><strong>Strategic Focus (Next 90 Days):</strong></p>
+        <ul>
+          <li class="editable" contenteditable="true" data-kpi-key="actionStrategic1">Launch pilot program for knowledge-based service offerings</li>
+          <li class="editable" contenteditable="true" data-kpi-key="actionStrategic2">Implement advanced analytics for predictive risk management</li>
+          <li class="editable" contenteditable="true" data-kpi-key="actionStrategic3">Develop cross-functional training initiative to improve design-fabrication handoffs</li>
+        </ul>
+      </div>
+      <div style="margin-top: 20px; text-align: center; font-style: italic; color: #666;">
+        <p><strong>Note:</strong> Detailed departmental reports follow this executive summary. All data sourced from Project Board system.</p>
+      </div>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <!-- OPERATIONS MANAGER KPI (Single Page) -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Personal KPI Assessment Report</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" data-kpi-key="opsSubtitleMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Employee Name:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="opsName">[Full Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Role:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="opsRole">Operations Manager</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Reporting To:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="opsManager">[Manager Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Facility:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="opsFacility">[Dominant Facility]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Review Period:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="opsReviewPeriod">[Insert Month & Year]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">System Source:</div>
+          <div>Project Board</div>
+        </div>
+      </div>
+      <h3>Performance Assessment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Core Mandate</th>
+            <th>KPI (Editable)</th>
+            <th>Measurement Method (Editable)</th>
+            <th>Progress (1-10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Setup Apt Engineering operation plan</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi1">Operation Plan approved and implemented across all units</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod1">Project Board implementation audit</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="opsScore1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Implement management structure in company projects</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi2">All active projects have defined leads and reporting lines</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod2">Project Board role mapping verification</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="opsScore2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Establish meetings, reporting and documentation routine</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi3">Weekly cross-unit meetings held with documented minutes</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod3">Meeting logs and action item closure rate</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="opsScore3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Develop and present company vital statistics dashboard</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi4">Weekly dashboard delivered to MD on time</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod4">Delivery timestamp and completeness audit</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="opsScore4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Weekly MD meetings on projects, operations, finance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi5">Weekly 1:1 with MD with agenda and decisions documented</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod5">Agenda submission and decision log in Project Board</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="opsScore5" /></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Coordinate all business unit team leads</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi6">All team leads report progress; 90%+ action items completed</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod6">Task completion rate in Project Board</td>
+            <td><input type="number" min="1" max="10" value="6" style="width:50px; text-align:center;" data-kpi-key="opsScore6" /></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Implement verification of external contract and contractors</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi7">100% of external contracts reviewed for compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod7">Contract audit trail in Project Board</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="opsScore7" /></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Flag negative business indicators ahead of crisis points</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi8">Early warning reports submitted ≥7 days before impact</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod8">Risk log submission timing and validation</td>
+            <td><input type="number" min="1" max="10" value="4" style="width:50px; text-align:center;" data-kpi-key="opsScore8" /></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Identify, specify and coordinate training requirements</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi9">Training plan executed; 100% of new hires trained within 30 days</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod9">Training completion logs in Skill Forge</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="opsScore9" /></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Coordinate all business engagement effort</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi10">Seamless handoffs; client satisfaction ≥90%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod10">NPS score and RFQ response time tracking</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="opsScore10" /></td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>Develop framework for transforming into a Knowledge driven business</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsKpi11">Knowledge Revenue Framework (KRF) draft submitted</td>
+            <td class="editable" contenteditable="true" data-kpi-key="opsMethod11">Document approval in Project Board</td>
+            <td><input type="number" min="1" max="10" value="3" style="width:50px; text-align:center;" data-kpi-key="opsScore11" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Average Score:</strong> <span id="opsAverageScore">7.5</span> / 10</p>
+      <p><strong>Manager Comments:</strong> <span class="editable" contenteditable="true" data-kpi-key="opsComments">Provide feedback on performance, development areas, and recognition.</span></p>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <!-- ENGINEERING LEAD KPI -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Personal KPI Assessment Report</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" data-kpi-key="engSubtitleMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Employee Name:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="engName">[Full Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Role:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="engRole">Engineering Lead</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Reporting To:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="engManager">[Manager Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Facility:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="engFacility">[Dominant Facility]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Review Period:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="engReviewPeriod">[Insert Month & Year]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">System Source:</div>
+          <div>Project Board</div>
+        </div>
+      </div>
+      <h3>Performance Assessment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>KPI Area</th>
+            <th>KPI (Editable)</th>
+            <th>Measurement Method (Editable)</th>
+            <th>Progress (1-10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Design Accuracy</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi1">Design Error Rate ≤2 per project</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod1">BIM model validation reports</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="engScore1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Quality Assurance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi2">Peer Review Completion: 100% of designs reviewed</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod2">Project Board task logs</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="engScore2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Process Efficiency</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi3">Design-to-Fabrication Handoff ≤48 hours</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod3">Time between design approval and fabrication start</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="engScore3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Model Integrity</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi4">BIM Model Accuracy ≥98%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod4">Field verification reports</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="engScore4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Resource Utilization</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi5">Engineering Rework Hours ≤5% of total</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod5">Logged in Project Board</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="engScore5" /></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Change Management</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi6">Change Order Initiation Accuracy ≥90%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod6">Approved vs. rejected change orders</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="engScore6" /></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Knowledge Sharing</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi7">Knowledge Repository Contributions: 2/month</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod7">New design templates, SOPs added</td>
+            <td><input type="number" min="1" max="10" value="6" style="width:50px; text-align:center;" data-kpi-key="engScore7" /></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Team Development</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi8">Team Skill Development: 100% of team plans completed</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod8">Individual development plans in Project Board</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="engScore8" /></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Data Integrity</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi9">Project Board Data Accuracy: 100% compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod9">Audit of engineering entries</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="engScore9" /></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Schedule Adherence</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engKpi10">On-Time Design Delivery ≥95%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="engMethod10">Design milestones met</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="engScore10" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Average Score:</strong> <span id="engAverageScore">7.7</span> / 10</p>
+      <p><strong>Manager Comments:</strong> <span class="editable" contenteditable="true" data-kpi-key="engComments">Provide feedback on performance, development areas, and recognition.</span></p>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <!-- FABRICATION LEAD KPI -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Personal KPI Assessment Report</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" data-kpi-key="fabSubtitleMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Employee Name:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="fabName">[Full Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Role:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="fabRole">Fabrication Lead</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Reporting To:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="fabManager">[Manager Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Facility:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="fabFacility">[Dominant Facility]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Review Period:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="fabReviewPeriod">[Insert Month & Year]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">System Source:</div>
+          <div>Project Board</div>
+        </div>
+      </div>
+      <h3>Performance Assessment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>KPI Area</th>
+            <th>KPI (Editable)</th>
+            <th>Measurement Method (Editable)</th>
+            <th>Progress (1-10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Schedule Adherence</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi1">Production Schedule Adherence ≥90%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod1">Actual vs. planned start/end times</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="fabScore1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Quality Output</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi2">First-Pass Quality Rate ≥92%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod2">Inspection reports (no rework needed)</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="fabScore2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Resource Efficiency</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi3">Material Waste Rate ≤3%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod3">Scrap vs. total material used</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="fabScore3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Equipment Management</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi4">Machine Downtime ≤5% of shift</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod4">Logged maintenance & idle time</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="fabScore4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Task Completion</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi5">Work Order Completion Rate ≥95%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod5">Fabrication tasks closed on time</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="fabScore5" /></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Safety Compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi6">Safety Incident Rate: 0 per week</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod6">Near misses & incidents reported</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="fabScore6" /></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Team Utilization</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi7">Team Utilization Rate ≥85%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod7">Productive hours vs. available hours</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="fabScore7" /></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Equipment Readiness</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi8">Tool & Equipment Readiness: 100%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod8">Pre-shift inspection pass rate</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="fabScore8" /></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Skill Development</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi9">Training Completion: 100% of team</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod9">Skill Forge modules completed</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="fabScore9" /></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Data Integrity</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabKpi10">Project Board Update Accuracy: 100%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="fabMethod10">Data entry audit</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="fabScore10" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Average Score:</strong> <span id="fabAverageScore">8.5</span> / 10</p>
+      <p><strong>Manager Comments:</strong> <span class="editable" contenteditable="true" data-kpi-key="fabComments">Provide feedback on performance, development areas, and recognition.</span></p>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <!-- PROJECT DIRECTOR KPI -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Personal KPI Assessment Report</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" data-kpi-key="pdSubtitleMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Employee Name:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="pdName">[Full Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Role:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="pdRole">Project Director</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Reporting To:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="pdManager">[Manager Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Facility:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="pdFacility">[Dominant Facility]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Review Period:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="pdReviewPeriod">[Insert Month & Year]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">System Source:</div>
+          <div>Project Board</div>
+        </div>
+      </div>
+      <h3>Performance Assessment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>KPI Area</th>
+            <th>KPI (Editable)</th>
+            <th>Measurement Method (Editable)</th>
+            <th>Progress (1-10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Delivery Performance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi1">On-Time Project Delivery ≥95%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod1">Final handover vs. schedule</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="pdScore1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Financial Control</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi2">On-Budget Delivery ≤5% variance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod2">Final cost vs. approved budget</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="pdScore2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Client Satisfaction</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi3">Client Satisfaction Score ≥90%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod3">Post-project survey (NPS)</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="pdScore3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Change Management</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi4">Change Order Approval Time ≤72 hours</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod4">Submission to client approval</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="pdScore4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Risk Management</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi5">Risk Log Updates: 100% compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod5">Weekly risk assessment in Project Board</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="pdScore5" /></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Stakeholder Engagement</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi6">Stakeholder Meeting Attendance ≥95%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod6">Planned vs. held meetings</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="pdScore6" /></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Documentation</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi7">Documentation Completeness: 100% delivered</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod7">As-built drawings, manuals, warranties</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="pdScore7" /></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Issue Resolution</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi8">Issue Resolution Time ≤48 hours</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod8">Reported issue to resolution</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="pdScore8" /></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Task Management</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi9">Project Board Task Completion: 100%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod9">All assigned tasks closed</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="pdScore9" /></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Profitability</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdKpi10">Profitability vs. Forecast ≥95%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="pdMethod10">Actual vs. projected margin</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="pdScore10" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Average Score:</strong> <span id="pdAverageScore">8.2</span> / 10</p>
+      <p><strong>Manager Comments:</strong> <span class="editable" contenteditable="true" data-kpi-key="pdComments">Provide feedback on performance, development areas, and recognition.</span></p>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <!-- SALES LEAD KPI -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Personal KPI Assessment Report</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" data-kpi-key="salesSubtitleMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Employee Name:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="salesName">[Full Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Role:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="salesRole">Sales Lead</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Reporting To:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="salesManager">[Manager Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Facility:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="salesFacility">[Dominant Facility]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Review Period:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="salesReviewPeriod">[Insert Month & Year]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">System Source:</div>
+          <div>Project Board</div>
+        </div>
+      </div>
+      <h3>Performance Assessment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>KPI Area</th>
+            <th>KPI (Editable)</th>
+            <th>Measurement Method (Editable)</th>
+            <th>Progress (1-10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Responsiveness</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi1">RFQ Response Time ≤48 hours</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod1">Received to submission</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="salesScore1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Conversion Efficiency</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi2">Conversion Rate ≥35%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod2">RFQs to signed contracts</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="salesScore2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Pipeline Health</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi3">Sales Pipeline Value = 3x monthly target</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod3">Total value of active opportunities</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="salesScore3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Cost Efficiency</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi4">Client Acquisition Cost ≤15% of contract value</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod4">Marketing + sales effort / new clients</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="salesScore4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Accuracy</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi5">Quote Accuracy ≤5% variance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod5">Final cost vs. quoted cost</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="salesScore5" /></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Client Retention</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi6">Client Retention Rate ≥70%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod6">Repeat clients / total clients</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="salesScore6" /></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Market Intelligence</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi7">Market Intelligence Reports: 2/month</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod7">Competitor & trend updates submitted</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="salesScore7" /></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Data Integrity</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi8">CRM Data Completeness: 100% compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod8">Opportunity records updated</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="salesScore8" /></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Lead Quality</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi9">Lead Qualification Accuracy ≥50%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod9">Qualified leads that convert</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="salesScore9" /></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>System Integration</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesKpi10">Project Board Integration: 100% of RFQs logged</td>
+            <td class="editable" contenteditable="true" data-kpi-key="salesMethod10">All RFQs logged in system</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="salesScore10" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Average Score:</strong> <span id="salesAverageScore">8.0</span> / 10</p>
+      <p><strong>Manager Comments:</strong> <span class="editable" contenteditable="true" data-kpi-key="salesComments">Provide feedback on performance, development areas, and recognition.</span></p>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <!-- QUALITY LEAD KPI -->
+  <div class="container page-break">
+    <header>
+      <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Apt Engineering Logo" class="logo">
+      <h1>Personal KPI Assessment Report</h1>
+      <div class="subtitle">CONFIDENTIAL & PROPRIETARY | <span class="editable" contenteditable="true" data-kpi-key="qualSubtitleMonth">[Insert Month & Year]</span></div>
+    </header>
+    <div class="section">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Employee Name:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="qualName">[Full Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Role:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="qualRole">Quality Lead</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Reporting To:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="qualManager">[Manager Name]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Facility:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="qualFacility">[Dominant Facility]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Review Period:</div>
+          <div class="editable" contenteditable="true" data-kpi-key="qualReviewPeriod">[Insert Month & Year]</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">System Source:</div>
+          <div>Project Board</div>
+        </div>
+      </div>
+      <h3>Performance Assessment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>KPI Area</th>
+            <th>KPI (Editable)</th>
+            <th>Measurement Method (Editable)</th>
+            <th>Progress (1-10)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi1">Internal Audit Pass Rate: 100%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod1">Departmental compliance checks</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="qualScore1" /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Field Quality</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi2">Defect Rate (Field) ≤1 per project</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod2">Client-reported defects per project</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="qualScore2" /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Corrective Action</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi3">Corrective Action Closure Time ≤72 hours</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod3">Issue identified to resolution</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="qualScore3" /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Equipment Compliance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi4">Calibration Compliance: 100% on schedule</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod4">Tools & equipment calibration logs</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="qualScore4" /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Team Certification</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi5">Quality Training Completion: 100% of staff</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod5">Team certification in quality protocols</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="qualScore5" /></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Process Control</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi6">Non-Conformance Reports (NCR) ≤2/month</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod6">Number of NCRs issued</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="qualScore6" /></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Process Deviation</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi7">Process Deviation Rate ≤3%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod7">Documented SOP deviations</td>
+            <td><input type="number" min="1" max="10" value="8" style="width:50px; text-align:center;" data-kpi-key="qualScore7" /></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Audit Performance</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi8">Client Audit Results: No major non-conformities</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod8">External quality audit scores</td>
+            <td><input type="number" min="1" max="10" value="9" style="width:50px; text-align:center;" data-kpi-key="qualScore8" /></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Document Control</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi9">Document Control Compliance: 100%</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod9">Latest SOPs in use across teams</td>
+            <td><input type="number" min="1" max="10" value="10" style="width:50px; text-align:center;" data-kpi-key="qualScore9" /></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Continuous Improvement</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualKpi10">Continuous Improvement Initiatives ≥2/month</td>
+            <td class="editable" contenteditable="true" data-kpi-key="qualMethod10">Validated improvements implemented</td>
+            <td><input type="number" min="1" max="10" value="7" style="width:50px; text-align:center;" data-kpi-key="qualScore10" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Average Score:</strong> <span id="qualAverageScore">9.0</span> / 10</p>
+      <p><strong>Manager Comments:</strong> <span class="editable" contenteditable="true" data-kpi-key="qualComments">Provide feedback on performance, development areas, and recognition.</span></p>
+    </div>
+    <footer>
+      APT ENGINEERING | CONFIDENTIAL & PROPRIETARY
+    </footer>
+  </div>
+  <div class="btn-container">
+    <button class="btn" onclick="printAllReports()">🖨️ Print Full Executive Report</button>
+  </div>
+  <script>
+    // --- Data Persistence and Reload Logic ---
+    const KPI_DATA_KEY = 'aeWorkKpiData';
+
+    function saveKpiData() {
+        const data = {};
+        document.querySelectorAll('[data-kpi-key]').forEach(el => {
+            const key = el.getAttribute('data-kpi-key');
+            if (el.tagName === 'INPUT' && el.type === 'number') {
+                data[key] = parseInt(el.value, 10) || 0; // Ensure number
+            } else {
+                data[key] = el.textContent;
+            }
+        });
+        // Save averages
+        data.opsAverage = parseFloat(document.getElementById('opsAverageScore').textContent) || 0;
+        data.engAverage = parseFloat(document.getElementById('engAverageScore').textContent) || 0;
+        data.fabAverage = parseFloat(document.getElementById('fabAverageScore').textContent) || 0;
+        data.pdAverage = parseFloat(document.getElementById('pdAverageScore').textContent) || 0;
+        data.salesAverage = parseFloat(document.getElementById('salesAverageScore').textContent) || 0;
+        data.qualAverage = parseFloat(document.getElementById('qualAverageScore').textContent) || 0;
+        data.overallScore = parseFloat(document.getElementById('overallScore').textContent) || 0;
+
+        localStorage.setItem(KPI_DATA_KEY, JSON.stringify(data));
+        console.log('KPI data saved to localStorage');
+    }
+
+    function loadKpiData() {
+        const dataStr = localStorage.getItem(KPI_DATA_KEY);
+        if (dataStr) {
+            try {
+                const data = JSON.parse(dataStr);
+                Object.keys(data).forEach(key => {
+                    const el = document.querySelector(`[data-kpi-key="${key}"]`);
+                    if (el) {
+                        if (el.tagName === 'INPUT' && el.type === 'number') {
+                             // Ensure the value is within min/max
+                             const val = data[key];
+                             const min = parseInt(el.min, 10) || 1;
+                             const max = parseInt(el.max, 10) || 10;
+                             if (val >= min && val <= max) {
+                                el.value = val;
+                             } else {
+                                 // Handle invalid data gracefully
+                                 console.warn(`Invalid value ${val} for input ${key}, using default.`);
+                             }
+                        } else {
+                            el.textContent = data[key];
+                        }
+                    }
+                });
+                // Load averages if saved
+                if (data.opsAverage) document.getElementById('opsAverageScore').textContent = data.opsAverage.toFixed(1);
+                if (data.engAverage) document.getElementById('engAverageScore').textContent = data.engAverage.toFixed(1);
+                if (data.fabAverage) document.getElementById('fabAverageScore').textContent = data.fabAverage.toFixed(1);
+                if (data.pdAverage) document.getElementById('pdAverageScore').textContent = data.pdAverage.toFixed(1);
+                if (data.salesAverage) document.getElementById('salesAverageScore').textContent = data.salesAverage.toFixed(1);
+                if (data.qualAverage) document.getElementById('qualAverageScore').textContent = data.qualAverage.toFixed(1);
+                if (data.overallScore) document.getElementById('overallScore').textContent = data.overallScore.toFixed(1);
+
+                console.log('KPI data loaded from localStorage');
+                // Recalculate charts if needed after load
+                updateCharts();
+            } catch (e) {
+                console.error('Error parsing KPI data from localStorage:', e);
+            }
+        } else {
+            console.log('No KPI data found in localStorage');
+        }
+    }
+
+    function updateCharts() {
+        // Update the department chart if it exists
+        if (window.departmentChart) {
+             // Recalculate scores from inputs (or use saved averages)
+             const opsScore = parseFloat(document.querySelector('[data-kpi-key="opsAverage"]').textContent) || 0;
+             const engScore = parseFloat(document.querySelector('[data-kpi-key="engAverage"]').textContent) || 0;
+             const fabScore = parseFloat(document.querySelector('[data-kpi-key="fabAverage"]').textContent) || 0;
+             const pdScore = parseFloat(document.querySelector('[data-kpi-key="pdAverage"]').textContent) || 0;
+             const salesScore = parseFloat(document.querySelector('[data-kpi-key="salesAverage"]').textContent) || 0;
+             const qualScore = parseFloat(document.querySelector('[data-kpi-key="qualAverage"]').textContent) || 0;
+
+             const scores = [opsScore, engScore, fabScore, pdScore, salesScore, qualScore];
+             window.departmentChart.data.datasets[0].data = scores;
+             window.departmentChart.update();
+
+             // Update overall score display
+             const validScores = scores.filter(s => s > 0); // Filter out uncalculated scores
+             const overall = validScores.length > 0 ? (validScores.reduce((a, b) => a + b, 0) / validScores.length) : 0;
+             document.getElementById('overallScore').textContent = overall.toFixed(1);
+        }
+    }
+
+    // Attach event listeners to save data on change
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-kpi-key]').forEach(el => {
+            if (el.tagName === 'INPUT' && el.type === 'number') {
+                el.addEventListener('input', saveKpiData);
+            } else {
+                el.addEventListener('input', saveKpiData); // contenteditable
+            }
+        });
+        // Load data when the page loads
+        loadKpiData();
+        // Set current date
+        const now = new Date().toLocaleDateString();
+        document.getElementById("printDate").textContent = now;
+    });
+
+    // Listen for reload message from parent
+    window.addEventListener('message', function(event) {
+        // Basic origin check (adjust if needed)
+        // if (event.origin !== window.location.origin) return;
+        if (event.data && event.data.type === 'RELOAD_DATA') {
+            console.log('Received RELOAD_DATA message in KPI Monitor');
+            loadKpiData(); // Reload data from localStorage
+        }
+    });
+    // --- End Data Persistence and Reload Logic ---
+
+    // --- Departmental Performance Chart ---
+    document.addEventListener('DOMContentLoaded', function() {
+      const deptCtx = document.getElementById('departmentChart').getContext('2d');
+      // Store chart instance globally for updates
+      window.departmentChart = new Chart(deptCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Operations', 'Engineering', 'Fabrication', 'Project Dir.', 'Sales', 'Quality'],
+          datasets: [{
+            label: 'Average KPI Score (1-10)',
+            // Initial data, will be updated by loadKpiData/updateCharts
+            data: [7.5, 7.7, 8.5, 8.2, 8.0, 9.0],
+            backgroundColor: [
+              '#0066cc', '#28a745', '#ffc107', '#d39000', '#fd7e14', '#dc3545'
+            ],
+            borderColor: '#1a3b5d',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10,
+              title: {
+                display: true,
+                text: 'Score (1-10)'
+              }
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Departmental Performance Comparison',
+              font: {
+                size: 16
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Score: ${context.parsed.y.toFixed(1)}/10`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Sync month across all reports (keep existing logic)
+      const dashboardMonth = document.getElementById('dashboardMonth');
+      const reportingPeriod = document.getElementById('reportingPeriod');
+      function updateAllMonths() {
+        const monthValue = dashboardMonth.textContent;
+        document.querySelectorAll('.editable[contenteditable="true"]').forEach(el => {
+          if (el.textContent.includes('Insert Month')) {
+            el.textContent = monthValue;
+          }
+        });
+        saveKpiData(); // Save updated months
+      }
+      dashboardMonth.addEventListener('input', updateAllMonths);
+      reportingPeriod.addEventListener('input', function() {
+        dashboardMonth.textContent = reportingPeriod.textContent;
+        updateAllMonths();
+      });
+
+      // Calculate overall score (initial calculation, updateCharts handles dynamic)
+      const scores = [7.5, 7.7, 8.5, 8.2, 8.0, 9.0];
+      const overallScore = document.getElementById('overallScore');
+      overallScore.textContent = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+
+    });
+    // --- End Departmental Performance Chart ---
+
+    // --- Print Function (keep existing) ---
+    function printAllReports() {
+      window.print();
+    }
+    // --- End Print Function ---
+  </script>
+</body>
+</html>

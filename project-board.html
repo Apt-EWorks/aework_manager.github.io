@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEWork Project Board</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #f8fafd;
+            --border-color: #e0e6ed;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            /* Project Colors for Calendar Streaks */
+            --project-color-1: #3498db; /* Blue */
+            --project-color-2: #e74c3c; /* Red */
+            --project-color-3: #2ecc71; /* Green */
+            --project-color-4: #f39c12; /* Orange */
+            --project-color-5: #9b59b6; /* Purple */
+            --project-color-6: #1abc9c; /* Turquoise */
+            --project-color-7: #d35400; /* Pumpkin */
+            --project-color-8: #34495e; /* Midnight Blue */
+            --project-color-9: #f1c40f; /* Sunflower */
+            --project-color-10: #e67e22; /* Carrot */
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            color: var(--text-dark);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .logo {
+            height: 40px;
+            margin-right: 15px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        nav {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow-x: auto; /* Allow horizontal scroll on small screens */
+        }
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            border-bottom: 3px solid var(--secondary-color);
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        .tab:hover:not(.active) {
+            background-color: #f5f7fa;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .search-input {
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            width: 300px;
+            font-size: 1rem;
+            flex-grow: 1; /* Allow search bar to grow */
+            min-width: 200px; /* Minimum width */
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .add-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .projects-table, .team-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            background-color: #f8fafd;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success-color);
+        }
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-active {
+            background-color: #e1f0fa;
+            color: var(--secondary-color);
+        }
+        .status-completed {
+            background-color: #e8f4e8;
+            color: var(--success-color);
+        }
+        .status-on-hold {
+            background-color: #fef5e7;
+            color: var(--warning-color);
+        }
+        .priority-high {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            margin: 0 5px;
+            font-size: 1rem;
+        }
+        .btn-icon:hover {
+            color: var(--primary-color);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .editor-selection {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8fafd;
+            border-radius: 8px;
+        }
+        .editor-selection label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .editor-selection select {
+            width: auto;
+            min-width: 200px;
+        }
+        .financial-risk-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .financial-risk-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .financial-risk-tab.active {
+            border-bottom: 3px solid var(--secondary-color);
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        .financial-risk-content {
+            display: none;
+        }
+        .financial-risk-content.active {
+            display: block;
+        }
+        .calendar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-nav button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .calendar-cell {
+            background: white;
+            min-height: 100px;
+            padding: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .calendar-day {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        .calendar-date {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .calendar-event {
+            font-size: 0.8rem;
+            padding: 3px 5px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            color: white;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .calendar-project-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: auto; /* Push icons to the bottom */
+        }
+        .calendar-project-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid #fff;
+            box-sizing: border-box;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 2rem;
+        }
+        .profile-info h2 {
+            margin-bottom: 10px;
+        }
+        .profile-meta {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        .profile-section {
+            margin-bottom: 30px;
+        }
+        .profile-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .profile-list {
+            list-style: none;
+        }
+        .profile-list li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-list li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .profile-list .title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .profile-list .meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .profile-list .description {
+            margin-top: 5px;
+        }
+        .notification-settings {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notification-label {
+            font-weight: 500;
+        }
+        .notification-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .notification-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .notification-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .notification-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .notification-slider {
+            background-color: var(--secondary-color);
+        }
+        input:checked + .notification-slider:before {
+            transform: translateX(26px);
+        }
+        .project-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .project-details-header h2 {
+            margin: 0;
+        }
+        .project-stages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stage-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .stage-card.completed {
+            border-left: 4px solid var(--success-color);
+        }
+        .stage-card.in-progress {
+            border-left: 4px solid var(--warning-color);
+        }
+        .stage-card.not-started {
+            border-left: 4px solid #bdc3c7;
+        }
+        .stage-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .stage-status {
+            font-size: 0.9rem;
+        }
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .risk-table th, .risk-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        .risk-table th {
+            background-color: #f8fafd;
+        }
+        .risk-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .risk-high {
+            background-color: #fadbd8 !important;
+            color: #c0392b;
+        }
+        .risk-medium {
+            background-color: #fef9e7 !important;
+            color: #d35400;
+        }
+        .risk-low {
+            background-color: #d5f5e3 !important;
+            color: #27ae60;
+        }
+        .editable {
+            background-color: #f9f9f9;
+            border: 1px dashed #ccc;
+            padding: 5px;
+            border-radius: 3px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        /* --- Add Import/Export Styles --- */
+        .import-export-section {
+            background: #f8f9fa;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .import-export-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #1a3b5d;
+        }
+        .import-export-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+        .notification.success {
+            background-color: #28a745;
+        }
+        .notification.error {
+            background-color: #dc3545;
+        }
+        /* --- End Import/Export Styles --- */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .search-bar, .action-buttons {
+                flex-direction: column;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            .calendar-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="logo/logo.jpg" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=LOGO';" alt="Apt Engineering Logo" class="logo">
+                    <h1>AEWork Project Board</h1>
+                </div>
+                <div class="user-info">
+                    <div class="notification-icon">
+                        <i class="far fa-bell"></i>
+                        <div class="notification-badge">3</div>
+                    </div>
+                    <div class="user-profile" onclick="openTeamMemberProfile('JS')">
+                        <div class="user-avatar">JS</div>
+                        <div>John Smith</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Import/Export Section -->
+        <div class="import-export-section">
+            <h2 class="import-export-title">Import/Export Project Data</h2>
+            <div class="import-export-actions">
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-file-export"></i> Export Data
+                </button>
+                <button class="btn" id="importBtn" style="background-color: #6c757d; color: white;">
+                    <i class="fas fa-file-import"></i> Import Data
+                </button>
+            </div>
+        </div>
+        <!-- --- Notifications --- -->
+        <div id="notification" class="notification"></div>
+        <!-- --- End Notifications --- -->
+        <nav>
+            <ul class="nav-tabs">
+                <li class="tab active" onclick="showTab('dashboard')">Dashboard</li>
+                <li class="tab" onclick="showTab('projects')">Projects</li>
+                <li class="tab" onclick="showTab('team')">Team</li>
+                <li class="tab" onclick="showTab('calendar')">Calendar</li>
+                <li class="tab" onclick="showTab('notifications')">Notifications</li>
+            </ul>
+        </nav>
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Projects</div>
+                    <div class="stat-value" id="totalProjects">0</div>
+                    <div>Managed by Apt Engineering</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Projects</div>
+                    <div class="stat-value" id="activeProjects">0</div>
+                    <div>Currently in progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Overdue Tasks</div>
+                    <div class="stat-value" id="overdueTasks">0</div>
+                    <div>Require immediate attention</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Budget</div>
+                    <div class="stat-value" id="totalBudget">₦0</div>
+                    <div>Across all projects</div>
+                </div>
+            </div>
+            <div class="projects-table">
+                <div style="padding: 20px;">
+                    <div class="section-title">Recent Projects</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Client</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Budget</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentProjectsTable">
+                            <!-- Recent projects will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Projects Tab -->
+        <div id="projects" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="section-title">All Projects</div>
+                <div class="action-buttons">
+                    <button class="action-btn add-btn" onclick="openAddProject()">
+                        <i class="fas fa-plus"></i> Add Project
+                    </button>
+                </div>
+            </div>
+            <div class="projects-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Budget</th>
+                            <th>Due Date</th>
+                            <th>Days Left</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectsTableBody">
+                        <!-- Projects will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Team Tab -->
+        <div id="team" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="section-title">Team Members</div>
+                <div class="action-buttons">
+                    <button class="action-btn add-btn" onclick="openAddEditTeamMember()">
+                        <i class="fas fa-user-plus"></i> Add Member
+                    </button>
+                </div>
+            </div>
+            <div class="team-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Specialization</th>
+                            <th>Projects</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamTableBody">
+                        <!-- Team members will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Calendar Tab -->
+        <div id="calendar" class="tab-content">
+            <div class="calendar">
+                <div class="calendar-header">
+                    <div class="section-title" id="calendarMonthYear">June 2025</div>
+                    <div class="calendar-nav">
+                        <button onclick="changeCalendarMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <button onclick="changeCalendarMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+        <!-- Notifications Tab -->
+        <div id="notifications" class="tab-content">
+            <div class="notification-settings">
+                <h2 class="section-title">Notification Preferences</h2>
+                <div class="notification-item">
+                    <div class="notification-label">Email Notifications</div>
+                    <label class="notification-switch">
+                        <input type="checkbox" id="notifyEmail" checked>
+                        <span class="notification-slider"></span>
+                    </label>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-label">Project Status Updates</div>
+                    <label class="notification-switch">
+                        <input type="checkbox" id="notifyProjectUpdates" checked>
+                        <span class="notification-slider"></span>
+                    </label>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-label">Task Assignments</div>
+                    <label class="notification-switch">
+                        <input type="checkbox" id="notifyTaskAssignments" checked>
+                        <span class="notification-slider"></span>
+                    </label>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-label">Urgent Project Updates</div>
+                    <label class="notification-switch">
+                        <input type="checkbox" id="notifyUrgentUpdates" checked>
+                        <span class="notification-slider"></span>
+                    </label>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-success" onclick="saveNotificationPreferences()">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+        <!-- Add Project Modal -->
+        <div id="addProjectModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddProject()">&times;</span>
+                <h2><i class="fas fa-project-diagram"></i> Add New Project</h2>
+                <div class="editor-selection">
+                    <label for="projectEditor">Select Editor:</label>
+                    <select id="projectEditor">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <form id="addProjectForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectName">Project Name:</label>
+                            <input type="text" id="projectName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectClient">Client:</label>
+                            <input type="text" id="projectClient" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectBudget">Budget (₦):</label>
+                            <input type="number" id="projectBudget" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDueDate">Due Date:</label>
+                            <input type="date" id="projectDueDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDescription">Description:</label>
+                        <textarea id="projectDescription" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Project</button>
+                </form>
+            </div>
+        </div>
+        <!-- Add Task Modal -->
+        <div id="addTaskModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddTask()">&times;</span>
+                <h2><i class="fas fa-tasks"></i> Add New Task</h2>
+                <div class="editor-selection">
+                    <label for="taskEditor">Select Editor:</label>
+                    <select id="taskEditor">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskName">Task Name:</label>
+                        <input type="text" id="taskName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskProject">Project:</label>
+                            <select id="taskProject" required>
+                                <option value="">Select a project</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskAssignee">Assign To:</label>
+                            <select id="taskAssignee" required>
+                                <option value="">Select a team member</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskDueDate">Due Date:</label>
+                            <input type="date" id="taskDueDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPriority">Priority:</label>
+                            <select id="taskPriority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Description:</label>
+                        <textarea id="taskDescription"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </form>
+            </div>
+        </div>
+        <!-- Add Event Modal -->
+        <div id="addEventModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddEvent()">&times;</span>
+                <h2><i class="fas fa-calendar-plus"></i> Add New Event</h2>
+                <div class="editor-selection">
+                    <label for="eventEditor">Select Editor:</label>
+                    <select id="eventEditor">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <form id="addEventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title:</label>
+                        <input type="text" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectSelect">Related Project:</label>
+                        <select id="projectSelect">
+                            <option value="">None</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventDate">Date:</label>
+                            <input type="date" id="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventTime">Time:</label>
+                            <input type="time" id="eventTime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventPriority">Priority:</label>
+                        <select id="eventPriority">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Event</button>
+                </form>
+            </div>
+        </div>
+        <!-- Add/Edit Team Member Modal -->
+        <div id="addEditTeamMemberModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddEditTeamMember()">&times;</span>
+                <h2 id="addEditTeamMemberTitle"><i class="fas fa-user"></i> Add Team Member</h2>
+                <div class="editor-selection">
+                    <label for="memberEditor">Select Editor:</label>
+                    <select id="memberEditor">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <form id="teamMemberForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="memberName">Full Name:</label>
+                            <input type="text" id="memberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberPosition">Position:</label>
+                            <input type="text" id="memberPosition" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberSpecialization">Specialization:</label>
+                        <input type="text" id="memberSpecialization">
+                    </div>
+                    <div class="form-group">
+                        <label for="memberBio">Bio:</label>
+                        <textarea id="memberBio"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Member</button>
+                </form>
+            </div>
+        </div>
+        <!-- Team Member Profile Modal -->
+        <div id="teamMemberProfileModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeTeamMemberProfile()">&times;</span>
+                <div id="profileContent">
+                    <!-- Profile content will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+        <!-- Project Details Modal -->
+        <div id="projectDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeProjectDetails()">&times;</span>
+                <div id="projectDetailsContent">
+                    <!-- Project details content will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // --- Data Structure for Import/Export ---
+        const PROJECT_BOARD_DATA_KEY = 'aeWorkProjectBoardData';
+        // --- Sample Data (Replace with your actual data structure) ---
+        // Standard project stages
+        const standardStages = [
+            "Start", "Planning", "Design", "Procurement",
+            "Cutting & Prep", "Tacking & Assembly", "Fitups and Tolerance Checks",
+            "Final Welding", "Finishing", "Delivery and Pickup Notice", "Close Out"
+        ];
+        // Stage weights for progress calculation (must sum to 100 for percentage)
+        const stageWeights = {
+            "Start": 2,
+            "Planning": 10,
+            "Design": 12,
+            "Procurement": 8,
+            "Cutting & Prep": 10,
+            "Tacking & Assembly": 15,
+            "Fitups and Tolerance Checks": 5,
+            "Final Welding": 15,
+            "Finishing": 8,
+            "Delivery and Pickup Notice": 5,
+            "Close Out": 10
+        };
+        // Team members
+        let teamMembers = [
+            {
+                id: "JS",
+                name: "John Smith",
+                position: "Project Director",
+                specialization: "Structural Engineering & Project Management",
+                bio: "Experienced leader with a proven track record in delivering complex engineering projects.",
+                projects: [1, 2, 3, 4],
+                education: [
+                    { title: "MSc in Structural Engineering", meta: "University of Technology, 2015-2017" },
+                    { title: "BEng in Civil Engineering", meta: "State Engineering College, 2011-2015" }
+                ],
+                certifications: [
+                    { title: "Project Management Professional (PMP)", meta: "Project Management Institute, 2019" },
+                    { title: "Welding Inspection Certification", meta: "AWS, 2021" }
+                ],
+                achievements: [
+                    { title: "Excellence in Engineering Award", description: "Recognized for innovative design solution that saved 15% on material costs" },
+                    { title: "Safety Leadership Recognition", description: "Led a team of 50+ workers with zero incidents over 18 months" },
+                    { title: "Project Delivery Excellence", description: "Completed 3 major projects 10% under budget and 2 weeks ahead of schedule" }
+                ]
+            },
+            {
+                id: "MJ",
+                name: "Mike Johnson",
+                position: "Lead Engineer",
+                specialization: "Design & Analysis",
+                bio: "Skilled engineer specializing in structural design and analysis.",
+                projects: [1, 2],
+                education: [
+                    { title: "MSc in Structural Engineering", meta: "University of Technology, 2015-2017" },
+                    { title: "BEng in Mechanical Engineering", meta: "Regional Technical Institute, 2009-2013" }
+                ],
+                certifications: [
+                    { title: "Professional Engineer (PE)", meta: "State Board of Engineering, 2018" }
+                ],
+                achievements: [
+                    { title: "Innovation Award", description: "Developed a new welding technique that improved efficiency by 20%" },
+                    { title: "Quality Excellence", description: "Maintained 100% quality score on 5 consecutive projects" }
+                ]
+            }
+            // Add more team members as needed
+        ];
+        // Project data structure - Updated with financial and risk data and stages
+        let projects = [
+            {
+                id: 1,
+                name: "Steel Bridge Fabrication",
+                client: "Metropolitan Infrastructure Co.",
+                status: "Active",
+                budget: 5000000,
+                awardCost: 5000000,
+                dueDate: "2025-09-30",
+                description: "Fabrication of a 200-meter steel bridge for urban transit.",
+                tasks: [
+                    { id: 1, name: "Finalize design drawings", assignee: "MJ", dueDate: "2025-06-15", priority: "High", status: "Completed" },
+                    { id: 2, name: "Source steel materials", assignee: "JS", dueDate: "2025-06-20", priority: "High", status: "In Progress" },
+                    { id: 3, name: "Begin cutting phase", assignee: "MJ", dueDate: "2025-06-25", priority: "Medium", status: "Not Started" }
+                ],
+                stages: standardStages.map((stageName, index) => {
+                    let status = 'Not Started';
+                    if (stageName === "Start") status = "Completed";
+                    if (stageName === "Planning") status = "In Progress";
+                    if (stageName === "Design") status = "In Progress";
+                    return { stage: stageName, status: status };
+                }),
+                financials: {
+                    budget: 5000000,
+                    spent: 1200000,
+                    forecastedCost: 4800000
+                },
+                risks: [
+                    { id: 1, description: "Potential delay in steel delivery", impact: "High", probability: "Medium", mitigation: "Identify alternative suppliers" },
+                    { id: 2, description: "Adverse weather affecting outdoor work", impact: "Medium", probability: "High", mitigation: "Adjust schedule and provide protective gear" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Industrial Machinery Frame",
+                client: "Global Manufacturing Ltd.",
+                status: "Active",
+                budget: 1200000,
+                awardCost: 1200000,
+                dueDate: "2025-08-15",
+                description: "Custom steel frame for a new production line.",
+                tasks: [
+                    { id: 4, name: "Review client specifications", assignee: "JS", dueDate: "2025-06-10", priority: "High", status: "Completed" },
+                    { id: 5, name: "Procure specialty bolts", assignee: "JS", dueDate: "2025-06-18", priority: "Medium", status: "In Progress" }
+                ],
+                stages: standardStages.map((stageName, index) => {
+                    let status = 'Not Started';
+                    if (stageName === "Start") status = "Completed";
+                    if (stageName === "Planning") status = "Completed";
+                    if (stageName === "Design") status = "Completed";
+                    if (stageName === "Procurement") status = "In Progress";
+                    return { stage: stageName, status: status };
+                }),
+                financials: {
+                    budget: 1200000,
+                    spent: 350000,
+                    forecastedCost: 1150000
+                },
+                risks: [
+                    { id: 3, description: "Tight tolerance requirements", impact: "High", probability: "Medium", mitigation: "Use precision tools and conduct frequent checks" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Warehouse Modifications",
+                client: "Logistics Solutions Inc.",
+                status: "On Hold",
+                budget: 750000,
+                awardCost: 750000,
+                dueDate: "2025-11-20",
+                description: "Structural modifications to increase warehouse capacity.",
+                tasks: [
+                    { id: 6, name: "Site survey and assessment", assignee: "MJ", dueDate: "2025-06-05", priority: "High", status: "Completed" }
+                ],
+                stages: standardStages.map((stageName, index) => {
+                    let status = 'Not Started';
+                    if (stageName === "Start") status = "Completed";
+                    return { stage: stageName, status: status };
+                }),
+                financials: {
+                    budget: 750000,
+                    spent: 50000,
+                    forecastedCost: 740000
+                },
+                risks: [
+                    { id: 4, description: "Discovery of unforeseen structural issues", impact: "High", probability: "Low", mitigation: "Conduct detailed initial survey" }
+                ]
+            },
+            {
+                id: 4,
+                name: "Conveyor System Upgrade",
+                client: "Automotive Parts Co.",
+                status: "Completed",
+                budget: 2000000,
+                awardCost: 2000000,
+                dueDate: "2025-05-20",
+                description: "Upgrade existing conveyor system with new steel supports.",
+                tasks: [],
+                stages: standardStages.map((stageName, index) => {
+                    return { stage: stageName, status: "Completed" };
+                }),
+                financials: {
+                    budget: 2000000,
+                    spent: 1950000,
+                    forecastedCost: 1950000
+                },
+                risks: []
+            }
+        ];
+        // Calendar events
+        let calendarEvents = [
+            { id: 1, title: "Project Planning Meeting", projectId: 1, date: "2025-06-10", time: "10:00", priority: "High" },
+            { id: 2, title: "Safety Inspection", projectId: 2, date: "2025-06-12", time: "13:00", priority: "Medium" },
+            { id: 3, title: "Welding Inspection", projectId: 3, date: "2025-06-25", time: "14:00", priority: "High" },
+            { id: 4, title: "Project Kickoff Meeting", projectId: 4, date: "2025-06-05", time: "11:00", priority: "Medium" },
+            { id: 5, title: "Client Presentation", projectId: 1, date: "2025-06-18", time: "15:00", priority: "High" }
+        ];
+        // --- State Variables ---
+        let currentProjectId = null;
+        let currentProfileId = null;
+        let currentCalendarDate = new Date(); // Default to current month/year
+        let editingMemberId = null; // To track if we're editing an existing member
+        let currentEditor = null; // To track the current editor
+
+        // --- Helper Functions ---
+        function getProjectColor(projectId) {
+             const project = projects.find(p => p.id === projectId);
+             if (project) {
+                 const projectIndex = projects.indexOf(project) % 10;
+                 return getComputedStyle(document.documentElement).getPropertyValue(`--project-color-${projectIndex + 1}`).trim() || '#6c757d';
+             }
+             return '#6c757d'; // Default gray
+         }
+
+        // --- UI and Data Interaction Functions ---
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            // Add active class to the clicked tab
+            event.currentTarget.classList.add('active');
+            // Specific actions for certain tabs
+            if (tabName === 'projects') {
+                renderProjectsTable();
+            } else if (tabName === 'team') {
+                renderTeamTable();
+            } else if (tabName === 'dashboard') {
+                updateDashboardStats();
+                renderRecentProjects();
+            } else if (tabName === 'calendar') {
+                renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+            }
+        }
+        function updateDashboardStats() {
+            document.getElementById('totalProjects').textContent = projects.length;
+            const activeProjects = projects.filter(p => p.status === 'Active').length;
+            document.getElementById('activeProjects').textContent = activeProjects;
+            const overdueTasks = projects.flatMap(p => p.tasks || []).filter(task => new Date(task.dueDate) < new Date()).length;
+            document.getElementById('overdueTasks').textContent = overdueTasks;
+            const totalBudget = projects.reduce((sum, project) => sum + project.budget, 0);
+            document.getElementById('totalBudget').textContent = `₦${totalBudget.toLocaleString()}`;
+        }
+        function renderRecentProjects() {
+            const recentProjectsTable = document.getElementById('recentProjectsTable');
+            recentProjectsTable.innerHTML = '';
+            // Show last 3 projects as an example
+            const recent = projects.slice(0, 3);
+            recent.forEach(project => {
+                const progress = calculateProjectProgress(project);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${project.name}</td>
+                    <td>${project.client}</td>
+                    <td><span class="status-badge status-${project.status.toLowerCase().replace(' ', '-')}">${project.status}</span></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div>${progress.toFixed(1)}%</div>
+                    </td>
+                    <td>₦${project.budget.toLocaleString()}</td>
+                `;
+                recentProjectsTable.appendChild(row);
+            });
+        }
+        function renderProjectsTable() {
+            const tableBody = document.getElementById('projectsTableBody');
+            tableBody.innerHTML = '';
+            projects.forEach(project => {
+                const progress = calculateProjectProgress(project);
+                const dueDate = new Date(project.dueDate);
+                const today = new Date();
+                const timeDiff = dueDate.getTime() - today.getTime();
+                const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${project.name}</td>
+                    <td>${project.client}</td>
+                    <td><span class="status-badge status-${project.status.toLowerCase().replace(' ', '-')}">${project.status}</span></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div>${progress.toFixed(1)}%</div>
+                    </td>
+                    <td>₦${project.budget.toLocaleString()}</td>
+                    <td>${project.dueDate}</td>
+                    <td>${daysLeft >= 0 ? daysLeft : 'Overdue'}</td>
+                    <td>
+                        <button class="btn-icon" onclick="viewProject(${project.id})" title="View Details"><i class="fas fa-eye"></i></button>
+                        <button class="btn-icon" onclick="deleteProject(${project.id})" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        function renderTeamTable() {
+            const tableBody = document.getElementById('teamTableBody');
+            tableBody.innerHTML = '';
+            teamMembers.forEach(member => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${member.name}</td>
+                    <td>${member.position}</td>
+                    <td>${member.specialization}</td>
+                    <td>${member.projects ? member.projects.length : 0}</td>
+                    <td>
+                        <button class="btn-icon" onclick="openTeamMemberProfile('${member.id}')" title="View Profile"><i class="fas fa-user"></i></button>
+                        <button class="btn-icon" onclick="openAddEditTeamMember('${member.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon" onclick="deleteTeamMember('${member.id}')" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        function calculateProjectProgress(project) {
+            let totalWeight = 0;
+            let completedWeight = 0;
+            project.stages.forEach(stage => {
+                // Determine weight, defaulting to 5 for custom stages (though not used here)
+                const weight = stageWeights[stage.stage] || 0; // Use 0 for unknown stages to be safe
+                totalWeight += weight;
+                if (stage.status === 'Completed') {
+                    completedWeight += weight;
+                } else if (stage.status === 'In Progress') {
+                    // Give partial credit for In Progress
+                    completedWeight += weight * 0.5;
+                }
+                // 'Not Started' contributes 0
+            });
+            if (totalWeight === 0) return 0;
+            // Ensure the calculation results in a percentage (0-100)
+            const progress = (completedWeight / totalWeight) * 100;
+            // Clamp the value between 0 and 100 to prevent potential overflows/underflows
+            return Math.max(0, Math.min(100, progress));
+        }
+
+        function changeCalendarMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+        }
+
+        function getProjectsActiveOnDate(dateStr) {
+            // This is a simplified check. In a real app, you'd have project start/end dates
+            // and check if the dateStr falls within that range.
+            // For now, we'll assume a project is "active" if its status is Active or On Hold.
+            // A more robust solution would involve tracking project timelines.
+            return projects.filter(project => ['Active', 'On Hold'].includes(project.status));
+        }
+
+        function renderCalendar(year, month) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            document.getElementById('calendarMonthYear').textContent = `${monthNames[month]} ${year}`;
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            // Create header cells for days of the week
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            daysOfWeek.forEach(day => {
+                const headerCell = document.createElement('div');
+                headerCell.className = 'calendar-cell';
+                headerCell.innerHTML = `<div class="calendar-day">${day}</div>`;
+                calendarGrid.appendChild(headerCell);
+            });
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            // Fill in the blank cells for the first week
+            for (let i = 0; i < firstDay; i++) {
+                const blankCell = document.createElement('div');
+                blankCell.className = 'calendar-cell';
+                calendarGrid.appendChild(blankCell);
+            }
+            // Fill in the days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-cell';
+                dayCell.innerHTML = `<div class="calendar-date">${day}</div>`;
+                
+                // --- Enhanced Calendar Logic ---
+                const activeProjects = getProjectsActiveOnDate(dateStr);
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'calendar-project-icons';
+                
+                activeProjects.forEach(project => {
+                     const icon = document.createElement('div');
+                     icon.className = 'calendar-project-icon';
+                     icon.title = project.name; // Tooltip
+                     icon.style.backgroundColor = getProjectColor(project.id);
+                     icon.addEventListener('click', (e) => {
+                         e.stopPropagation(); // Prevent day cell click if needed
+                         viewProject(project.id);
+                     });
+                     iconContainer.appendChild(icon);
+                 });
+                
+                dayCell.appendChild(iconContainer);
+                // --- End Enhanced Calendar Logic ---
+
+                // Find events for this date (optional, can be kept or removed)
+                const eventsForDay = calendarEvents.filter(event => event.date === dateStr);
+                eventsForDay.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = `calendar-event priority-${event.priority.toLowerCase()}`;
+                    eventDiv.textContent = event.title;
+                    // Assign a color based on project if linked
+                    let projectColor = '#6c757d'; // Default gray
+                    if (event.projectId) {
+                        projectColor = getProjectColor(event.projectId);
+                    }
+                    eventDiv.style.backgroundColor = projectColor;
+                    
+                    // Add click event listener to view project
+                    eventDiv.addEventListener('click', () => {
+                        if (event.projectId) {
+                            viewProject(event.projectId);
+                        } else {
+                            alert(`Event: ${event.title}\nTime: ${event.time || 'All Day'}\nNo project linked.`);
+                        }
+                    });
+                    dayCell.appendChild(eventDiv);
+                });
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        // --- Modal Functions ---
+        function openAddProject() {
+            populateEditorSelect('projectEditor');
+            document.getElementById('addProjectForm').reset();
+            document.getElementById('addProjectModal').style.display = 'block';
+        }
+        function closeAddProject() {
+            document.getElementById('addProjectModal').style.display = 'none';
+        }
+        function openAddTask() {
+            populateEditorSelect('taskEditor');
+            const projectSelect = document.getElementById('taskProject');
+            projectSelect.innerHTML = '<option value="">Select a project</option>';
+            projects.forEach(project => {
+                const option = document.createElement('option');
+                option.value = project.id;
+                option.textContent = project.name;
+                projectSelect.appendChild(option);
+            });
+            const assigneeSelect = document.getElementById('taskAssignee');
+            assigneeSelect.innerHTML = '<option value="">Select a team member</option>';
+            teamMembers.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.id;
+                option.textContent = member.name;
+                assigneeSelect.appendChild(option);
+            });
+            document.getElementById('addTaskModal').style.display = 'block';
+        }
+        function closeAddTask() {
+            document.getElementById('addTaskModal').style.display = 'none';
+        }
+        function openAddEvent() {
+            populateEditorSelect('eventEditor');
+            const projectSelect = document.getElementById('projectSelect');
+            projectSelect.innerHTML = '<option value="">None</option>';
+            projects.forEach(project => {
+                const option = document.createElement('option');
+                option.value = project.id;
+                option.textContent = project.name;
+                projectSelect.appendChild(option);
+            });
+            document.getElementById('addEventModal').style.display = 'block';
+        }
+        function closeAddEvent() {
+            document.getElementById('addEventModal').style.display = 'none';
+        }
+        function openAddEditTeamMember(memberId = null) {
+            editingMemberId = memberId;
+            populateEditorSelect('memberEditor');
+            document.getElementById('teamMemberForm').reset();
+            if (memberId) {
+                // Editing existing member
+                const member = teamMembers.find(m => m.id === memberId);
+                if (member) {
+                    document.getElementById('addEditTeamMemberTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Team Member';
+                    document.getElementById('memberName').value = member.name;
+                    document.getElementById('memberPosition').value = member.position;
+                    document.getElementById('memberSpecialization').value = member.specialization || '';
+                    document.getElementById('memberBio').value = member.bio || '';
+                }
+            } else {
+                // Adding new member
+                document.getElementById('addEditTeamMemberTitle').innerHTML = '<i class="fas fa-user-plus"></i> Add Team Member';
+            }
+            document.getElementById('addEditTeamMemberModal').style.display = 'block';
+        }
+        function closeAddEditTeamMember() {
+            document.getElementById('addEditTeamMemberModal').style.display = 'none';
+            editingMemberId = null;
+        }
+        function openTeamMemberProfile(memberId) {
+            currentProfileId = memberId;
+            const member = teamMembers.find(m => m.id === memberId);
+            if (member) {
+                const profileContent = document.getElementById('profileContent');
+                profileContent.innerHTML = `
+                    <div class="profile-header">
+                        <div class="profile-avatar">${member.id}</div>
+                        <div class="profile-info">
+                            <h2>${member.name}</h2>
+                            <div class="profile-meta">${member.position}</div>
+                            <div class="profile-meta">${member.specialization || 'Specialization not set'}</div>
+                        </div>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Bio</h3>
+                        <p>${member.bio || 'No bio available.'}</p>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Education</h3>
+                        <ul class="profile-list">
+                            ${(member.education && member.education.length) ? member.education.map(edu => `
+                                <li>
+                                    <div class="title">${edu.title}</div>
+                                    <div class="meta">${edu.meta}</div>
+                                </li>
+                            `).join('') : '<li>No education information.</li>'}
+                        </ul>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Certifications</h3>
+                        <ul class="profile-list">
+                            ${(member.certifications && member.certifications.length) ? member.certifications.map(cert => `
+                                <li>
+                                    <div class="title">${cert.title}</div>
+                                    <div class="meta">${cert.meta}</div>
+                                </li>
+                            `).join('') : '<li>No certifications listed.</li>'}
+                        </ul>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Achievements</h3>
+                        <ul class="profile-list">
+                            ${(member.achievements && member.achievements.length) ? member.achievements.map(ach => `
+                                <li>
+                                    <div class="title">${ach.title}</div>
+                                    <div class="description">${ach.description}</div>
+                                </li>
+                            `).join('') : '<li>No achievements listed.</li>'}
+                        </ul>
+                    </div>
+                `;
+                document.getElementById('teamMemberProfileModal').style.display = 'block';
+            }
+        }
+        function closeTeamMemberProfile() {
+            document.getElementById('teamMemberProfileModal').style.display = 'none';
+            currentProfileId = null;
+        }
+        function viewProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+                currentProjectId = projectId;
+                const progress = calculateProjectProgress(project);
+                const projectDetailsContent = document.getElementById('projectDetailsContent');
+                projectDetailsContent.innerHTML = `
+                    <div class="project-details-header">
+                        <h2>${project.name}</h2>
+                        <button class="btn btn-danger" onclick="deleteProject(${project.id})">Delete Project</button>
+                    </div>
+                    <p><strong>Client:</strong> ${project.client}</p>
+                    <p><strong>Status:</strong> <span class="status-badge status-${project.status.toLowerCase().replace(' ', '-')}">${project.status}</span></p>
+                    <p><strong>Due Date:</strong> ${project.dueDate}</p>
+                    <p><strong>Description:</strong> ${project.description}</p>
+                    <p><strong>Progress:</strong> ${progress.toFixed(1)}%</p>
+                    <div class="project-stages">
+                        ${project.stages.map(stage => `
+                            <div class="stage-card ${stage.status.toLowerCase().replace(' ', '-')}">
+                                <div class="stage-title">${stage.stage}</div>
+                                <div class="stage-status">${stage.status}</div>
+                                <select class="editable" onchange="updateStageStatus(${project.id}, '${stage.stage}', this.value)">
+                                    <option value="Not Started" ${stage.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
+                                    <option value="In Progress" ${stage.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="Completed" ${stage.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="financial-risk-tabs">
+                        <div class="financial-risk-tab active" onclick="showFinancialRiskTab('financial')">Financials</div>
+                        <div class="financial-risk-tab" onclick="showFinancialRiskTab('risks')">Risks</div>
+                        <div class="financial-risk-tab" onclick="showFinancialRiskTab('tasks')">Tasks</div>
+                    </div>
+                    <div id="financial" class="financial-risk-content active">
+                        <h3>Financial Summary</h3>
+                        <table>
+                            <tr><th>Budget (₦)</th><td>${project.financials.budget.toLocaleString()}</td></tr>
+                            <tr><th>Spent (₦)</th><td>${project.financials.spent.toLocaleString()}</td></tr>
+                            <tr><th>Forecasted Cost (₦)</th><td>${project.financials.forecastedCost.toLocaleString()}</td></tr>
+                            <tr><th>Variance (₦)</th><td>${(project.financials.budget - project.financials.spent).toLocaleString()}</td></tr>
+                        </table>
+                        <!-- Editable financial inputs could go here -->
+                    </div>
+                    <div id="risks" class="financial-risk-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3>Risk Register</h3>
+                            <button class="btn btn-primary" onclick="addNewRisk(${project.id})">Add Risk</button>
+                        </div>
+                        <table class="risk-table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Impact</th>
+                                    <th>Probability</th>
+                                    <th>Mitigation Plan</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${project.risks.map(risk => `
+                                    <tr class="risk-${risk.impact.toLowerCase()}">
+                                        <td><input type="text" class="editable" value="${escapeHtml(risk.description)}" onchange="updateRisk(${project.id}, ${risk.id}, 'description', this.value)"></td>
+                                        <td>
+                                            <select class="editable" onchange="updateRisk(${project.id}, ${risk.id}, 'impact', this.value)">
+                                                <option value="Low" ${risk.impact === 'Low' ? 'selected' : ''}>Low</option>
+                                                <option value="Medium" ${risk.impact === 'Medium' ? 'selected' : ''}>Medium</option>
+                                                <option value="High" ${risk.impact === 'High' ? 'selected' : ''}>High</option>
+                                                <option value="Critical" ${risk.impact === 'Critical' ? 'selected' : ''}>Critical</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="editable" onchange="updateRisk(${project.id}, ${risk.id}, 'probability', this.value)">
+                                                <option value="Low" ${risk.probability === 'Low' ? 'selected' : ''}>Low</option>
+                                                <option value="Medium" ${risk.probability === 'Medium' ? 'selected' : ''}>Medium</option>
+                                                <option value="High" ${risk.probability === 'High' ? 'selected' : ''}>High</option>
+                                            </select>
+                                        </td>
+                                        <td><textarea class="editable" onchange="updateRisk(${project.id}, ${risk.id}, 'mitigation', this.value)}">${escapeHtml(risk.mitigation)}</textarea></td>
+                                        <td><button class="btn-icon" onclick="deleteRisk(${project.id}, ${risk.id})" title="Delete Risk"><i class="fas fa-trash"></i></button></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="tasks" class="financial-risk-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3>Tasks</h3>
+                            <button class="btn btn-primary" onclick="openAddTask()">Add Task</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Task Name</th>
+                                    <th>Assignee</th>
+                                    <th>Due Date</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${(project.tasks && project.tasks.length) ? project.tasks.map(task => `
+                                    <tr>
+                                        <td>${task.name}</td>
+                                        <td>${teamMembers.find(m => m.id === task.assignee)?.name || task.assignee}</td>
+                                        <td>${task.dueDate}</td>
+                                        <td class="priority-${task.priority.toLowerCase()}">${task.priority}</td>
+                                        <td>${task.status}</td>
+                                        <td>
+                                            <button class="btn-icon" title="Edit Task"><i class="fas fa-edit"></i></button>
+                                            <button class="btn-icon" title="Delete Task"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('') : '<tr><td colspan="6">No tasks assigned.</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                document.getElementById('projectDetailsModal').style.display = 'block';
+            }
+        }
+        function closeProjectDetails() {
+            document.getElementById('projectDetailsModal').style.display = 'none';
+            currentProjectId = null;
+        }
+        function showFinancialRiskTab(tabName) {
+            // Hide all tab contents within the project details modal
+            const contents = document.querySelectorAll('#projectDetailsModal .financial-risk-content');
+            contents.forEach(content => content.classList.remove('active'));
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('#projectDetailsModal .financial-risk-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            // Add active class to the clicked tab
+            event.currentTarget.classList.add('active');
+        }
+        // --- Data Modification Functions ---
+        function updateStageStatus(projectId, stageName, newStatus) {
+            const project = projects.find(p => p.id === parseInt(projectId));
+            if (project) {
+                const stage = project.stages.find(s => s.stage === stageName);
+                if (stage) {
+                    stage.status = newStatus;
+                    // Auto-save changes
+                    saveProjectBoardData();
+                    showNotification(`Stage '${stageName}' status updated to '${newStatus}'.`, 'success');
+                    // Re-render project view if it's open
+                    if (currentProjectId === projectId) {
+                        viewProject(projectId);
+                    }
+                    // Re-render calendar as project progress might have changed
+                    renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+                }
+            }
+        }
+        function updateRisk(projectId, riskId, field, value) {
+            const project = projects.find(p => p.id === parseInt(projectId));
+            if (project) {
+                const risk = project.risks.find(r => r.id === parseInt(riskId));
+                if (risk) {
+                    risk[field] = value;
+                    // Auto-save changes
+                    saveProjectBoardData();
+                }
+            }
+        }
+        function deleteRisk(projectId, riskId) {
+            if (confirm("Are you sure you want to delete this risk?")) {
+                const project = projects.find(p => p.id === parseInt(projectId));
+                if (project) {
+                    project.risks = project.risks.filter(r => r.id !== parseInt(riskId));
+                    // Re-render the risks
+                    viewProject(projectId);
+                    // Auto-save changes
+                    saveProjectBoardData();
+                    showNotification('Risk deleted successfully.', 'success');
+                }
+            }
+        }
+        function addNewRisk(projectId) {
+            const project = projects.find(p => p.id === parseInt(projectId));
+            if (project) {
+                const newId = project.risks.length > 0 ? Math.max(...project.risks.map(r => r.id)) + 1 : 1;
+                project.risks.push({
+                    id: newId,
+                    description: "New Risk Description",
+                    impact: "Medium",
+                    probability: "Medium",
+                    mitigation: "Mitigation Plan"
+                });
+                // Re-render the risks
+                viewProject(projectId);
+                // Auto-save changes
+                saveProjectBoardData();
+                showNotification('New risk added.', 'success');
+            }
+        }
+        function deleteProject(projectId) {
+            if (confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+                projects = projects.filter(project => project.id !== projectId);
+                renderProjectsTable();
+                updateDashboardStats();
+                renderRecentProjects();
+                closeProjectDetails();
+                // Re-render calendar
+                renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+                // Auto-save changes
+                saveProjectBoardData();
+                showNotification('Project deleted successfully.', 'success');
+            }
+        }
+        function deleteTeamMember(memberId) {
+            if (confirm("Are you sure you want to delete this team member?")) {
+                teamMembers = teamMembers.filter(member => member.id !== memberId);
+                renderTeamTable();
+                // Auto-save changes
+                saveProjectBoardData();
+                showNotification('Team member deleted successfully.', 'success');
+            }
+        }
+        function populateEditorSelect(selectId) {
+            const selectElement = document.getElementById(selectId);
+            selectElement.innerHTML = '<option value="">Select an editor</option>';
+            teamMembers.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.id;
+                option.textContent = member.name;
+                selectElement.appendChild(option);
+            });
+        }
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        // --- Data Persistence and Reload Logic (Integrated from first file) ---
+        function saveProjectBoardData() {
+            const dataToSave = {
+                projects: projects,
+                teamMembers: teamMembers,
+                calendarEvents: calendarEvents
+                // Add other top-level data structures as needed
+            };
+            localStorage.setItem(PROJECT_BOARD_DATA_KEY, JSON.stringify(dataToSave));
+            console.log('Project Board data saved to localStorage');
+        }
+        function loadProjectBoardData() {
+            const dataStr = localStorage.getItem(PROJECT_BOARD_DATA_KEY);
+            if (dataStr) {
+                try {
+                    const data = JSON.parse(dataStr);
+                    // Load projects
+                    if (data.projects && Array.isArray(data.projects)) {
+                        projects = data.projects;
+                    }
+                    // Load team members
+                    if (data.teamMembers && Array.isArray(data.teamMembers)) {
+                        teamMembers = data.teamMembers;
+                    }
+                    // Load calendar events
+                    if (data.calendarEvents && Array.isArray(data.calendarEvents)) {
+                        calendarEvents = data.calendarEvents;
+                    }
+                    // Load other data structures as needed
+                    console.log('Project Board data loaded from localStorage');
+                    showNotification('Project Board data loaded successfully!', 'success');
+                    // Re-render UI elements that depend on data
+                    const activeTab = document.querySelector('.tab.active').textContent.toLowerCase();
+                    if (activeTab === 'projects') renderProjectsTable();
+                    if (activeTab === 'team') renderTeamTable();
+                    if (activeTab === 'dashboard') {
+                        updateDashboardStats();
+                        renderRecentProjects();
+                    }
+                    if (activeTab === 'calendar') {
+                        renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+                    }
+                } catch (e) {
+                    console.error('Error parsing Project Board data from localStorage:', e);
+                    showNotification('Error loading Project Board data.', 'error');
+                }
+            } else {
+                console.log('No Project Board data found in localStorage');
+            }
+        }
+        // --- Import/Export Logic (Integrated from first file) ---
+        function exportProjectBoardData() {
+            saveProjectBoardData(); // Ensure latest data is saved before export
+            const dataStr = localStorage.getItem(PROJECT_BOARD_DATA_KEY);
+            if (dataStr) {
+                try {
+                    const data = JSON.parse(dataStr);
+                    const filename = `project-board-data-${new Date().toISOString().slice(0, 10)}.json`;
+                    downloadJSON(data, filename);
+                    showNotification('Project Board data exported successfully!', 'success');
+                } catch (e) {
+                    console.error('Error exporting Project Board ', e);
+                    showNotification('Error exporting Project Board data.', 'error');
+                }
+            } else {
+                showNotification('No data to export.', 'error');
+            }
+        }
+        function importProjectBoardData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        // Validate basic structure (optional but good practice)
+                        if (data.projects && Array.isArray(data.projects) &&
+                            data.teamMembers && Array.isArray(data.teamMembers)) {
+                            localStorage.setItem(PROJECT_BOARD_DATA_KEY, JSON.stringify(data));
+                            loadProjectBoardData(); // Reload UI with imported data
+                            showNotification('Project Board data imported successfully!', 'success');
+                        } else {
+                            showNotification('Invalid Project Board data file structure.', 'error');
+                        }
+                    } catch (err) {
+                        console.error('Error parsing JSON:', err);
+                        showNotification('Invalid JSON file.', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        function downloadJSON(data, filename) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        // --- Initialize and Event Listeners ---
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load data when the page loads
+            loadProjectBoardData();
+            // Add event listeners for import/export buttons
+            document.getElementById('exportBtn').addEventListener('click', exportProjectBoardData);
+            document.getElementById('importBtn').addEventListener('click', importProjectBoardData);
+            // Form submissions
+            document.getElementById('addProjectForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Get editor
+                const editorId = document.getElementById('projectEditor').value;
+                if (!editorId) {
+                    alert('Please select an editor.');
+                    return;
+                }
+                const editor = teamMembers.find(m => m.id === editorId);
+                if (!editor) {
+                    alert('Selected editor not found.');
+                    return;
+                }
+                const projectName = document.getElementById('projectName').value;
+                const projectClient = document.getElementById('projectClient').value;
+                const projectBudget = parseFloat(document.getElementById('projectBudget').value);
+                const projectDueDate = document.getElementById('projectDueDate').value;
+                const projectDescription = document.getElementById('projectDescription').value;
+                const newId = projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1;
+                const standardStages = [
+                    "Start", "Planning", "Design", "Procurement",
+                    "Cutting & Prep", "Tacking & Assembly", "Fitups and Tolerance Checks",
+                    "Final Welding", "Finishing", "Delivery and Pickup Notice", "Close Out"
+                ];
+                projects.push({
+                    id: newId,
+                    name: projectName,
+                    client: projectClient,
+                    status: "Active",
+                    budget: projectBudget,
+                    awardCost: projectBudget,
+                    dueDate: projectDueDate,
+                    description: projectDescription,
+                    tasks: [],
+                    stages: standardStages.map(stageName => {
+                        let status = 'Not Started';
+                        if (stageName === "Start") status = "Completed";
+                        return { stage: stageName, status: status };
+                    }),
+                    financials: {
+                        budget: projectBudget,
+                        spent: 0,
+                        forecastedCost: projectBudget
+                    },
+                    risks: []
+                });
+                renderProjectsTable();
+                updateDashboardStats();
+                renderRecentProjects();
+                closeAddProject();
+                document.getElementById('addProjectForm').reset();
+                // Re-render calendar
+                renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+                // Auto-save changes
+                saveProjectBoardData();
+                alert(`Project "${projectName}" added successfully by ${editor.name}!`);
+            });
+            document.getElementById('addTaskForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Get editor
+                const editorId = document.getElementById('taskEditor').value;
+                if (!editorId) {
+                    alert('Please select an editor.');
+                    return;
+                }
+                const editor = teamMembers.find(m => m.id === editorId);
+                if (!editor) {
+                    alert('Selected editor not found.');
+                    return;
+                }
+                const taskName = document.getElementById('taskName').value;
+                const projectId = parseInt(document.getElementById('taskProject').value);
+                const assigneeId = document.getElementById('taskAssignee').value;
+                const dueDate = document.getElementById('taskDueDate').value;
+                const priority = document.getElementById('taskPriority').value;
+                const description = document.getElementById('taskDescription').value;
+                const project = projects.find(p => p.id === projectId);
+                if (project) {
+                    const newTaskId = project.tasks && project.tasks.length > 0 ? Math.max(...project.tasks.map(t => t.id)) + 1 : 1;
+                    if (!project.tasks) project.tasks = [];
+                    project.tasks.push({
+                        id: newTaskId,
+                        name: taskName,
+                        assignee: assigneeId,
+                        dueDate: dueDate,
+                        priority: priority,
+                        status: "Not Started",
+                        description: description
+                    });
+                    // Auto-save changes
+                    saveProjectBoardData();
+                    alert(`Task "${taskName}" added to project "${project.name}" successfully by ${editor.name}!`);
+                    closeAddTask();
+                    document.getElementById('addTaskForm').reset();
+                }
+            });
+            document.getElementById('addEventForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Get editor
+                const editorId = document.getElementById('eventEditor').value;
+                if (!editorId) {
+                    alert('Please select an editor.');
+                    return;
+                }
+                const editor = teamMembers.find(m => m.id === editorId);
+                if (!editor) {
+                    alert('Selected editor not found.');
+                    return;
+                }
+                const eventTitle = document.getElementById('eventTitle').value;
+                const projectId = document.getElementById('projectSelect').value || null;
+                const eventDate = document.getElementById('eventDate').value;
+                const eventTime = document.getElementById('eventTime').value;
+                const eventPriority = document.getElementById('eventPriority').value;
+                const newId = calendarEvents.length > 0 ? Math.max(...calendarEvents.map(e => e.id)) + 1 : 1;
+                calendarEvents.push({
+                    id: newId,
+                    title: eventTitle,
+                    projectId: projectId ? parseInt(projectId) : null,
+                    date: eventDate,
+                    time: eventTime,
+                    priority: eventPriority
+                });
+                // Re-render calendar
+                renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+                // Auto-save changes
+                saveProjectBoardData();
+                alert(`Event "${eventTitle}" added successfully by ${editor.name}!`);
+                closeAddEvent();
+                document.getElementById('addEventForm').reset();
+            });
+            document.getElementById('teamMemberForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Get editor
+                const editorId = document.getElementById('memberEditor').value;
+                if (!editorId) {
+                    alert('Please select an editor.');
+                    return;
+                }
+                const editor = teamMembers.find(m => m.id === editorId);
+                if (!editor) {
+                    alert('Selected editor not found.');
+                    return;
+                }
+                const memberName = document.getElementById('memberName').value;
+                const memberPosition = document.getElementById('memberPosition').value;
+                const memberSpecialization = document.getElementById('memberSpecialization').value;
+                const memberBio = document.getElementById('memberBio').value;
+                // Simple ID generation (initials)
+                const nameParts = memberName.split(' ');
+                const initials = nameParts.map(part => part.charAt(0).toUpperCase()).join('');
+                const memberId = editingMemberId || initials;
+                const memberData = {
+                    id: memberId,
+                    name: memberName,
+                    position: memberPosition,
+                    specialization: memberSpecialization,
+                    bio: memberBio,
+                    projects: [], // Initialize with no projects
+                    education: [],
+                    certifications: [],
+                    achievements: []
+                };
+                if (editingMemberId) {
+                    // Update existing member
+                    const index = teamMembers.findIndex(m => m.id === editingMemberId);
+                    if (index !== -1) {
+                        teamMembers[index] = memberData;
+                    }
+                    alert(`Team member "${memberName}" updated successfully by ${editor.name}!`);
+                } else {
+                    // Add new member
+                    teamMembers.push(memberData);
+                    alert(`Team member "${memberName}" added successfully by ${editor.name}!`);
+                }
+                // Update team table
+                renderTeamTable();
+                // Close modal and reset form
+                closeAddEditTeamMember();
+                document.getElementById('teamMemberForm').reset();
+                // Auto-save changes
+                saveProjectBoardData();
+            });
+            // Listen for reload message from parent (if embedded in iframe)
+            window.addEventListener('message', function (event) {
+                // Basic origin check (adjust if needed)
+                // if (event.origin !== window.location.origin) return;
+                if (event.data && event.data.type === 'RELOAD_DATA') {
+                    console.log('Received RELOAD_DATA message in Project Board');
+                    loadProjectBoardData(); // Reload data from localStorage
+                }
+            });
+            // Initial render
+            renderProjectsTable();
+            renderTeamTable();
+            updateDashboardStats();
+            renderRecentProjects();
+            renderCalendar(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth());
+        });
+        function saveNotificationPreferences() {
+            // In a real app, you would save these preferences to a server or localStorage
+            alert('Notification preferences saved!');
+        }
+    </script>
+</body>
+</html>
