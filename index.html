@@ -603,42 +603,13 @@
                 <p class="module-description">Integrated project and material database system for engineering works management</p>
             </div>
         </div>
-        <!-- Project Board Module -->
-        <div id="projectBoardModule" class="module-content">
-            <button class="back-button" onclick="showModuleSelector()">
-                <i class="fas fa-arrow-left"></i> Back to Main Menu
-            </button>
-            <div class="iframe-container">
-                <iframe id="projectBoardIframe" class="module-iframe" title="Project Board"></iframe>
-            </div>
-        </div>
-         <!-- KPI Monitor Module -->
-        <div id="kpiMonitorModule" class="module-content">
-            <button class="back-button" onclick="showModuleSelector()">
-                <i class="fas fa-arrow-left"></i> Back to Main Menu
-            </button>
-            <div class="iframe-container">
-                 <iframe id="kpiMonitorIframe" class="module-iframe" title="KPI Monitor"></iframe>
-            </div>
-        </div>
-        <!-- Payroll Manager Module -->
-        <div id="payrollManagerModule" class="module-content">
-            <button class="back-button" onclick="showModuleSelector()">
-                <i class="fas fa-arrow-left"></i> Back to Main Menu
-            </button>
-            <div class="iframe-container">
-                <iframe id="payrollManagerIframe" class="module-iframe" title="Payroll Manager"></iframe>
-            </div>
-        </div>
-        <!-- Work Manager Module -->
-        <div id="workManagerModule" class="module-content">
-            <button class="back-button" onclick="showModuleSelector()">
-                <i class="fas fa-arrow-left"></i> Back to Main Menu
-            </button>
-            <div class="iframe-container">
-                <iframe id="workManagerIframe" class="module-iframe" title="Work Manager"></iframe>
-            </div>
-        </div>
+        
+        <!-- Module content areas will be populated by JavaScript -->
+        <div id="project-boardModule" class="module-content"></div>
+        <div id="kpi-monitorModule" class="module-content"></div>
+        <div id="payroll-managerModule" class="module-content"></div>
+        <div id="work-managerModule" class="module-content"></div>
+
         <div class="logo-upload-container">
             <div class="logo-upload-instructions">
                 <i class="fas fa-info-circle" style="font-size: 2rem; color: #0066cc;"></i>
@@ -702,21 +673,36 @@
         // Initialize user system
         function initUserSystem() {
             // Check if users exist in localStorage, if not create default ones
-            const storedUsers = localStorage.getItem(USER_STORAGE_KEY);
-            if (!storedUsers) {
+            let storedUsers = [];
+            try {
+                const storedData = localStorage.getItem(USER_STORAGE_KEY);
+                if (storedData) {
+                    storedUsers = JSON.parse(storedData);
+                    if (!Array.isArray(storedUsers)) {
+                        throw new Error("Stored users data is not an array");
+                    }
+                }
+            } catch (e) {
+                console.error("Error parsing stored users:", e);
+                storedUsers = [];
+            }
+            
+            if (storedUsers.length === 0) {
                 localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(DEFAULT_USERS));
             }
             
-            // Check if user is already logged in
             const storedUser = localStorage.getItem(CURRENT_USER_KEY);
             if (storedUser) {
-                currentUser = JSON.parse(storedUser);
-                
-                // Check if user needs to change password on first login
-                if (currentUser.firstLogin) {
-                    showChangePasswordModal();
-                } else {
-                    showApp();
+                try {
+                    currentUser = JSON.parse(storedUser);
+                    if (currentUser.firstLogin) {
+                        showChangePasswordModal();
+                    } else {
+                        showApp();
+                    }
+                } catch (e) {
+                    console.error("Error parsing current user:", e);
+                    showLogin();
                 }
             } else {
                 showLogin();
@@ -729,8 +715,6 @@
             document.getElementById('registerModal').style.display = 'none';
             document.getElementById('mainApp').style.display = 'none';
             document.getElementById('changePasswordModal').style.display = 'none';
-            
-            // Reset form fields
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             document.getElementById('adminPassword').value = '';
@@ -757,8 +741,6 @@
             document.getElementById('registerModal').style.display = 'none';
             document.getElementById('changePasswordModal').style.display = 'flex';
             document.getElementById('mainApp').style.display = 'none';
-            
-            // Reset form fields
             document.getElementById('currentPassword').value = '';
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmPassword').value = '';
@@ -770,13 +752,9 @@
             document.getElementById('registerModal').style.display = 'none';
             document.getElementById('changePasswordModal').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
-            
-            // Update UI with user info
             document.getElementById('userName').textContent = currentUser.fullName;
             document.getElementById('userRole').textContent = capitalizeFirstLetter(currentUser.role);
             document.getElementById('userAvatar').textContent = currentUser.avatar;
-            
-            // Show/hide admin features based on role
             if (currentUser.role === 'admin') {
                 document.getElementById('manageUsersBtn').style.display = 'block';
             } else {
@@ -800,8 +778,7 @@
         
         // Toggle admin override fields
         function toggleAdminOverride() {
-            const adminOverrideFields = document.getElementById('adminOverrideFields');
-            adminOverrideFields.classList.toggle('show');
+            document.getElementById('adminOverrideFields').classList.toggle('show');
         }
         
         // Login function
@@ -816,47 +793,45 @@
                 return;
             }
             
-            const users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
-            let user = users.find(u => u.username === username);
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+            } catch (e) {
+                showNotification('Error accessing user database', 'error');
+                return;
+            }
             
-            // Check if using admin override
             if (useAdminOverride) {
                 if (adminPassword === MASTER_ADMIN_PASSWORD) {
+                    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
                     if (user) {
                         currentUser = user;
                         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-                        
                         if (user.firstLogin) {
                             showChangePasswordModal();
                         } else {
                             showApp();
                         }
-                        
                         showNotification(`Admin override used. Welcome, ${user.fullName}!`, 'success');
-                        return;
                     } else {
                         showNotification('User not found with admin override', 'error');
-                        return;
                     }
                 } else {
                     showNotification('Invalid admin password', 'error');
-                    return;
                 }
+                return;
             }
             
-            // Normal login
-            user = users.find(u => u.username === username && u.password === password);
+            const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
             
             if (user) {
                 currentUser = user;
                 localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-                
                 if (user.firstLogin) {
                     showChangePasswordModal();
                 } else {
                     showApp();
                 }
-                
                 showNotification(`Welcome back, ${user.fullName}!`, 'success');
             } else {
                 showNotification('Invalid username or password', 'error');
@@ -876,31 +851,40 @@
                 return;
             }
             
-            const users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+            } catch (e) {
+                showNotification('Error accessing user database', 'error');
+                return;
+            }
             
-            // Check if username already exists
-            if (users.some(u => u.username === username)) {
+            if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
                 showNotification('Username already exists', 'error');
                 return;
             }
             
-            // Create new user
+            if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showNotification('Email already registered', 'error');
+                return;
+            }
+            
             const newUser = {
-                username,
-                password,
-                fullName,
-                email,
-                role,
+                username, password, fullName, email, role,
                 avatar: fullName.charAt(0).toUpperCase(),
                 firstLogin: true,
                 passwordChanged: false
             };
             
             users.push(newUser);
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
             
-            showNotification('Account created successfully! You can now login.', 'success');
-            showLoginForm();
+            try {
+                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+                showNotification('Account created successfully! You can now login.', 'success');
+                showLoginForm();
+            } catch (e) {
+                showNotification('Error creating account. Please try again.', 'error');
+            }
         }
         
         // Change password function
@@ -913,12 +897,10 @@
                 showNotification('Please fill in all password fields', 'error');
                 return;
             }
-            
             if (newPassword !== confirmPassword) {
                 showNotification('New passwords do not match', 'error');
                 return;
             }
-            
             if (newPassword.length < 6) {
                 showNotification('New password must be at least 6 characters', 'error');
                 return;
@@ -931,19 +913,15 @@
                 showNotification('User not found', 'error');
                 return;
             }
-            
-            // Verify current password (unless it's first login)
             if (!currentUser.firstLogin && users[userIndex].password !== currentPassword) {
                 showNotification('Current password is incorrect', 'error');
                 return;
             }
             
-            // Update password
             users[userIndex].password = newPassword;
             users[userIndex].firstLogin = false;
             users[userIndex].passwordChanged = true;
             
-            // Update current user
             currentUser = users[userIndex];
             
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
@@ -971,12 +949,8 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('service-worker.js')
-                        .then(registration => {
-                            console.log('ServiceWorker registered: ', registration);
-                        })
-                        .catch(error => {
-                            console.log('ServiceWorker registration failed: ', error);
-                        });
+                        .then(registration => console.log('ServiceWorker registered: ', registration))
+                        .catch(error => console.log('ServiceWorker registration failed: ', error));
                 });
             }
         }
@@ -987,30 +961,23 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then(reg => {
                 sw = reg;
-                // Listen for messages from the service worker
                 navigator.serviceWorker.addEventListener('message', event => {
                     if (event.data.type === 'EXPORT_DATA_RESPONSE') {
                         if (event.data.success) {
                             downloadJSON(event.data.data, `ae-work-export-${new Date().toISOString().slice(0, 10)}.json`);
                             showNotification('All data exported successfully!', 'success');
                         } else {
-                            console.error('Export failed:', event.data.error);
                             showNotification('Export failed: ' + (event.data.error || 'Unknown error'), 'error');
                         }
                     }
                     if (event.data.type === 'IMPORT_DATA_RESPONSE') {
                         if (event.data.success) {
                             showNotification('All data imported successfully! Reloading modules...', 'success');
-                            // Trigger a reload of all active modules
-                            const activeModules = document.querySelectorAll('.module-content.active');
-                            activeModules.forEach(module => {
+                            document.querySelectorAll('.module-content.active').forEach(module => {
                                 const iframe = module.querySelector('iframe');
-                                if (iframe) {
-                                    iframe.contentWindow.postMessage({ type: 'RELOAD_DATA' }, '*');
-                                }
+                                if (iframe) iframe.contentWindow.postMessage({ type: 'RELOAD_DATA' }, '*');
                             });
                         } else {
-                            console.error('Import failed:', event.data.error);
                             showNotification('Import failed: ' + (event.data.error || 'Unknown error'), 'error');
                         }
                     }
@@ -1047,7 +1014,6 @@
             input.onchange = (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
-
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     try {
@@ -1058,7 +1024,6 @@
                             showNotification('Service worker not ready. Please try again.', 'error');
                         }
                     } catch (error) {
-                        console.error('Error parsing JSON file:', error);
                         showNotification('Invalid JSON file. Please select a valid export file.', 'error');
                     }
                 };
@@ -1074,7 +1039,6 @@
             notification.textContent = message;
             notification.className = `notification ${type}`;
             notification.style.display = 'block';
-
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
@@ -1083,60 +1047,50 @@
 
         // --- Module Loading Logic ---
         function loadModule(moduleName) {
-            // Hide module selector
+            // Hide the main module selector
             document.getElementById('moduleSelector').style.display = 'none';
-            
-            // Show loading state
             const moduleElement = document.getElementById(`${moduleName}Module`);
+            
+            // Set the HTML for the module, including the back button and the iframe container
             moduleElement.innerHTML = `
                 <button class="back-button" onclick="showModuleSelector()">
                     <i class="fas fa-arrow-left"></i> Back to Main Menu
                 </button>
-                <div class="module-loading">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                    <p>Loading ${moduleName.replace(/-/g, ' ')}...</p>
+                <div class="iframe-container">
+                    <iframe id="${moduleName}Iframe" class="module-iframe" title="${moduleName.replace(/-/g, ' ')}"></iframe>
                 </div>
             `;
+            // Show the module content area
             moduleElement.classList.add('active');
-            
-            // Simulate loading delay (in real app, this would be actual module loading)
-            setTimeout(() => {
-                // Set iframe source based on module
-                const iframe = document.getElementById(`${moduleName}Iframe`);
-                iframe.onload = () => {
-                    // Hide loading state
-                    const loadingElement = moduleElement.querySelector('.module-loading');
-                    if (loadingElement) {
-                        loadingElement.style.display = 'none';
-                    }
-                };
-                
-                // Set appropriate iframe source based on module
-                switch(moduleName) {
-                    case 'project-board':
-                        iframe.src = 'project-board/index.html';
-                        break;
-                    case 'kpi-monitor':
-                        iframe.src = 'kpi-monitor/index.html';
-                        break;
-                    case 'payroll-manager':
-                        iframe.src = 'payroll-manager/index.html';
-                        break;
-                    case 'work-manager':
-                        iframe.src = 'work-manager/index.html';
-                        break;
-                    default:
-                        moduleElement.innerHTML = `
-                            <button class="back-button" onclick="showModuleSelector()">
-                                <i class="fas fa-arrow-left"></i> Back to Main Menu
-                            </button>
-                            <div class="module-error">
-                                <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                                <p>Module not found or not implemented yet.</p>
-                            </div>
-                        `;
-                }
-            }, 1000);
+            // Find the new iframe we just created
+            const iframe = document.getElementById(`${moduleName}Iframe`);
+
+            // Set the source of the iframe based on the module clicked
+            switch(moduleName) {
+                case 'project-board':
+                    iframe.src = 'project-board.html';
+                    break;
+                case 'kpi-monitor':
+                    iframe.src = 'kpi-monitor.html';
+                    break;
+                case 'payroll-manager':
+                    iframe.src = 'apt-payroll-manager.html';
+                    break;
+                case 'work-manager':
+                    iframe.src = 'apt-work-manager.html';
+                    break;
+                default:
+                    // If the module file doesn't exist, show an error inside the module area
+                    moduleElement.innerHTML = `
+                        <button class="back-button" onclick="showModuleSelector()">
+                            <i class="fas fa-arrow-left"></i> Back to Main Menu
+                        </button>
+                        <div class="module-error">
+                            <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <p>Module not found or not implemented yet.</p>
+                        </div>
+                    `;
+            }
         }
 
         function showModuleSelector() {
@@ -1144,7 +1098,6 @@
             document.querySelectorAll('.module-content').forEach(module => {
                 module.classList.remove('active');
             });
-            
             // Show module selector
             document.getElementById('moduleSelector').style.display = 'grid';
         }
@@ -1156,10 +1109,7 @@
 
         // --- Initialize App ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize user system
             initUserSystem();
-            
-            // Setup action menu
             const menuButton = document.getElementById('menuButton');
             const dropdownMenu = document.getElementById('dropdownMenu');
             
@@ -1167,21 +1117,12 @@
                 e.stopPropagation();
                 dropdownMenu.classList.toggle('show');
             });
+            document.addEventListener('click', () => dropdownMenu.classList.remove('show'));
+            dropdownMenu.addEventListener('click', e => e.stopPropagation());
             
-            document.addEventListener('click', function() {
-                dropdownMenu.classList.remove('show');
-            });
-            
-            dropdownMenu.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-            
-            // Setup export/import buttons
             document.getElementById('exportBtn').addEventListener('click', exportAllData);
             document.getElementById('importBtn').addEventListener('click', importAllData);
-            document.getElementById('manageUsersBtn').addEventListener('click', function() {
-                alert('User management feature will be implemented here');
-            });
+            document.getElementById('manageUsersBtn').addEventListener('click', () => alert('User management feature will be implemented here'));
         });
         // --- End Initialize App ---
     </script>
