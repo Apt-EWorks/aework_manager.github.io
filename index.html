@@ -3,13 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#2c3e50">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="AEWork Project Board">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     <title>Apt Engineering Work Platform</title>
     <style>
         /* Base styles */
@@ -394,6 +387,390 @@
             align-items: center;
             z-index: 2001;
         }
+        
+        /* --- Error Reporting Styles --- */
+        .error-report-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .error-report-button:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+        }
+        .error-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2002;
+            display: none;
+        }
+        .error-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .error-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .error-header h2 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        .close-error-modal {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #e74c3c;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .error-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .error-form-group label {
+            font-weight: 600;
+            color: #555;
+        }
+        .error-form-group input,
+        .error-form-group select,
+        .error-form-group textarea {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .error-form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .error-form-group input:focus,
+        .error-form-group select:focus,
+        .error-form-group textarea:focus {
+            outline: none;
+            border-color: #1a3b5d;
+            box-shadow: 0 0 0 2px rgba(26, 59, 93, 0.2);
+        }
+        .error-submit-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .error-submit-btn:hover {
+            background: #c0392b;
+        }
+        .error-list-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+        .error-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .error-list-title {
+            font-weight: 600;
+            color: #1a3b5d;
+        }
+        .error-item {
+            background: white;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+        .error-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .error-module {
+            font-weight: 600;
+            color: #1a3b5d;
+        }
+        .error-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        .error-category {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        .error-description {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .error-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-new {
+            color: #e74c3c;
+        }
+        .status-in-progress {
+            color: #f39c12;
+        }
+        .status-resolved {
+            color: #27ae60;
+        }
+        .toggle-error-list {
+            background: transparent;
+            border: none;
+            color: #1a3b5d;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .screenshot-preview {
+            margin-top: 10px;
+            max-width: 100%;
+            border-radius: 5px;
+            display: none;
+        }
+        .screenshot-capture-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .screenshot-capture-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* --- Admin Error Dashboard Styles --- */
+        .error-dashboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2003;
+            display: none;
+        }
+        .error-dashboard-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .error-dashboard-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .error-dashboard-header h2 {
+            color: #1a3b5d;
+            margin-bottom: 10px;
+        }
+        .close-dashboard-modal {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #1a3b5d;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dashboard-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .dashboard-filter-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .dashboard-filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .error-dashboard-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .dashboard-error-item {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+        .dashboard-error-item.resolved {
+            border-left-color: #27ae60;
+        }
+        .dashboard-error-item.in-progress {
+            border-left-color: #f39c12;
+        }
+        .dashboard-error-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+        .dashboard-error-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1a3b5d;
+            margin-right: 15px;
+        }
+        .dashboard-error-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .dashboard-error-meta span {
+            background: #e0e0e0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        .dashboard-error-description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .dashboard-error-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .status-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .status-btn.new {
+            background: #e74c3c;
+            color: white;
+        }
+        .status-btn.in-progress {
+            background: #f39c12;
+            color: white;
+        }
+        .status-btn.resolved {
+            background: #27ae60;
+            color: white;
+        }
+        .error-count-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .admin-error-indicator {
+            position: relative;
+            margin-right: 15px;
+        }
+        .view-errors-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .view-errors-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* --- End Admin Error Dashboard Styles --- */
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -532,6 +909,144 @@
         </div>
     </div>
 
+    <!-- Error Reporting Modal -->
+    <div id="errorModal" class="error-modal">
+        <div class="error-container">
+            <div class="error-header">
+                <h2>Report an Issue</h2>
+                <button class="close-error-modal" onclick="closeErrorModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="error-form">
+                <div class="error-form-group">
+                    <label for="errorModule">Module</label>
+                    <select id="errorModule" required>
+                        <option value="">Select a module</option>
+                        <option value="project-board">Project Board</option>
+                        <option value="kpi-monitor">KPI Monitor</option>
+                        <option value="payroll-manager">Payroll Manager</option>
+                        <option value="work-manager">Work Manager</option>
+                        <option value="general">General Platform</option>
+                    </select>
+                </div>
+                <div class="error-form-group">
+                    <label for="errorCategory">Category</label>
+                    <select id="errorCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="bug">Bug/Error</option>
+                        <option value="ui-issue">User Interface Issue</option>
+                        <option value="performance">Performance Problem</option>
+                        <option value="feature-request">Feature Request</option>
+                        <option value="security">Security Concern</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="error-form-group">
+                    <label for="errorSeverity">Severity</label>
+                    <select id="errorSeverity" required>
+                        <option value="">Select severity</option>
+                        <option value="low">Low - Minor inconvenience</option>
+                        <option value="medium">Medium - Affects functionality</option>
+                        <option value="high">High - Critical function broken</option>
+                        <option value="critical">Critical - System down/Data loss</option>
+                    </select>
+                </div>
+                <div class="error-form-group">
+                    <label for="errorTitle">Title</label>
+                    <input type="text" id="errorTitle" placeholder="Brief description of the issue" required>
+                </div>
+                <div class="error-form-group">
+                    <label for="errorDescription">Description</label>
+                    <textarea id="errorDescription" placeholder="Please describe the issue in detail. Include steps to reproduce if applicable." required></textarea>
+                </div>
+                <div class="error-form-group">
+                    <label for="errorScreenshot">Screenshot (optional)</label>
+                    <input type="file" id="errorScreenshot" accept="image/*" onchange="previewScreenshot()">
+                    <button type="button" class="screenshot-capture-btn" onclick="captureScreenshot()">
+                        <i class="fas fa-camera"></i> Capture Current Screen
+                    </button>
+                    <img id="screenshotPreview" class="screenshot-preview" alt="Screenshot preview">
+                </div>
+                <button class="error-submit-btn" onclick="submitErrorReport()">Submit Report</button>
+                
+                <button type="button" class="toggle-error-list" onclick="toggleErrorList()">
+                    <i class="fas fa-list"></i> View Previously Reported Issues
+                </button>
+                
+                <div class="error-list-container" id="errorListContainer">
+                    <div class="error-list-header">
+                        <div class="error-list-title">Your Reported Issues</div>
+                        <button class="close-error-modal" onclick="toggleErrorList()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="errorList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Error Dashboard Modal -->
+    <div id="errorDashboardModal" class="error-dashboard-modal">
+        <div class="error-dashboard-container">
+            <div class="error-dashboard-header">
+                <h2>Error Reports Dashboard</h2>
+                <button class="close-dashboard-modal" onclick="closeErrorDashboard()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="dashboard-filters">
+                <div class="dashboard-filter-group">
+                    <label for="filterStatus">Status</label>
+                    <select id="filterStatus" onchange="filterErrorReports()">
+                        <option value="all">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="dashboard-filter-group">
+                    <label for="filterModule">Module</label>
+                    <select id="filterModule" onchange="filterErrorReports()">
+                        <option value="all">All Modules</option>
+                        <option value="project-board">Project Board</option>
+                        <option value="kpi-monitor">KPI Monitor</option>
+                        <option value="payroll-manager">Payroll Manager</option>
+                        <option value="work-manager">Work Manager</option>
+                        <option value="general">General Platform</option>
+                    </select>
+                </div>
+                <div class="dashboard-filter-group">
+                    <label for="filterSeverity">Severity</label>
+                    <select id="filterSeverity" onchange="filterErrorReports()">
+                        <option value="all">All Severities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="dashboard-filter-group">
+                    <label for="filterUser">Reported By</label>
+                    <select id="filterUser" onchange="filterErrorReports()">
+                        <option value="all">All Users</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="error-dashboard-list" id="errorDashboardList">
+                <!-- Error reports will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Error Report Button -->
+    <button class="error-report-button" id="errorReportButton" onclick="openErrorModal()">
+        <i class="fas fa-bug"></i>
+    </button>
+
     <div class="app-container" id="mainApp" style="display: none;">
         <header>
             <img src="logo/logo.jpg" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=LOGO';" alt="Apt Engineering Logo" class="logo">
@@ -546,6 +1061,14 @@
                 <button class="logout-btn" onclick="showChangePasswordModal()" style="margin-left: 10px;">
                     <i class="fas fa-key"></i> Change Password
                 </button>
+                
+                <!-- Admin Error Indicator -->
+                <div class="admin-error-indicator" id="adminErrorIndicator" style="display: none;">
+                    <button class="view-errors-btn" onclick="openErrorDashboard()">
+                        <i class="fas fa-bug"></i> View Errors
+                        <span class="error-count-badge" id="errorCountBadge">0</span>
+                    </button>
+                </div>
             </div>
             <!-- --- Import/Export UI --- -->
             <div class="header-actions">
@@ -561,6 +1084,9 @@
                     </button>
                     <button class="dropdown-item" id="manageUsersBtn" style="display: none;">
                         <i class="fas fa-users-cog"></i> Manage Users
+                    </button>
+                    <button class="dropdown-item" id="viewErrorReportsBtn">
+                        <i class="fas fa-bug"></i> View Error Reports
                     </button>
                 </div>
             </div>
@@ -632,6 +1158,7 @@
         // User management system
         const USER_STORAGE_KEY = "apt_engineering_users";
         const CURRENT_USER_KEY = "apt_engineering_current_user";
+        const ERROR_REPORTS_KEY = "apt_engineering_error_reports";
         const MASTER_ADMIN_PASSWORD = "AptMaster2024!"; // Master password only available to you
         
         // Default users (for demo purposes)
@@ -669,6 +1196,8 @@
         ];
         
         let currentUser = null;
+        let currentModule = null;
+        let errorCheckInterval = null;
         
         // Initialize user system
         function initUserSystem() {
@@ -719,61 +1248,29 @@
             document.getElementById('password').value = '';
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminOverrideFields').classList.remove('show');
+            
+            // Clear any error check interval
+            if (errorCheckInterval) {
+                clearInterval(errorCheckInterval);
+                errorCheckInterval = null;
+            }
         }
         
-        // Show registration form
+        // Show register form
         function showRegisterForm() {
             document.getElementById('loginModal').style.display = 'none';
             document.getElementById('registerModal').style.display = 'flex';
-            document.getElementById('changePasswordModal').style.display = 'none';
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regFullName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regRole').value = 'user';
         }
         
-        // Show login form from registration
+        // Show login form from register
         function showLoginForm() {
             document.getElementById('loginModal').style.display = 'flex';
             document.getElementById('registerModal').style.display = 'none';
-            document.getElementById('changePasswordModal').style.display = 'none';
-        }
-        
-        // Show change password modal
-        function showChangePasswordModal() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('registerModal').style.display = 'none';
-            document.getElementById('changePasswordModal').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-        }
-        
-        // Show the main application
-        function showApp() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('registerModal').style.display = 'none';
-            document.getElementById('changePasswordModal').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('userName').textContent = currentUser.fullName;
-            document.getElementById('userRole').textContent = capitalizeFirstLetter(currentUser.role);
-            document.getElementById('userAvatar').textContent = currentUser.avatar;
-            if (currentUser.role === 'admin') {
-                document.getElementById('manageUsersBtn').style.display = 'block';
-            } else {
-                document.getElementById('manageUsersBtn').style.display = 'none';
-            }
-        }
-        
-        // Toggle password visibility
-        function togglePassword(fieldId) {
-            const passwordField = document.getElementById(fieldId);
-            const toggleButton = passwordField.nextElementSibling;
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
-            } else {
-                passwordField.type = 'password';
-                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
-            }
         }
         
         // Toggle admin override fields
@@ -781,12 +1278,24 @@
             document.getElementById('adminOverrideFields').classList.toggle('show');
         }
         
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggleButton = input.parentNode.querySelector('.password-toggle');
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        }
+        
         // Login function
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const adminPassword = document.getElementById('adminPassword').value;
-            const useAdminOverride = document.getElementById('adminOverrideFields').classList.contains('show') && adminPassword;
             
             if (!username || !password) {
                 showNotification('Please enter both username and password', 'error');
@@ -795,44 +1304,39 @@
             
             let users = [];
             try {
-                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
             } catch (e) {
-                showNotification('Error accessing user database', 'error');
-                return;
+                console.error("Error parsing users:", e);
+                users = [];
             }
             
-            if (useAdminOverride) {
-                if (adminPassword === MASTER_ADMIN_PASSWORD) {
-                    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
-                    if (user) {
-                        currentUser = user;
-                        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-                        if (user.firstLogin) {
-                            showChangePasswordModal();
-                        } else {
-                            showApp();
-                        }
-                        showNotification(`Admin override used. Welcome, ${user.fullName}!`, 'success');
-                    } else {
-                        showNotification('User not found with admin override', 'error');
-                    }
-                } else {
-                    showNotification('Invalid admin password', 'error');
+            // Check for admin override
+            if (adminPassword && adminPassword === MASTER_ADMIN_PASSWORD) {
+                // Find the user with admin override
+                const user = users.find(u => u.username === username);
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                    showApp();
+                    showNotification('Admin override login successful', 'success');
+                    return;
                 }
-                return;
             }
             
-            const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+            // Normal login
+            const user = users.find(u => u.username === username && u.password === password);
             
             if (user) {
                 currentUser = user;
-                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                
                 if (user.firstLogin) {
                     showChangePasswordModal();
                 } else {
                     showApp();
                 }
-                showNotification(`Welcome back, ${user.fullName}!`, 'success');
+                
+                showNotification('Login successful', 'success');
             } else {
                 showNotification('Invalid username or password', 'error');
             }
@@ -847,44 +1351,50 @@
             const role = document.getElementById('regRole').value;
             
             if (!username || !password || !fullName || !email) {
-                showNotification('Please fill in all fields', 'error');
+                showNotification('Please fill in all required fields', 'error');
                 return;
             }
             
             let users = [];
             try {
-                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
             } catch (e) {
-                showNotification('Error accessing user database', 'error');
-                return;
+                console.error("Error parsing users:", e);
+                users = [];
             }
             
-            if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+            // Check if username already exists
+            if (users.some(u => u.username === username)) {
                 showNotification('Username already exists', 'error');
                 return;
             }
             
-            if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-                showNotification('Email already registered', 'error');
-                return;
-            }
-            
+            // Create new user
             const newUser = {
-                username, password, fullName, email, role,
+                username,
+                password,
+                fullName,
+                email,
+                role,
                 avatar: fullName.charAt(0).toUpperCase(),
                 firstLogin: true,
                 passwordChanged: false
             };
             
             users.push(newUser);
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
             
-            try {
-                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
-                showNotification('Account created successfully! You can now login.', 'success');
-                showLoginForm();
-            } catch (e) {
-                showNotification('Error creating account. Please try again.', 'error');
-            }
+            showNotification('Account created successfully. Please log in.', 'success');
+            showLoginForm();
+        }
+        
+        // Show change password modal
+        function showChangePasswordModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('changePasswordModal').style.display = 'flex';
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
         }
         
         // Change password function
@@ -897,234 +1407,701 @@
                 showNotification('Please fill in all password fields', 'error');
                 return;
             }
+            
             if (newPassword !== confirmPassword) {
                 showNotification('New passwords do not match', 'error');
                 return;
             }
-            if (newPassword.length < 6) {
-                showNotification('New password must be at least 6 characters', 'error');
-                return;
+            
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
+            } catch (e) {
+                console.error("Error parsing users:", e);
+                users = [];
             }
             
-            const users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+            // Find current user
             const userIndex = users.findIndex(u => u.username === currentUser.username);
             
             if (userIndex === -1) {
                 showNotification('User not found', 'error');
                 return;
             }
-            if (!currentUser.firstLogin && users[userIndex].password !== currentPassword) {
+            
+            // Verify current password
+            if (users[userIndex].password !== currentPassword) {
                 showNotification('Current password is incorrect', 'error');
                 return;
             }
             
+            // Update password
             users[userIndex].password = newPassword;
             users[userIndex].firstLogin = false;
             users[userIndex].passwordChanged = true;
             
-            currentUser = users[userIndex];
-            
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+            
+            // Update current user
+            currentUser = users[userIndex];
             localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
             
-            showNotification('Password updated successfully!', 'success');
+            showNotification('Password changed successfully', 'success');
+            document.getElementById('changePasswordModal').style.display = 'none';
             showApp();
         }
         
         // Logout function
         function logout() {
-            currentUser = null;
             localStorage.removeItem(CURRENT_USER_KEY);
+            currentUser = null;
             showLogin();
-            showNotification('You have been logged out', 'success');
         }
         
-        // Helper function to capitalize first letter
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-        
-        // --- Service Worker Registration ---
-        if (window.location.protocol === 'https:' || window.location.hostname === 'localhost') {
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('service-worker.js')
-                        .then(registration => console.log('ServiceWorker registered: ', registration))
-                        .catch(error => console.log('ServiceWorker registration failed: ', error));
-                });
-            }
-        }
-        // --- End Service Worker Registration ---
-
-        // --- Import/Export Logic ---
-        let sw = null;
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(reg => {
-                sw = reg;
-                navigator.serviceWorker.addEventListener('message', event => {
-                    if (event.data.type === 'EXPORT_DATA_RESPONSE') {
-                        if (event.data.success) {
-                            downloadJSON(event.data.data, `ae-work-export-${new Date().toISOString().slice(0, 10)}.json`);
-                            showNotification('All data exported successfully!', 'success');
-                        } else {
-                            showNotification('Export failed: ' + (event.data.error || 'Unknown error'), 'error');
-                        }
-                    }
-                    if (event.data.type === 'IMPORT_DATA_RESPONSE') {
-                        if (event.data.success) {
-                            showNotification('All data imported successfully! Reloading modules...', 'success');
-                            document.querySelectorAll('.module-content.active').forEach(module => {
-                                const iframe = module.querySelector('iframe');
-                                if (iframe) iframe.contentWindow.postMessage({ type: 'RELOAD_DATA' }, '*');
-                            });
-                        } else {
-                            showNotification('Import failed: ' + (event.data.error || 'Unknown error'), 'error');
-                        }
-                    }
-                });
-            });
-        }
-
-        function downloadJSON(data, filename) {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 100);
-        }
-
-        function exportAllData() {
-            if (sw && sw.active) {
-                sw.active.postMessage({ type: 'EXPORT_DATA_REQUEST' });
+        // Show the main application
+        function showApp() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('changePasswordModal').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            // Update user info in the header
+            document.getElementById('userName').textContent = currentUser.fullName;
+            document.getElementById('userRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+            document.getElementById('userAvatar').textContent = currentUser.avatar;
+            
+            // Show/hide admin features based on role
+            if (currentUser.role === 'admin') {
+                document.getElementById('manageUsersBtn').style.display = 'block';
             } else {
-                showNotification('Service worker not ready. Please try again.', 'error');
+                document.getElementById('manageUsersBtn').style.display = 'none';
             }
+            
+            // Setup error monitoring for managers and admins
+            setupErrorMonitoring();
         }
-
-        function importAllData() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        if (sw && sw.active) {
-                            sw.active.postMessage({ type: 'IMPORT_DATA_REQUEST', data });
-                        } else {
-                            showNotification('Service worker not ready. Please try again.', 'error');
-                        }
-                    } catch (error) {
-                        showNotification('Invalid JSON file. Please select a valid export file.', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-        // --- End Import/Export Logic ---
-
-        // --- Notification System ---
+        
+        // Show notification
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type}`;
             notification.style.display = 'block';
+            
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
         }
-        // --- End Notification System ---
-
-        // --- Module Loading Logic ---
-        function loadModule(moduleName) {
-            // Hide the main module selector
-            document.getElementById('moduleSelector').style.display = 'none';
-            const moduleElement = document.getElementById(`${moduleName}Module`);
+        
+        // --- Import/Export Functions ---
+        document.getElementById('menuButton').addEventListener('click', function() {
+            document.getElementById('dropdownMenu').classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.menu-button')) {
+                const dropdown = document.getElementById('dropdownMenu');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+        
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            // Get all data from localStorage
+            const users = localStorage.getItem(USER_STORAGE_KEY);
+            const currentUserData = localStorage.getItem(CURRENT_USER_KEY);
+            const errorReports = localStorage.getItem(ERROR_REPORTS_KEY);
             
-            // Set the HTML for the module, including the back button and the iframe container
-            moduleElement.innerHTML = `
-                <button class="back-button" onclick="showModuleSelector()">
-                    <i class="fas fa-arrow-left"></i> Back to Main Menu
-                </button>
-                <div class="iframe-container">
-                    <iframe id="${moduleName}Iframe" class="module-iframe" title="${moduleName.replace(/-/g, ' ')}"></iframe>
-                </div>
-            `;
-            // Show the module content area
-            moduleElement.classList.add('active');
-            // Find the new iframe we just created
-            const iframe = document.getElementById(`${moduleName}Iframe`);
-
-            // Set the source of the iframe based on the module clicked
-            switch(moduleName) {
-                case 'project-board':
-                    iframe.src = 'project-board.html';
-                    break;
-                case 'kpi-monitor':
-                    iframe.src = 'kpi-monitor.html';
-                    break;
-                case 'payroll-manager':
-                    iframe.src = 'apt-payroll-manager.html';
-                    break;
-                case 'work-manager':
-                    iframe.src = 'apt-work-manager.html';
-                    break;
-                default:
-                    // If the module file doesn't exist, show an error inside the module area
-                    moduleElement.innerHTML = `
-                        <button class="back-button" onclick="showModuleSelector()">
-                            <i class="fas fa-arrow-left"></i> Back to Main Menu
-                        </button>
-                        <div class="module-error">
-                            <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                            <p>Module not found or not implemented yet.</p>
-                        </div>
-                    `;
+            // Combine all data
+            const exportData = {
+                users: users ? JSON.parse(users) : [],
+                currentUser: currentUserData ? JSON.parse(currentUserData) : null,
+                errorReports: errorReports ? JSON.parse(errorReports) : []
+            };
+            
+            // Create a blob and download link
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `apt_engineering_data_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Data exported successfully', 'success');
+            document.getElementById('dropdownMenu').classList.remove('show');
+        });
+        
+        document.getElementById('importBtn').addEventListener('click', function() {
+            // Create file input element
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            
+            fileInput.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importData = JSON.parse(e.target.result);
+                        
+                        // Validate the import data structure
+                        if (!importData.users || !Array.isArray(importData.users)) {
+                            throw new Error("Invalid data format: users array missing");
+                        }
+                        
+                        // Import the data
+                        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(importData.users));
+                        
+                        if (importData.currentUser) {
+                            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(importData.currentUser));
+                            currentUser = importData.currentUser;
+                        }
+                        
+                        if (importData.errorReports && Array.isArray(importData.errorReports)) {
+                            localStorage.setItem(ERROR_REPORTS_KEY, JSON.stringify(importData.errorReports));
+                        }
+                        
+                        showNotification('Data imported successfully', 'success');
+                        showApp(); // Refresh the app
+                    } catch (error) {
+                        console.error('Error importing data:', error);
+                        showNotification('Failed to import data: Invalid file format', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            fileInput.click();
+            document.getElementById('dropdownMenu').classList.remove('show');
+        });
+        
+        // --- Error Reporting System ---
+        
+        // Setup error monitoring for managers and admins
+        function setupErrorMonitoring() {
+            const isManagerOrAdmin = currentUser.role === 'manager' || currentUser.role === 'admin';
+            
+            if (isManagerOrAdmin) {
+                // Show the error indicator
+                document.getElementById('adminErrorIndicator').style.display = 'block';
+                
+                // Check for errors immediately
+                updateErrorCount();
+                
+                // Set up interval to check for new errors every 30 seconds
+                errorCheckInterval = setInterval(updateErrorCount, 30000);
+            } else {
+                // Hide the error indicator for non-managers/admins
+                document.getElementById('adminErrorIndicator').style.display = 'none';
+                
+                // Clear any existing interval
+                if (errorCheckInterval) {
+                    clearInterval(errorCheckInterval);
+                    errorCheckInterval = null;
+                }
             }
         }
-
-        function showModuleSelector() {
+        
+        // Update the error count badge
+        function updateErrorCount() {
+            let errorReports = [];
+            try {
+                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
+                if (storedReports) {
+                    errorReports = JSON.parse(storedReports);
+                }
+            } catch (e) {
+                console.error("Error parsing error reports:", e);
+                errorReports = [];
+            }
+            
+            // Count only new errors
+            const newErrorCount = errorReports.filter(report => report.status === 'new').length;
+            
+            // Update the badge
+            const errorCountBadge = document.getElementById('errorCountBadge');
+            errorCountBadge.textContent = newErrorCount;
+            
+            // Add pulse animation if there are new errors
+            if (newErrorCount > 0) {
+                errorCountBadge.style.animation = 'pulse 2s infinite';
+            } else {
+                errorCountBadge.style.animation = 'none';
+            }
+        }
+        
+        // Open error modal
+        function openErrorModal() {
+            document.getElementById('errorModal').style.display = 'flex';
+            document.getElementById('errorListContainer').style.display = 'none';
+            document.getElementById('screenshotPreview').style.display = 'none';
+            document.getElementById('screenshotPreview').src = '';
+            
+            // If we're in a module, pre-select that module
+            if (currentModule) {
+                document.getElementById('errorModule').value = currentModule;
+            }
+            
+            // Load user's error reports
+            loadUserErrorReports();
+        }
+        
+        // Close error modal
+        function closeErrorModal() {
+            document.getElementById('errorModal').style.display = 'none';
+            // Reset form
+            document.getElementById('errorForm').reset();
+        }
+        
+        // Toggle error list visibility
+        function toggleErrorList() {
+            const errorListContainer = document.getElementById('errorListContainer');
+            if (errorListContainer.style.display === 'block') {
+                errorListContainer.style.display = 'none';
+            } else {
+                errorListContainer.style.display = 'block';
+                loadUserErrorReports();
+            }
+        }
+        
+        // Load user's error reports
+        function loadUserErrorReports() {
+            const errorList = document.getElementById('errorList');
+            errorList.innerHTML = '';
+            
+            let errorReports = [];
+            try {
+                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
+                if (storedReports) {
+                    errorReports = JSON.parse(storedReports);
+                }
+            } catch (e) {
+                console.error("Error parsing error reports:", e);
+                errorReports = [];
+            }
+            
+            // Filter to show only current user's reports
+            const userReports = errorReports.filter(report => report.userId === currentUser.username);
+            
+            if (userReports.length === 0) {
+                errorList.innerHTML = '<p>No issues reported yet.</p>';
+                return;
+            }
+            
+            // Sort by date (newest first)
+            userReports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            userReports.forEach(report => {
+                const errorItem = document.createElement('div');
+                errorItem.className = 'error-item';
+                
+                const date = new Date(report.timestamp).toLocaleString();
+                
+                errorItem.innerHTML = `
+                    <div class="error-item-header">
+                        <div class="error-module">${report.module}</div>
+                        <div class="error-date">${date}</div>
+                    </div>
+                    <div class="error-category">${report.category}</div>
+                    <div class="error-description">${report.title}</div>
+                    <div class="error-status status-${report.status || 'new'}">
+                        Status: ${report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1) : 'New'}
+                    </div>
+                `;
+                
+                errorList.appendChild(errorItem);
+            });
+        }
+        
+        // Preview screenshot
+        function previewScreenshot() {
+            const file = document.getElementById('errorScreenshot').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('screenshotPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Capture current screen (simplified version)
+        function captureScreenshot() {
+            // In a real implementation, this would use a library like html2canvas
+            alert("In a full implementation, this would capture the current screen. For this demo, please use the file upload option.");
+        }
+        
+        // Submit error report
+        function submitErrorReport() {
+            const module = document.getElementById('errorModule').value;
+            const category = document.getElementById('errorCategory').value;
+            const severity = document.getElementById('errorSeverity').value;
+            const title = document.getElementById('errorTitle').value;
+            const description = document.getElementById('errorDescription').value;
+            const screenshotFile = document.getElementById('errorScreenshot').files[0];
+            
+            if (!module || !category || !severity || !title || !description) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            let errorReports = [];
+            try {
+                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
+                if (storedReports) {
+                    errorReports = JSON.parse(storedReports);
+                }
+            } catch (e) {
+                console.error("Error parsing error reports:", e);
+                errorReports = [];
+            }
+            
+            // Create new error report
+            const newReport = {
+                id: Date.now().toString(),
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                module,
+                category,
+                severity,
+                title,
+                description,
+                timestamp: new Date().toISOString(),
+                status: 'new'
+            };
+            
+            // Handle screenshot if provided
+            if (screenshotFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    newReport.screenshot = e.target.result;
+                    saveErrorReport(errorReports, newReport);
+                };
+                reader.readAsDataURL(screenshotFile);
+            } else {
+                saveErrorReport(errorReports, newReport);
+            }
+        }
+        
+        // Save error report to storage
+        function saveErrorReport(errorReports, newReport) {
+            errorReports.push(newReport);
+            localStorage.setItem(ERROR_REPORTS_KEY, JSON.stringify(errorReports));
+            
+            showNotification('Issue reported successfully. Thank you!', 'success');
+            closeErrorModal();
+            
+            // Update error count for managers/admins
+            updateErrorCount();
+            
+            // In a real implementation, this would also send the report to a server
+            console.log("Error report submitted:", newReport);
+        }
+        
+        // --- Admin Error Dashboard ---
+        
+        // Open error dashboard
+        function openErrorDashboard() {
+            document.getElementById('errorDashboardModal').style.display = 'flex';
+            loadErrorDashboard();
+        }
+        
+        // Close error dashboard
+        function closeErrorDashboard() {
+            document.getElementById('errorDashboardModal').style.display = 'none';
+        }
+        
+        // Load error dashboard with all reports
+        function loadErrorDashboard() {
+            let errorReports = [];
+            try {
+                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
+                if (storedReports) {
+                    errorReports = JSON.parse(storedReports);
+                }
+            } catch (e) {
+                console.error("Error parsing error reports:", e);
+                errorReports = [];
+            }
+            
+            // Populate user filter
+            populateUserFilter(errorReports);
+            
+            // Apply filters and display reports
+            filterErrorReports();
+        }
+        
+        // Populate user filter dropdown
+        function populateUserFilter(errorReports) {
+            const userFilter = document.getElementById('filterUser');
+            
+            // Clear existing options except "All Users"
+            while (userFilter.options.length > 1) {
+                userFilter.remove(1);
+            }
+            
+            // Get unique users from error reports
+            const users = [...new Set(errorReports.map(report => report.userId))];
+            
+            // Add each user to the filter
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user;
+                option.textContent = user;
+                userFilter.appendChild(option);
+            });
+        }
+        
+        // Filter error reports based on selected filters
+        function filterErrorReports() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const moduleFilter = document.getElementById('filterModule').value;
+            const severityFilter = document.getElementById('filterSeverity').value;
+            const userFilter = document.getElementById('filterUser').value;
+            
+            let errorReports = [];
+            try {
+                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
+                if (storedReports) {
+                    errorReports = JSON.parse(storedReports);
+                }
+            } catch (e) {
+                console.error("Error parsing error reports:", e);
+                errorReports = [];
+            }
+            
+            // Apply filters
+            let filteredReports = errorReports.filter(report => {
+                if (statusFilter !== 'all' && report.status !== statusFilter) return false;
+                if (moduleFilter !== 'all' && report.module !== moduleFilter) return false;
+                if (severityFilter !== 'all' && report.severity !== severityFilter) return false;
+                if (userFilter !== 'all' && report.userId !== userFilter) return false;
+                return true;
+            });
+            
+            // Sort by date (newest first)
+            filteredReports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Display filtered reports
+            displayFilteredReports(filteredReports);
+        }
+        
+        // Display filtered reports in the dashboard
+        function displayFilteredReports(reports) {
+            const dashboardList = document.getElementById('errorDashboardList');
+            dashboardList.innerHTML = '';
+            
+            if (reports.length === 0) {
+                dashboardList.innerHTML = '<p>No error reports match the selected filters.</p>';
+                return;
+            }
+            
+            reports.forEach(report => {
+                const reportItem = document.createElement('div');
+                reportItem.className = `dashboard-error-item ${report.status || 'new'}`;
+                
+                const date = new Date(report.timestamp).toLocaleString();
+                
+                reportItem.innerHTML = `
+                    <div class="dashboard-error-header">
+                        <div class="dashboard-error-title">${report.title}</div>
+                        <div class="dashboard-error-actions">
+                            <button class="status-btn ${report.status || 'new'}" onclick="changeErrorStatus('${report.id}', '${report.status || 'new'}')">
+                                ${report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1) : 'New'}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="dashboard-error-meta">
+                        <span>Module: ${report.module}</span>
+                        <span>Category: ${report.category}</span>
+                        <span>Severity: ${report.severity}</span>
+                        <span>Reported by: ${report.userFullName} (${report.userId})</span>
+                        <span>Date: ${date}</span>
+                    </div>
+                    <div class="dashboard-error-description">${report.description}</div>
+                `;
+                
+                dashboardList.appendChild(reportItem);
+            });
+        }
+        
+        // Change error status
+        function changeErrorStatus(errorId, currentStatus) {
+            let errorReports = [];
+            try {
+                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
+                if (storedReports) {
+                    errorReports = JSON.parse(storedReports);
+                }
+            } catch (e) {
+                console.error("Error parsing error reports:", e);
+                errorReports = [];
+            }
+            
+            // Find the error report
+            const errorIndex = errorReports.findIndex(report => report.id === errorId);
+            
+            if (errorIndex === -1) {
+                showNotification('Error report not found', 'error');
+                return;
+            }
+            
+            // Determine new status based on current status
+            let newStatus;
+            switch (currentStatus) {
+                case 'new':
+                    newStatus = 'in-progress';
+                    break;
+                case 'in-progress':
+                    newStatus = 'resolved';
+                    break;
+                case 'resolved':
+                    newStatus = 'new';
+                    break;
+                default:
+                    newStatus = 'new';
+            }
+            
+            // Update the status
+            errorReports[errorIndex].status = newStatus;
+            
+            // Save back to storage
+            localStorage.setItem(ERROR_REPORTS_KEY, JSON.stringify(errorReports));
+            
+            // Refresh the dashboard
+            filterErrorReports();
+            
+            // Update the error count badge
+            updateErrorCount();
+            
+            showNotification(`Error status updated to ${newStatus}`, 'success');
+        }
+        
+        // --- Module Loading System ---
+        
+        // Load a module
+        function loadModule(moduleId) {
+            currentModule = moduleId;
+            
             // Hide all modules
-            document.querySelectorAll('.module-content').forEach(module => {
+            const modules = document.querySelectorAll('.module-content');
+            modules.forEach(module => {
                 module.classList.remove('active');
             });
-            // Show module selector
-            document.getElementById('moduleSelector').style.display = 'grid';
+            
+            // Hide module selector
+            document.getElementById('moduleSelector').style.display = 'none';
+            
+            // Show back button
+            const backButton = document.createElement('button');
+            backButton.className = 'back-button';
+            backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Modules';
+            backButton.onclick = () => {
+                document.getElementById(`${moduleId}Module`).innerHTML = '';
+                document.getElementById(`${moduleId}Module`).classList.remove('active');
+                document.getElementById('moduleSelector').style.display = 'grid';
+                currentModule = null;
+            };
+            
+            // Show loading state
+            const moduleContent = document.getElementById(`${moduleId}Module`);
+            moduleContent.innerHTML = '';
+            moduleContent.appendChild(backButton);
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'module-loading';
+            loadingDiv.innerHTML = `
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                <p>Loading ${moduleId.replace(/-/g, ' ')}...</p>
+            `;
+            
+            moduleContent.appendChild(loadingDiv);
+            moduleContent.classList.add('active');
+            
+            // Simulate module loading
+            setTimeout(() => {
+                moduleContent.removeChild(loadingDiv);
+                
+                // Add module-specific content
+                const moduleTitle = document.createElement('h2');
+                moduleTitle.textContent = moduleId.replace(/-/g, ' ').toUpperCase();
+                moduleTitle.style.margin = '20px 0';
+                
+                const moduleDescription = document.createElement('p');
+                moduleDescription.textContent = `This is the ${moduleId.replace(/-/g, ' ')} module. In a full implementation, this would contain the actual module interface.`;
+                moduleDescription.style.marginBottom = '20px';
+                
+                moduleContent.appendChild(moduleTitle);
+                moduleContent.appendChild(moduleDescription);
+                
+                // Add a sample iframe for demonstration
+                const iframeContainer = document.createElement('div');
+                iframeContainer.className = 'iframe-container';
+                
+                const iframe = document.createElement('iframe');
+                iframe.className = 'module-iframe';
+                iframe.src = 'about:blank'; // In a real implementation, this would point to the actual module
+                iframe.onload = function() {
+                    // Add content to the iframe for demonstration
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.body.innerHTML = `
+                        <div style="padding: 20px; text-align: center;">
+                            <h2>${moduleId.replace(/-/g, ' ').toUpperCase()} Module</h2>
+                            <p>This would be the actual module interface in a full implementation.</p>
+                            <p>You can use the floating "Report Error" button to report any issues with this module.</p>
+                        </div>
+                    `;
+                };
+                
+                iframeContainer.appendChild(iframe);
+                moduleContent.appendChild(iframeContainer);
+            }, 1500);
         }
-
+        
+        // Show logo instructions
         function showLogoInstructions() {
-            alert("To add your company logo:\n\n1. Create a folder named 'logo' in the same directory as this app\n2. Place your logo file (jpg, png) inside this folder\n3. Name the file 'logo.jpg' or 'logo.png'\n4. Refresh the app to see your logo");
+            alert("To add your company logo:\n\n1. Create a folder named 'logo' in the same directory as this application\n2. Place your logo file (preferably PNG format) named 'logo.jpg' in that folder\n3. Refresh the application\n\nYour logo will automatically replace the placeholder.");
         }
-        // --- End Module Loading Logic ---
-
-        // --- Initialize App ---
-        document.addEventListener('DOMContentLoaded', function() {
+        
+        // Initialize the application
+        function initApp() {
             initUserSystem();
-            const menuButton = document.getElementById('menuButton');
-            const dropdownMenu = document.getElementById('dropdownMenu');
             
-            menuButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                dropdownMenu.classList.toggle('show');
+            // Setup menu button functionality
+            document.getElementById('menuButton').addEventListener('click', function() {
+                document.getElementById('dropdownMenu').classList.toggle('show');
             });
-            document.addEventListener('click', () => dropdownMenu.classList.remove('show'));
-            dropdownMenu.addEventListener('click', e => e.stopPropagation());
             
-            document.getElementById('exportBtn').addEventListener('click', exportAllData);
-            document.getElementById('importBtn').addEventListener('click', importAllData);
-            document.getElementById('manageUsersBtn').addEventListener('click', () => alert('User management feature will be implemented here'));
-        });
-        // --- End Initialize App ---
+            // Close dropdown when clicking outside
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('.menu-button')) {
+                    const dropdown = document.getElementById('dropdownMenu');
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+            
+            // Setup error report button
+            document.getElementById('errorReportButton').addEventListener('click', openErrorModal);
+            
+            // Setup view error reports button
+            document.getElementById('viewErrorReportsBtn').addEventListener('click', openErrorDashboard);
+        }
+        
+        // Start the application when the page loads
+        window.onload = initApp;
     </script>
 </body>
 </html>
