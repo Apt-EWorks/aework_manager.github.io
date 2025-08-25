@@ -1070,218 +1070,165 @@
                     </button>
                 </div>
             </div>
-            <!-- --- Import/Export UI --- -->
+            
             <div class="header-actions">
-                <button class="menu-button" id="menuButton">
-                    <i class="fas fa-ellipsis-v"></i> Actions
+                <button class="menu-button" onclick="toggleDropdown('importExportDropdown')">
+                    <i class="fas fa-file-export"></i> Import/Export
                 </button>
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <button class="dropdown-item" id="exportBtn">
-                        <i class="fas fa-file-export"></i> Export All Data
+                <div id="importExportDropdown" class="dropdown-menu">
+                    <button class="dropdown-item" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
                     </button>
-                    <button class="dropdown-item" id="importBtn">
-                        <i class="fas fa-file-import"></i> Import All Data
+                    <button class="dropdown-item" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Import Data
                     </button>
-                    <button class="dropdown-item" id="manageUsersBtn" style="display: none;">
-                        <i class="fas fa-users-cog"></i> Manage Users
-                    </button>
-                    <button class="dropdown-item" id="viewErrorReportsBtn">
-                        <i class="fas fa-bug"></i> View Error Reports
-                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this.files[0])">
                 </div>
             </div>
-            <!-- --- End Import/Export UI --- -->
         </header>
-
-        <!-- --- Notifications --- -->
-        <div id="notification" class="notification"></div>
-        <!-- --- End Notifications --- -->
-
+        
+        <div class="logo-upload-container" id="logoUploadContainer">
+            <div class="logo-upload-instructions">
+                <i class="fas fa-info-circle" style="font-size: 24px;"></i>
+                <div>
+                    <p>To display your company logo, please upload an image file or place your logo file at <strong>logo/logo.jpg</strong>.</p>
+                    <p>The recommended size is 120x40 pixels for optimal display.</p>
+                </div>
+            </div>
+            <div class="logo-upload-actions">
+                <input type="file" id="logoUpload" accept="image/*" style="display: none;" onchange="handleLogoUpload(this.files[0])">
+                <button class="logo-btn logo-primary" onclick="document.getElementById('logoUpload').click()">
+                    <i class="fas fa-upload"></i> Upload Logo
+                </button>
+                <button class="logo-btn logo-secondary" onclick="hideLogoUpload()">
+                    <i class="fas fa-times"></i> Dismiss
+                </button>
+            </div>
+        </div>
+        
         <div id="moduleSelector" class="module-selector">
-            <div class="module-card" onclick="loadModule('project-board')">
+            <div class="module-card" data-module="project-board">
                 <div class="module-icon">
                     <i class="fas fa-project-diagram"></i>
                 </div>
                 <h2 class="module-title">Project Board</h2>
-                <p class="module-description">Manage projects, tasks, and team performance with our comprehensive project management system</p>
+                <p class="module-description">Manage engineering projects, track progress, and assign resources to tasks.</p>
             </div>
-            <div class="module-card" onclick="loadModule('kpi-monitor')">
+            
+            <div class="module-card" data-module="kpi-monitor">
                 <div class="module-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h2 class="module-title">KPI Monitor</h2>
-                <p class="module-description">Track and analyze key performance indicators across all departments and roles</p>
+                <p class="module-description">Track key performance indicators and generate reports for management.</p>
             </div>
-            <!-- New Payroll Manager Module -->
-            <div class="module-card" onclick="loadModule('payroll-manager')">
+            
+            <div class="module-card" data-module="payroll-manager">
                 <div class="module-icon">
-                    <i class="fas fa-money-bill-wave"></i>
+                    <i class="fas fa-money-check-alt"></i>
                 </div>
                 <h2 class="module-title">Payroll Manager</h2>
-                <p class="module-description">Manage employee payroll, deductions, and generate payslips for your workforce</p>
+                <p class="module-description">Process payroll, manage employee compensation, and generate payslips.</p>
             </div>
-            <!-- New Work Manager Module -->
-            <div class="module-card" onclick="loadModule('work-manager')">
+            
+            <div class="module-card" data-module="work-manager">
                 <div class="module-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
                 <h2 class="module-title">Work Manager</h2>
-                <p class="module-description">Integrated project and material database system for engineering works management</p>
+                <p class="module-description">Assign and track work assignments, monitor workloads, and schedule tasks.</p>
             </div>
         </div>
         
-        <!-- Module content areas will be populated by JavaScript -->
-        <div id="project-boardModule" class="module-content"></div>
-        <div id="kpi-monitorModule" class="module-content"></div>
-        <div id="payroll-managerModule" class="module-content"></div>
-        <div id="work-managerModule" class="module-content"></div>
-
-        <div class="logo-upload-container">
-            <div class="logo-upload-instructions">
-                <i class="fas fa-info-circle" style="font-size: 2rem; color: #0066cc;"></i>
-                <div>
-                    <h3>Customize Your Company Logo</h3>
-                    <p>Replace the placeholder logo with your company logo for a personalized experience</p>
-                </div>
-            </div>
-            <div class="logo-upload-actions">
-                <button class="logo-btn logo-primary" onclick="showLogoInstructions()">
-                    <i class="fas fa-image"></i> How to Add Your Logo
-                </button>
-                <button class="logo-btn logo-secondary" onclick="window.open('logo', '_blank')">
-                    <i class="fas fa-folder-open"></i> Open Logo Folder
-                </button>
+        <div id="moduleContent" class="module-content">
+            <button class="back-button" onclick="goBackToModules()">
+                <i class="fas fa-arrow-left"></i> Back to Modules
+            </button>
+            
+            <div class="iframe-container">
+                <iframe id="moduleFrame" class="module-iframe" frameborder="0"></iframe>
             </div>
         </div>
     </div>
+    
+    <!-- Notification Element -->
+    <div id="notification" class="notification"></div>
+
     <script>
-        // User management system
-        const USER_STORAGE_KEY = "apt_engineering_users";
-        const CURRENT_USER_KEY = "apt_engineering_current_user";
-        const ERROR_REPORTS_KEY = "apt_engineering_error_reports";
-        const MASTER_ADMIN_PASSWORD = "AptMaster2024!"; // Master password only available to you
-        
-        // Default users (for demo purposes)
-        const DEFAULT_USERS = [
-            { 
-                username: "admin", 
-                password: "admin123", 
-                fullName: "System Administrator", 
-                email: "admin@aptengineering.com", 
-                role: "admin",
-                avatar: "A",
-                firstLogin: true,
-                passwordChanged: false
-            },
-            { 
-                username: "manager", 
-                password: "manager123", 
-                fullName: "Project Manager", 
-                email: "manager@aptengineering.com", 
-                role: "manager",
-                avatar: "M",
-                firstLogin: true,
-                passwordChanged: false
-            },
-            { 
-                username: "user", 
-                password: "user123", 
-                fullName: "Standard User", 
-                email: "user@aptengineering.com", 
-                role: "user",
-                avatar: "U",
-                firstLogin: true,
-                passwordChanged: false
-            }
-        ];
-        
+        // Global variables
         let currentUser = null;
-        let currentModule = null;
-        let errorCheckInterval = null;
+        let errorReports = [];
         
-        // Initialize user system
-        function initUserSystem() {
-            // Check if users exist in localStorage, if not create default ones
-            let storedUsers = [];
-            try {
-                const storedData = localStorage.getItem(USER_STORAGE_KEY);
-                if (storedData) {
-                    storedUsers = JSON.parse(storedData);
-                    if (!Array.isArray(storedUsers)) {
-                        throw new Error("Stored users data is not an array");
-                    }
-                }
-            } catch (e) {
-                console.error("Error parsing stored users:", e);
-                storedUsers = [];
-            }
-            
-            if (storedUsers.length === 0) {
-                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(DEFAULT_USERS));
-            }
-            
-            const storedUser = localStorage.getItem(CURRENT_USER_KEY);
-            if (storedUser) {
-                try {
-                    currentUser = JSON.parse(storedUser);
-                    if (currentUser.firstLogin) {
-                        showChangePasswordModal();
-                    } else {
-                        showApp();
-                    }
-                } catch (e) {
-                    console.error("Error parsing current user:", e);
-                    showLogin();
-                }
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                initializeApp();
             } else {
-                showLogin();
+                // Show login modal if not logged in
+                document.getElementById('loginModal').style.display = 'flex';
             }
-        }
-        
-        // Show login form
-        function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-            document.getElementById('registerModal').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('changePasswordModal').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('adminOverrideFields').classList.remove('show');
             
-            // Clear any error check interval
-            if (errorCheckInterval) {
-                clearInterval(errorCheckInterval);
-                errorCheckInterval = null;
+            // Load error reports from localStorage
+            const savedErrors = localStorage.getItem('errorReports');
+            if (savedErrors) {
+                errorReports = JSON.parse(savedErrors);
+            }
+            
+            // Set up module click handlers
+            const moduleCards = document.querySelectorAll('.module-card');
+            moduleCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const moduleName = card.getAttribute('data-module');
+                    loadModule(moduleName);
+                });
+            });
+            
+            // Check if logo exists
+            checkLogoExists();
+        });
+        
+        // Check if logo exists
+        function checkLogoExists() {
+            const logoImg = document.querySelector('.logo');
+            logoImg.onerror = function() {
+                document.getElementById('logoUploadContainer').style.display = 'block';
+            };
+            logoImg.onload = function() {
+                document.getElementById('logoUploadContainer').style.display = 'none';
+            };
+            // Trigger check
+            logoImg.src = logoImg.src;
+        }
+        
+        // Handle logo upload
+        function handleLogoUpload(file) {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoImg = document.querySelector('.logo');
+                    logoImg.src = e.target.result;
+                    // Save to localStorage
+                    localStorage.setItem('companyLogo', e.target.result);
+                    document.getElementById('logoUploadContainer').style.display = 'none';
+                    showNotification('Logo uploaded successfully!', 'success');
+                };
+                reader.readAsDataURL(file);
             }
         }
         
-        // Show register form
-        function showRegisterForm() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('registerModal').style.display = 'flex';
-            document.getElementById('regUsername').value = '';
-            document.getElementById('regPassword').value = '';
-            document.getElementById('regFullName').value = '';
-            document.getElementById('regEmail').value = '';
-            document.getElementById('regRole').value = 'user';
-        }
-        
-        // Show login form from register
-        function showLoginForm() {
-            document.getElementById('loginModal').style.display = 'flex';
-            document.getElementById('registerModal').style.display = 'none';
-        }
-        
-        // Toggle admin override fields
-        function toggleAdminOverride() {
-            document.getElementById('adminOverrideFields').classList.toggle('show');
+        // Hide logo upload container
+        function hideLogoUpload() {
+            document.getElementById('logoUploadContainer').style.display = 'none';
         }
         
         // Toggle password visibility
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
-            const toggleButton = input.parentNode.querySelector('.password-toggle');
+            const toggleButton = input.parentElement.querySelector('.password-toggle');
+            
             if (input.type === 'password') {
                 input.type = 'text';
                 toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
@@ -1289,6 +1236,29 @@
                 input.type = 'password';
                 toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
             }
+        }
+        
+        // Toggle admin override fields
+        function toggleAdminOverride() {
+            const fields = document.getElementById('adminOverrideFields');
+            fields.classList.toggle('show');
+        }
+        
+        // Show login form
+        function showLoginForm() {
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        
+        // Show register form
+        function showRegisterForm() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('registerModal').style.display = 'flex';
+        }
+        
+        // Show change password modal
+        function showChangePasswordModal() {
+            document.getElementById('changePasswordModal').style.display = 'flex';
         }
         
         // Login function
@@ -1302,43 +1272,49 @@
                 return;
             }
             
-            let users = [];
-            try {
-                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
-            } catch (e) {
-                console.error("Error parsing users:", e);
-                users = [];
-            }
-            
-            // Check for admin override
-            if (adminPassword && adminPassword === MASTER_ADMIN_PASSWORD) {
-                // Find the user with admin override
-                const user = users.find(u => u.username === username);
-                if (user) {
-                    currentUser = user;
-                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
-                    showApp();
-                    showNotification('Admin override login successful', 'success');
+            // Check if admin override is being used
+            if (adminPassword) {
+                if (adminPassword !== 'admin123') { // Default admin password
+                    showNotification('Invalid admin password', 'error');
                     return;
                 }
-            }
-            
-            // Normal login
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                // Admin override successful
+                currentUser = {
+                    username: username,
+                    role: 'admin',
+                    fullName: username,
+                    changePasswordRequired: false
+                };
+            } else {
+                // Normal login - check against stored users
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.username === username && u.password === password);
                 
-                if (user.firstLogin) {
-                    showChangePasswordModal();
-                } else {
-                    showApp();
+                if (!user) {
+                    showNotification('Invalid username or password', 'error');
+                    return;
                 }
                 
-                showNotification('Login successful', 'success');
+                currentUser = {
+                    username: user.username,
+                    role: user.role,
+                    fullName: user.fullName,
+                    changePasswordRequired: user.changePasswordRequired
+                };
+            }
+            
+            // Save user to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Check if password change is required
+            if (currentUser.changePasswordRequired) {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('changePasswordModal').style.display = 'flex';
             } else {
-                showNotification('Invalid username or password', 'error');
+                // Initialize the app
+                initializeApp();
+                document.getElementById('loginModal').style.display = 'none';
+                showNotification('Login successful!', 'success');
             }
         }
         
@@ -1351,17 +1327,12 @@
             const role = document.getElementById('regRole').value;
             
             if (!username || !password || !fullName || !email) {
-                showNotification('Please fill in all required fields', 'error');
+                showNotification('Please fill in all fields', 'error');
                 return;
             }
             
-            let users = [];
-            try {
-                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
-            } catch (e) {
-                console.error("Error parsing users:", e);
-                users = [];
-            }
+            // Get existing users
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
             
             // Check if username already exists
             if (users.some(u => u.username === username)) {
@@ -1369,32 +1340,21 @@
                 return;
             }
             
-            // Create new user
-            const newUser = {
+            // Add new user
+            users.push({
                 username,
                 password,
                 fullName,
                 email,
                 role,
-                avatar: fullName.charAt(0).toUpperCase(),
-                firstLogin: true,
-                passwordChanged: false
-            };
+                changePasswordRequired: true
+            });
             
-            users.push(newUser);
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+            // Save users
+            localStorage.setItem('users', JSON.stringify(users));
             
-            showNotification('Account created successfully. Please log in.', 'success');
+            showNotification('Account created successfully! Please log in.', 'success');
             showLoginForm();
-        }
-        
-        // Show change password modal
-        function showChangePasswordModal() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('changePasswordModal').style.display = 'flex';
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
         }
         
         // Change password function
@@ -1404,7 +1364,7 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             if (!currentPassword || !newPassword || !confirmPassword) {
-                showNotification('Please fill in all password fields', 'error');
+                showNotification('Please fill in all fields', 'error');
                 return;
             }
             
@@ -1413,15 +1373,8 @@
                 return;
             }
             
-            let users = [];
-            try {
-                users = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || [];
-            } catch (e) {
-                console.error("Error parsing users:", e);
-                users = [];
-            }
-            
-            // Find current user
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
             const userIndex = users.findIndex(u => u.username === currentUser.username);
             
             if (userIndex === -1) {
@@ -1437,671 +1390,457 @@
             
             // Update password
             users[userIndex].password = newPassword;
-            users[userIndex].firstLogin = false;
-            users[userIndex].passwordChanged = true;
+            users[userIndex].changePasswordRequired = false;
             
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+            // Save updated users
+            localStorage.setItem('users', JSON.stringify(users));
             
             // Update current user
-            currentUser = users[userIndex];
-            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+            currentUser.changePasswordRequired = false;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
             
-            showNotification('Password changed successfully', 'success');
+            // Close modal and initialize app
             document.getElementById('changePasswordModal').style.display = 'none';
-            showApp();
+            initializeApp();
+            
+            showNotification('Password updated successfully!', 'success');
         }
         
         // Logout function
         function logout() {
-            localStorage.removeItem(CURRENT_USER_KEY);
             currentUser = null;
-            showLogin();
+            localStorage.removeItem('currentUser');
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'flex';
+            
+            // Clear login form
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('adminPassword').value = '';
+            
+            showNotification('Logged out successfully', 'success');
         }
         
-        // Show the main application
-        function showApp() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('registerModal').style.display = 'none';
-            document.getElementById('changePasswordModal').style.display = 'none';
+        // Initialize the app after login
+        function initializeApp() {
             document.getElementById('mainApp').style.display = 'block';
             
-            // Update user info in the header
+            // Set user info
             document.getElementById('userName').textContent = currentUser.fullName;
             document.getElementById('userRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-            document.getElementById('userAvatar').textContent = currentUser.avatar;
+            document.getElementById('userAvatar').textContent = currentUser.fullName.charAt(0).toUpperCase();
             
-            // Show/hide admin features based on role
+            // Show admin features if user is admin
             if (currentUser.role === 'admin') {
-                document.getElementById('manageUsersBtn').style.display = 'block';
-            } else {
-                document.getElementById('manageUsersBtn').style.display = 'none';
+                document.getElementById('adminErrorIndicator').style.display = 'block';
+                updateErrorCountBadge();
             }
             
-            // Setup error monitoring for managers and admins
-            setupErrorMonitoring();
+            // Load logo if exists in localStorage
+            const savedLogo = localStorage.getItem('companyLogo');
+            if (savedLogo) {
+                document.querySelector('.logo').src = savedLogo;
+            }
         }
         
-        // Show notification
+        // Load module function
+        function loadModule(moduleName) {
+            // Hide module selector and show module content
+            document.getElementById('moduleSelector').style.display = 'none';
+            document.getElementById('moduleContent').classList.add('active');
+            
+            // Set the iframe source based on the module
+            const moduleFrame = document.getElementById('moduleFrame');
+            
+            // Map module names to their HTML files
+            const moduleMap = {
+                'project-board': 'project-board.html',
+                'kpi-monitor': 'kpi-monitor.html',
+                'payroll-manager': 'apt-payroll-manager.html',
+                'work-manager': 'apt-work-manager.html'
+            };
+            
+            const moduleFile = moduleMap[moduleName];
+            
+            if (moduleFile) {
+                // Show loading state
+                moduleFrame.onload = function() {
+                    // Hide loading state if needed
+                };
+                
+                // Load the module
+                moduleFrame.src = moduleFile;
+            } else {
+                // Handle unknown module
+                moduleFrame.srcdoc = `
+                    <div style="padding: 20px; text-align: center;">
+                        <h2>Module Not Found</h2>
+                        <p>The requested module could not be loaded.</p>
+                        <p>Please check that the file ${moduleFile} exists.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Go back to modules
+        function goBackToModules() {
+            // Hide module content and show module selector
+            document.getElementById('moduleContent').classList.remove('active');
+            document.getElementById('moduleSelector').style.display = 'grid';
+            
+            // Clear the iframe
+            document.getElementById('moduleFrame').src = '';
+        }
+        
+        // Toggle dropdown menu
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+            
+            // Close other dropdowns
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            allDropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            window.onclick = function(event) {
+                if (!event.target.matches('.menu-button')) {
+                    allDropdowns.forEach(dropdown => {
+                        if (dropdown.classList.contains('show')) {
+                            dropdown.classList.remove('show');
+                        }
+                    });
+                }
+            };
+        }
+        
+        // Export data function
+        function exportData() {
+            // Get all data from localStorage
+            const data = {
+                users: JSON.parse(localStorage.getItem('users') || '[]'),
+                errorReports: JSON.parse(localStorage.getItem('errorReports') || '[]'),
+                exportDate: new Date().toISOString()
+            };
+            
+            // Create a blob and download link
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `apt_engineering_export_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Data exported successfully!', 'success');
+        }
+        
+        // Import data function
+        function importData(file) {
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate the data structure
+                    if (data.users && Array.isArray(data.users)) {
+                        localStorage.setItem('users', JSON.stringify(data.users));
+                    }
+                    
+                    if (data.errorReports && Array.isArray(data.errorReports)) {
+                        localStorage.setItem('errorReports', JSON.stringify(data.errorReports));
+                        errorReports = data.errorReports;
+                        
+                        // Update error count badge if user is admin
+                        if (currentUser && currentUser.role === 'admin') {
+                            updateErrorCountBadge();
+                        }
+                    }
+                    
+                    showNotification('Data imported successfully!', 'success');
+                } catch (error) {
+                    showNotification('Failed to import data: Invalid file format', 'error');
+                    console.error('Import error:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Show notification function
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type}`;
             notification.style.display = 'block';
             
+            // Hide notification after 3 seconds
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
         }
         
-        // --- Import/Export Functions ---
-        document.getElementById('menuButton').addEventListener('click', function() {
-            document.getElementById('dropdownMenu').classList.toggle('show');
-        });
-        
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function(event) {
-            if (!event.target.matches('.menu-button')) {
-                const dropdown = document.getElementById('dropdownMenu');
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
-                }
-            }
-        });
-        
-        document.getElementById('exportBtn').addEventListener('click', function() {
-            // Get all data from localStorage
-            const users = localStorage.getItem(USER_STORAGE_KEY);
-            const currentUserData = localStorage.getItem(CURRENT_USER_KEY);
-            const errorReports = localStorage.getItem(ERROR_REPORTS_KEY);
-            
-            // Combine all data
-            const exportData = {
-                users: users ? JSON.parse(users) : [],
-                currentUser: currentUserData ? JSON.parse(currentUserData) : null,
-                errorReports: errorReports ? JSON.parse(errorReports) : []
-            };
-            
-            // Create a blob and download link
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `apt_engineering_data_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            showNotification('Data exported successfully', 'success');
-            document.getElementById('dropdownMenu').classList.remove('show');
-        });
-        
-        document.getElementById('importBtn').addEventListener('click', function() {
-            // Create file input element
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.json';
-            
-            fileInput.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const importData = JSON.parse(e.target.result);
-                        
-                        // Validate the import data structure
-                        if (!importData.users || !Array.isArray(importData.users)) {
-                            throw new Error("Invalid data format: users array missing");
-                        }
-                        
-                        // Import the data
-                        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(importData.users));
-                        
-                        if (importData.currentUser) {
-                            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(importData.currentUser));
-                            currentUser = importData.currentUser;
-                        }
-                        
-                        if (importData.errorReports && Array.isArray(importData.errorReports)) {
-                            localStorage.setItem(ERROR_REPORTS_KEY, JSON.stringify(importData.errorReports));
-                        }
-                        
-                        showNotification('Data imported successfully', 'success');
-                        showApp(); // Refresh the app
-                    } catch (error) {
-                        console.error('Error importing data:', error);
-                        showNotification('Failed to import data: Invalid file format', 'error');
-                    }
-                };
-                
-                reader.readAsText(file);
-            };
-            
-            fileInput.click();
-            document.getElementById('dropdownMenu').classList.remove('show');
-        });
-        
-        // --- Error Reporting System ---
-        
-        // Setup error monitoring for managers and admins
-        function setupErrorMonitoring() {
-            const isManagerOrAdmin = currentUser.role === 'manager' || currentUser.role === 'admin';
-            
-            if (isManagerOrAdmin) {
-                // Show the error indicator
-                document.getElementById('adminErrorIndicator').style.display = 'block';
-                
-                // Check for errors immediately
-                updateErrorCount();
-                
-                // Set up interval to check for new errors every 30 seconds
-                errorCheckInterval = setInterval(updateErrorCount, 30000);
-            } else {
-                // Hide the error indicator for non-managers/admins
-                document.getElementById('adminErrorIndicator').style.display = 'none';
-                
-                // Clear any existing interval
-                if (errorCheckInterval) {
-                    clearInterval(errorCheckInterval);
-                    errorCheckInterval = null;
-                }
-            }
-        }
-        
-        // Update the error count badge
-        function updateErrorCount() {
-            let errorReports = [];
-            try {
-                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
-                if (storedReports) {
-                    errorReports = JSON.parse(storedReports);
-                }
-            } catch (e) {
-                console.error("Error parsing error reports:", e);
-                errorReports = [];
-            }
-            
-            // Count only new errors
-            const newErrorCount = errorReports.filter(report => report.status === 'new').length;
-            
-            // Update the badge
-            const errorCountBadge = document.getElementById('errorCountBadge');
-            errorCountBadge.textContent = newErrorCount;
-            
-            // Add pulse animation if there are new errors
-            if (newErrorCount > 0) {
-                errorCountBadge.style.animation = 'pulse 2s infinite';
-            } else {
-                errorCountBadge.style.animation = 'none';
-            }
-        }
-        
-        // Open error modal
+        // Error reporting functions
         function openErrorModal() {
             document.getElementById('errorModal').style.display = 'flex';
-            document.getElementById('errorListContainer').style.display = 'none';
-            document.getElementById('screenshotPreview').style.display = 'none';
-            document.getElementById('screenshotPreview').src = '';
-            
-            // If we're in a module, pre-select that module
-            if (currentModule) {
-                document.getElementById('errorModule').value = currentModule;
-            }
-            
-            // Load user's error reports
-            loadUserErrorReports();
         }
         
-        // Close error modal
         function closeErrorModal() {
             document.getElementById('errorModal').style.display = 'none';
+            document.getElementById('errorListContainer').style.display = 'none';
+            
             // Reset form
-            document.getElementById('errorForm').reset();
+            document.getElementById('errorModule').value = '';
+            document.getElementById('errorCategory').value = '';
+            document.getElementById('errorSeverity').value = '';
+            document.getElementById('errorTitle').value = '';
+            document.getElementById('errorDescription').value = '';
+            document.getElementById('errorScreenshot').value = '';
+            document.getElementById('screenshotPreview').style.display = 'none';
+            document.getElementById('screenshotPreview').src = '';
         }
         
-        // Toggle error list visibility
         function toggleErrorList() {
-            const errorListContainer = document.getElementById('errorListContainer');
-            if (errorListContainer.style.display === 'block') {
-                errorListContainer.style.display = 'none';
+            const container = document.getElementById('errorListContainer');
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
             } else {
-                errorListContainer.style.display = 'block';
-                loadUserErrorReports();
+                container.style.display = 'block';
+                loadUserErrorList();
             }
         }
         
-        // Load user's error reports
-        function loadUserErrorReports() {
+        function loadUserErrorList() {
             const errorList = document.getElementById('errorList');
-            errorList.innerHTML = '';
+            const userErrors = errorReports.filter(error => error.reportedBy === currentUser.username);
             
-            let errorReports = [];
-            try {
-                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
-                if (storedReports) {
-                    errorReports = JSON.parse(storedReports);
-                }
-            } catch (e) {
-                console.error("Error parsing error reports:", e);
-                errorReports = [];
-            }
-            
-            // Filter to show only current user's reports
-            const userReports = errorReports.filter(report => report.userId === currentUser.username);
-            
-            if (userReports.length === 0) {
+            if (userErrors.length === 0) {
                 errorList.innerHTML = '<p>No issues reported yet.</p>';
                 return;
             }
             
-            // Sort by date (newest first)
-            userReports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
-            userReports.forEach(report => {
-                const errorItem = document.createElement('div');
-                errorItem.className = 'error-item';
-                
-                const date = new Date(report.timestamp).toLocaleString();
-                
-                errorItem.innerHTML = `
+            errorList.innerHTML = userErrors.map(error => `
+                <div class="error-item">
                     <div class="error-item-header">
-                        <div class="error-module">${report.module}</div>
-                        <div class="error-date">${date}</div>
+                        <div class="error-module">${error.module}</div>
+                        <div class="error-date">${new Date(error.date).toLocaleDateString()}</div>
                     </div>
-                    <div class="error-category">${report.category}</div>
-                    <div class="error-description">${report.title}</div>
-                    <div class="error-status status-${report.status || 'new'}">
-                        Status: ${report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1) : 'New'}
-                    </div>
-                `;
-                
-                errorList.appendChild(errorItem);
-            });
+                    <div class="error-category">${error.category}</div>
+                    <div class="error-description">${error.title}</div>
+                    <div class="error-status ${error.status}">Status: ${error.status}</div>
+                </div>
+            `).join('');
         }
         
-        // Preview screenshot
         function previewScreenshot() {
-            const file = document.getElementById('errorScreenshot').files[0];
-            if (file) {
+            const fileInput = document.getElementById('errorScreenshot');
+            const preview = document.getElementById('screenshotPreview');
+            
+            if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const preview = document.getElementById('screenshotPreview');
                     preview.src = e.target.result;
                     preview.style.display = 'block';
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(fileInput.files[0]);
             }
         }
         
-        // Capture current screen (simplified version)
         function captureScreenshot() {
-            // In a real implementation, this would use a library like html2canvas
-            alert("In a full implementation, this would capture the current screen. For this demo, please use the file upload option.");
+            // In a real implementation, you would use a library like html2canvas
+            // This is a simplified version that just captures the current viewport
+            
+            html2canvas(document.body).then(canvas => {
+                const screenshot = canvas.toDataURL('image/png');
+                const preview = document.getElementById('screenshotPreview');
+                preview.src = screenshot;
+                preview.style.display = 'block';
+                
+                // Store the screenshot data for submission
+                preview.dataset.screenshot = screenshot;
+            });
         }
         
-        // Submit error report
         function submitErrorReport() {
             const module = document.getElementById('errorModule').value;
             const category = document.getElementById('errorCategory').value;
             const severity = document.getElementById('errorSeverity').value;
             const title = document.getElementById('errorTitle').value;
             const description = document.getElementById('errorDescription').value;
-            const screenshotFile = document.getElementById('errorScreenshot').files[0];
+            const screenshotInput = document.getElementById('errorScreenshot');
+            const screenshotPreview = document.getElementById('screenshotPreview');
             
             if (!module || !category || !severity || !title || !description) {
                 showNotification('Please fill in all required fields', 'error');
                 return;
             }
             
-            let errorReports = [];
-            try {
-                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
-                if (storedReports) {
-                    errorReports = JSON.parse(storedReports);
-                }
-            } catch (e) {
-                console.error("Error parsing error reports:", e);
-                errorReports = [];
-            }
-            
-            // Create new error report
-            const newReport = {
+            // Create error report object
+            const errorReport = {
                 id: Date.now().toString(),
-                userId: currentUser.username,
-                userFullName: currentUser.fullName,
                 module,
                 category,
                 severity,
                 title,
                 description,
-                timestamp: new Date().toISOString(),
+                reportedBy: currentUser.username,
+                date: new Date().toISOString(),
                 status: 'new'
             };
             
             // Handle screenshot if provided
-            if (screenshotFile) {
+            if (screenshotInput.files && screenshotInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    newReport.screenshot = e.target.result;
-                    saveErrorReport(errorReports, newReport);
+                    errorReport.screenshot = e.target.result;
+                    saveErrorReport(errorReport);
                 };
-                reader.readAsDataURL(screenshotFile);
+                reader.readAsDataURL(screenshotInput.files[0]);
+            } else if (screenshotPreview.dataset.screenshot) {
+                errorReport.screenshot = screenshotPreview.dataset.screenshot;
+                saveErrorReport(errorReport);
             } else {
-                saveErrorReport(errorReports, newReport);
+                saveErrorReport(errorReport);
             }
         }
         
-        // Save error report to storage
-        function saveErrorReport(errorReports, newReport) {
-            errorReports.push(newReport);
-            localStorage.setItem(ERROR_REPORTS_KEY, JSON.stringify(errorReports));
+        function saveErrorReport(errorReport) {
+            // Add to error reports array
+            errorReports.push(errorReport);
             
-            showNotification('Issue reported successfully. Thank you!', 'success');
+            // Save to localStorage
+            localStorage.setItem('errorReports', JSON.stringify(errorReports));
+            
+            // Update admin error count badge if user is admin
+            if (currentUser.role === 'admin') {
+                updateErrorCountBadge();
+            }
+            
+            showNotification('Error report submitted successfully!', 'success');
             closeErrorModal();
-            
-            // Update error count for managers/admins
-            updateErrorCount();
-            
-            // In a real implementation, this would also send the report to a server
-            console.log("Error report submitted:", newReport);
         }
         
-        // --- Admin Error Dashboard ---
-        
-        // Open error dashboard
+        // Admin error dashboard functions
         function openErrorDashboard() {
+            if (currentUser.role !== 'admin') return;
+            
             document.getElementById('errorDashboardModal').style.display = 'flex';
             loadErrorDashboard();
         }
         
-        // Close error dashboard
         function closeErrorDashboard() {
             document.getElementById('errorDashboardModal').style.display = 'none';
         }
         
-        // Load error dashboard with all reports
         function loadErrorDashboard() {
-            let errorReports = [];
-            try {
-                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
-                if (storedReports) {
-                    errorReports = JSON.parse(storedReports);
-                }
-            } catch (e) {
-                console.error("Error parsing error reports:", e);
-                errorReports = [];
+            const dashboardList = document.getElementById('errorDashboardList');
+            const filteredReports = filterErrorReports();
+            
+            if (filteredReports.length === 0) {
+                dashboardList.innerHTML = '<p>No error reports found.</p>';
+                return;
             }
             
-            // Populate user filter
-            populateUserFilter(errorReports);
-            
-            // Apply filters and display reports
-            filterErrorReports();
+            dashboardList.innerHTML = filteredReports.map(error => `
+                <div class="dashboard-error-item ${error.status}">
+                    <div class="dashboard-error-header">
+                        <div class="dashboard-error-title">${error.title}</div>
+                        <div class="error-date">${new Date(error.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="dashboard-error-meta">
+                        <span>Module: ${error.module}</span>
+                        <span>Category: ${error.category}</span>
+                        <span>Severity: ${error.severity}</span>
+                        <span>Reported by: ${error.reportedBy}</span>
+                    </div>
+                    <div class="dashboard-error-description">${error.description}</div>
+                    <div class="dashboard-error-actions">
+                        <button class="status-btn ${error.status}" onclick="changeErrorStatus('${error.id}', 'new')">New</button>
+                        <button class="status-btn ${error.status}" onclick="changeErrorStatus('${error.id}', 'in-progress')">In Progress</button>
+                        <button class="status-btn ${error.status}" onclick="changeErrorStatus('${error.id}', 'resolved')">Resolved</button>
+                    </div>
+                </div>
+            `).join('');
         }
         
-        // Populate user filter dropdown
-        function populateUserFilter(errorReports) {
-            const userFilter = document.getElementById('filterUser');
-            
-            // Clear existing options except "All Users"
-            while (userFilter.options.length > 1) {
-                userFilter.remove(1);
-            }
-            
-            // Get unique users from error reports
-            const users = [...new Set(errorReports.map(report => report.userId))];
-            
-            // Add each user to the filter
-            users.forEach(user => {
-                const option = document.createElement('option');
-                option.value = user;
-                option.textContent = user;
-                userFilter.appendChild(option);
-            });
-        }
-        
-        // Filter error reports based on selected filters
         function filterErrorReports() {
             const statusFilter = document.getElementById('filterStatus').value;
             const moduleFilter = document.getElementById('filterModule').value;
             const severityFilter = document.getElementById('filterSeverity').value;
             const userFilter = document.getElementById('filterUser').value;
             
-            let errorReports = [];
-            try {
-                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
-                if (storedReports) {
-                    errorReports = JSON.parse(storedReports);
-                }
-            } catch (e) {
-                console.error("Error parsing error reports:", e);
-                errorReports = [];
+            let filtered = errorReports;
+            
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(error => error.status === statusFilter);
             }
             
-            // Apply filters
-            let filteredReports = errorReports.filter(report => {
-                if (statusFilter !== 'all' && report.status !== statusFilter) return false;
-                if (moduleFilter !== 'all' && report.module !== moduleFilter) return false;
-                if (severityFilter !== 'all' && report.severity !== severityFilter) return false;
-                if (userFilter !== 'all' && report.userId !== userFilter) return false;
-                return true;
-            });
-            
-            // Sort by date (newest first)
-            filteredReports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
-            // Display filtered reports
-            displayFilteredReports(filteredReports);
-        }
-        
-        // Display filtered reports in the dashboard
-        function displayFilteredReports(reports) {
-            const dashboardList = document.getElementById('errorDashboardList');
-            dashboardList.innerHTML = '';
-            
-            if (reports.length === 0) {
-                dashboardList.innerHTML = '<p>No error reports match the selected filters.</p>';
-                return;
+            if (moduleFilter !== 'all') {
+                filtered = filtered.filter(error => error.module === moduleFilter);
             }
             
-            reports.forEach(report => {
-                const reportItem = document.createElement('div');
-                reportItem.className = `dashboard-error-item ${report.status || 'new'}`;
-                
-                const date = new Date(report.timestamp).toLocaleString();
-                
-                reportItem.innerHTML = `
-                    <div class="dashboard-error-header">
-                        <div class="dashboard-error-title">${report.title}</div>
-                        <div class="dashboard-error-actions">
-                            <button class="status-btn ${report.status || 'new'}" onclick="changeErrorStatus('${report.id}', '${report.status || 'new'}')">
-                                ${report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1) : 'New'}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="dashboard-error-meta">
-                        <span>Module: ${report.module}</span>
-                        <span>Category: ${report.category}</span>
-                        <span>Severity: ${report.severity}</span>
-                        <span>Reported by: ${report.userFullName} (${report.userId})</span>
-                        <span>Date: ${date}</span>
-                    </div>
-                    <div class="dashboard-error-description">${report.description}</div>
-                `;
-                
-                dashboardList.appendChild(reportItem);
-            });
-        }
-        
-        // Change error status
-        function changeErrorStatus(errorId, currentStatus) {
-            let errorReports = [];
-            try {
-                const storedReports = localStorage.getItem(ERROR_REPORTS_KEY);
-                if (storedReports) {
-                    errorReports = JSON.parse(storedReports);
-                }
-            } catch (e) {
-                console.error("Error parsing error reports:", e);
-                errorReports = [];
+            if (severityFilter !== 'all') {
+                filtered = filtered.filter(error => error.severity === severityFilter);
             }
             
-            // Find the error report
-            const errorIndex = errorReports.findIndex(report => report.id === errorId);
-            
-            if (errorIndex === -1) {
-                showNotification('Error report not found', 'error');
-                return;
+            if (userFilter !== 'all') {
+                filtered = filtered.filter(error => error.reportedBy === userFilter);
             }
             
-            // Determine new status based on current status
-            let newStatus;
-            switch (currentStatus) {
-                case 'new':
-                    newStatus = 'in-progress';
-                    break;
-                case 'in-progress':
-                    newStatus = 'resolved';
-                    break;
-                case 'resolved':
-                    newStatus = 'new';
-                    break;
-                default:
-                    newStatus = 'new';
+            return filtered;
+        }
+        
+        function changeErrorStatus(errorId, newStatus) {
+            const errorIndex = errorReports.findIndex(error => error.id === errorId);
+            
+            if (errorIndex !== -1) {
+                errorReports[errorIndex].status = newStatus;
+                localStorage.setItem('errorReports', JSON.stringify(errorReports));
+                loadErrorDashboard();
+                updateErrorCountBadge();
             }
-            
-            // Update the status
-            errorReports[errorIndex].status = newStatus;
-            
-            // Save back to storage
-            localStorage.setItem(ERROR_REPORTS_KEY, JSON.stringify(errorReports));
-            
-            // Refresh the dashboard
-            filterErrorReports();
-            
-            // Update the error count badge
-            updateErrorCount();
-            
-            showNotification(`Error status updated to ${newStatus}`, 'success');
         }
         
-        // --- Module Loading System ---
-        
-        // Load a module
-        function loadModule(moduleId) {
-            currentModule = moduleId;
+        function updateErrorCountBadge() {
+            if (currentUser.role !== 'admin') return;
             
-            // Hide all modules
-            const modules = document.querySelectorAll('.module-content');
-            modules.forEach(module => {
-                module.classList.remove('active');
-            });
-            
-            // Hide module selector
-            document.getElementById('moduleSelector').style.display = 'none';
-            
-            // Show back button
-            const backButton = document.createElement('button');
-            backButton.className = 'back-button';
-            backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Modules';
-            backButton.onclick = () => {
-                document.getElementById(`${moduleId}Module`).innerHTML = '';
-                document.getElementById(`${moduleId}Module`).classList.remove('active');
-                document.getElementById('moduleSelector').style.display = 'grid';
-                currentModule = null;
-            };
-            
-            // Show loading state
-            const moduleContent = document.getElementById(`${moduleId}Module`);
-            moduleContent.innerHTML = '';
-            moduleContent.appendChild(backButton);
-            
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'module-loading';
-            loadingDiv.innerHTML = `
-                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                <p>Loading ${moduleId.replace(/-/g, ' ')}...</p>
-            `;
-            
-            moduleContent.appendChild(loadingDiv);
-            moduleContent.classList.add('active');
-            
-            // Simulate module loading
-            setTimeout(() => {
-                moduleContent.removeChild(loadingDiv);
-                
-                // Add module-specific content
-                const moduleTitle = document.createElement('h2');
-                moduleTitle.textContent = moduleId.replace(/-/g, ' ').toUpperCase();
-                moduleTitle.style.margin = '20px 0';
-                
-                const moduleDescription = document.createElement('p');
-                moduleDescription.textContent = `This is the ${moduleId.replace(/-/g, ' ')} module. In a full implementation, this would contain the actual module interface.`;
-                moduleDescription.style.marginBottom = '20px';
-                
-                moduleContent.appendChild(moduleTitle);
-                moduleContent.appendChild(moduleDescription);
-                
-                // Add a sample iframe for demonstration
-                const iframeContainer = document.createElement('div');
-                iframeContainer.className = 'iframe-container';
-                
-                const iframe = document.createElement('iframe');
-                iframe.className = 'module-iframe';
-                iframe.src = 'about:blank'; // In a real implementation, this would point to the actual module
-                iframe.onload = function() {
-                    // Add content to the iframe for demonstration
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    iframeDoc.body.innerHTML = `
-                        <div style="padding: 20px; text-align: center;">
-                            <h2>${moduleId.replace(/-/g, ' ').toUpperCase()} Module</h2>
-                            <p>This would be the actual module interface in a full implementation.</p>
-                            <p>You can use the floating "Report Error" button to report any issues with this module.</p>
-                        </div>
-                    `;
-                };
-                
-                iframeContainer.appendChild(iframe);
-                moduleContent.appendChild(iframeContainer);
-            }, 1500);
+            const newErrorCount = errorReports.filter(error => error.status === 'new').length;
+            document.getElementById('errorCountBadge').textContent = newErrorCount;
         }
         
-        // Show logo instructions
-        function showLogoInstructions() {
-            alert("To add your company logo:\n\n1. Create a folder named 'logo' in the same directory as this application\n2. Place your logo file (preferably PNG format) named 'logo.jpg' in that folder\n3. Refresh the application\n\nYour logo will automatically replace the placeholder.");
-        }
-        
-        // Initialize the application
-        function initApp() {
-            initUserSystem();
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            const changePasswordModal = document.getElementById('changePasswordModal');
+            const errorModal = document.getElementById('errorModal');
+            const errorDashboardModal = document.getElementById('errorDashboardModal');
             
-            // Setup menu button functionality
-            document.getElementById('menuButton').addEventListener('click', function() {
-                document.getElementById('dropdownMenu').classList.toggle('show');
-            });
-            
-            // Close dropdown when clicking outside
-            window.addEventListener('click', function(event) {
-                if (!event.target.matches('.menu-button')) {
-                    const dropdown = document.getElementById('dropdownMenu');
-                    if (dropdown.classList.contains('show')) {
-                        dropdown.classList.remove('show');
-                    }
-                }
-            });
-            
-            // Setup error report button
-            document.getElementById('errorReportButton').addEventListener('click', openErrorModal);
-            
-            // Setup view error reports button
-            document.getElementById('viewErrorReportsBtn').addEventListener('click', openErrorDashboard);
-        }
-        
-        // Start the application when the page loads
-        window.onload = initApp;
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+            if (event.target === changePasswordModal) {
+                changePasswordModal.style.display = 'none';
+            }
+            if (event.target === errorModal) {
+                closeErrorModal();
+            }
+            if (event.target === errorDashboardModal) {
+                closeErrorDashboard();
+            }
+        };
     </script>
+    
+    <!-- Include html2canvas for screenshot functionality -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
