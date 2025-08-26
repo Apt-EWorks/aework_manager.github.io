@@ -22,6 +22,86 @@
       max-width: 1400px;
       margin: 0 auto;
     }
+    /* Login Screen */
+    .login-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .login-box {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-header h2 {
+      color: #2c5282;
+      margin-bottom: 10px;
+    }
+    .login-header p {
+      color: #4a5568;
+      opacity: 0.8;
+    }
+    .login-form .form-group {
+      margin-bottom: 15px;
+    }
+    .login-form .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #4a5568;
+    }
+    .login-form .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .login-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .login-buttons .btn {
+      flex: 1;
+    }
+    .github-login {
+      background: #24292e;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .github-login:hover {
+      background: #1a1e23;
+      transform: translateY(-2px);
+    }
+    .github-login i {
+      font-size: 20px;
+    }
+    
     /* Header Styles */
     header {
       background: linear-gradient(to right, #1a3a6c, #2c5282);
@@ -30,6 +110,9 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     header h1 {
       font-size: 18px;
@@ -38,6 +121,56 @@
       opacity: 0.9;
       font-size: 13px;
     }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #cbd5e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #4a5568;
+    }
+    .user-menu {
+      position: relative;
+    }
+    .user-menu-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 200px;
+      z-index: 100;
+      margin-top: 5px;
+    }
+    .user-menu:hover .user-menu-content {
+      display: block;
+    }
+    .user-menu-item {
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .user-menu-item:hover {
+      background: #f7fafc;
+    }
+    .user-menu-item i {
+      width: 20px;
+      text-align: center;
+    }
+    
     /* Tab Navigation */
     .tab-navigation {
       display: flex;
@@ -62,6 +195,7 @@
       color: #3182ce;
       border-bottom-color: #bee3f8;
     }
+    
     /* Panel Styles */
     .panel {
       background: white;
@@ -87,6 +221,7 @@
     .panel-content {
       margin-top: 15px;
     }
+    
     /* Form Styles */
     .payment-date-selector {
       display: flex;
@@ -155,6 +290,7 @@
       cursor: pointer;
       font-size: 12px;
     }
+    
     /* Button Styles */
     .action-buttons {
       display: flex;
@@ -183,7 +319,7 @@
     .btn-danger { background: linear-gradient(to right, #e53e3e, #c53030); color: white; }
     .btn-info { background: linear-gradient(to right, #00b5d8, #0987a0); color: white; }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-
+    
     /* Table Styles */
     .table-container {
       overflow-x: auto;
@@ -213,7 +349,7 @@
       font-size: 12px;
     }
     tr:nth-child(even) { background-color: #f8fafc; }
-
+    
     /* Input Fields */
     .input-field {
       width: 100%;
@@ -233,7 +369,7 @@
       font-size: 12px;
       text-align: center;
     }
-
+    
     /* Summary Section */
     .summary {
       background: white;
@@ -259,7 +395,7 @@
       color: #2c5282;
       margin-top: 5px;
     }
-
+    
     /* Edit Lock Warning */
     .edit-lock-warning {
       position: fixed;
@@ -274,7 +410,30 @@
       z-index: 9999;
       display: none;
     }
-
+    
+    /* Sync Status */
+    .sync-status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border-radius: 8px;
+      padding: 10px 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      border-left: 4px solid #38a169;
+    }
+    .sync-status.syncing {
+      border-left-color: #ed8936;
+    }
+    .sync-status.error {
+      border-left-color: #e53e3e;
+    }
+    
     /* Contact Selection Modal */
     .modal {
       display: none;
@@ -336,7 +495,7 @@
       border: 1px solid #cbd5e0;
       border-radius: 4px;
     }
-
+    
     /* Signature Section */
     .signature-section {
       margin-top: 15px;
@@ -368,12 +527,12 @@
       display: flex;
       gap: 10px;
     }
-
+    
     /* Payslip Styles - A4 Landscape, Two A5 Portrait Pages */
     .payslip-container {
       display: none;
     }
-
+    
     @media print {
       body { visibility: hidden; }
       .payslip-container { display: block !important; visibility: visible; }
@@ -426,7 +585,7 @@
         max-height: 30px;
       }
     }
-
+    
     .payslip-dual {
       display: flex;
       width: 100%;
@@ -505,14 +664,57 @@
   </style>
 </head>
 <body>
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-header">
+        <h2>Apt Engineering Works Payroll System</h2>
+        <p>Secure login required to access payroll data</p>
+      </div>
+      <div class="login-form">
+        <div class="form-group">
+          <label for="username">GitHub Username</label>
+          <input type="text" id="username" placeholder="Enter your GitHub username">
+        </div>
+        <div class="form-group">
+          <label for="password">GitHub Personal Access Token</label>
+          <input type="password" id="password" placeholder="Enter your GitHub token">
+        </div>
+        <div class="login-buttons">
+          <button class="btn btn-info" onclick="loginWithGitHub()">
+            <i class="fab fa-github"></i> Login with GitHub
+          </button>
+        </div>
+        <div style="margin-top: 15px; font-size: 12px; color: #718096;">
+          <p><i class="fas fa-info-circle"></i> Need a token? <a href="https://github.com/settings/tokens" target="_blank">Create a personal access token</a> with repo access.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="edit-lock-warning" id="editLockWarning">
     ⚠️ Another session is editing this payroll. Avoid concurrent edits.
+  </div>
+
+  <div class="sync-status" id="syncStatus">
+    <i class="fas fa-sync-alt"></i> <span id="syncStatusText">Data synchronized</span>
   </div>
 
   <div class="container">
     <header>
       <h1>Apt Engineering Works Ltd</h1>
       <p>Advanced Payroll Management System</p>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-menu">
+          <div id="userName">User</div>
+          <div class="user-menu-content">
+            <div class="user-menu-item" onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
     <!-- Tab Navigation -->
@@ -734,6 +936,17 @@
   <input type="file" id="restoreFileInput" accept=".json" style="display: none;">
 
   <script>
+    // === GitHub Integration ===
+    const GITHUB_REPO_OWNER = "Apt-EWorks";
+    const GITHUB_REPO_NAME = "aework_manager.github.io";
+    const PAYROLL_FILE_PATH = "apt-payroll-manager-data.json";
+    const CONTACTS_FILE_PATH = "apt-work-manager-contacts.json";
+    
+    // === User Authentication ===
+    let currentUser = null;
+    let githubToken = null;
+    let syncInterval = null;
+    
     // === Edit Lock System ===
     const LOCK_KEY = "aptPayrollEditLock";
     const LOCK_TIMEOUT = 5 * 60 * 1000; // 5 minutes
@@ -757,6 +970,7 @@
     let currentPaymentDate = new Date().toISOString().split('T')[0];
     const localStorageKey = "aptEngineeringPayrollData";
     const signatureStorageKey = "aptPayrollSignature";
+    const lastSyncKey = "aptPayrollLastSync";
 
     // Default sample data
     function resetToDefault() {
@@ -795,7 +1009,13 @@
     }
 
     function saveData() {
-      const data = { employees, payrollHistory, managerName, currentPaymentDate };
+      const data = { 
+        employees, 
+        payrollHistory, 
+        managerName, 
+        currentPaymentDate,
+        lastSync: localStorage.getItem(lastSyncKey) || ""
+      };
       localStorage.setItem(localStorageKey, JSON.stringify(data));
     }
 
@@ -813,22 +1033,288 @@
       setTimeout(() => notif.remove(), 4000);
     }
 
+    // === Authentication System ===
+    function showLoginScreen() {
+      document.getElementById('loginScreen').style.display = 'flex';
+    }
+
+    function hideLoginScreen() {
+      document.getElementById('loginScreen').style.display = 'none';
+    }
+
+    function loginWithGitHub() {
+      const username = document.getElementById('username').value;
+      const token = document.getElementById('password').value;
+      
+      if (!username || !token) {
+        showNotification("Please enter both username and token", "error");
+        return;
+      }
+      
+      // Test the token with a simple GitHub API call
+      fetch('https://api.github.com/user', {
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Invalid GitHub token');
+        }
+        return response.json();
+      })
+      .then(userData => {
+        currentUser = {
+          username: userData.login,
+          name: userData.name || userData.login,
+          avatarUrl: userData.avatar_url
+        };
+        githubToken = token;
+        
+        // Update UI with user info
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        if (currentUser.avatarUrl) {
+          document.getElementById('userAvatar').style.backgroundImage = `url(${currentUser.avatarUrl})`;
+          document.getElementById('userAvatar').style.backgroundSize = 'cover';
+          document.getElementById('userAvatar').style.color = 'transparent';
+        }
+        
+        hideLoginScreen();
+        showNotification(`Welcome, ${currentUser.name}!`, "success");
+        
+        // Start sync process
+        initializeGitHubSync();
+      })
+      .catch(error => {
+        showNotification(error.message, "error");
+      });
+    }
+
+    function logout() {
+      if (confirm("Are you sure you want to log out?")) {
+        currentUser = null;
+        githubToken = null;
+        
+        if (syncInterval) {
+          clearInterval(syncInterval);
+          syncInterval = null;
+        }
+        
+        document.getElementById('userName').textContent = 'User';
+        document.getElementById('userAvatar').textContent = 'U';
+        document.getElementById('userAvatar').style.backgroundImage = 'none';
+        document.getElementById('userAvatar').style.color = '#4a5568';
+        
+        showLoginScreen();
+      }
+    }
+
+    // === GitHub Synchronization ===
+    function initializeGitHubSync() {
+      // First, load data from GitHub
+      loadFromGitHub()
+        .then(() => {
+          // Then start periodic sync
+          syncInterval = setInterval(syncToGitHub, 300000); // Every 5 minutes
+          
+          // Update sync status
+          document.getElementById('syncStatusText').textContent = "Data synchronized";
+          document.getElementById('syncStatus').className = 'sync-status';
+          
+          // Initial load complete
+          showNotification("Successfully connected to GitHub repository", "success");
+        })
+        .catch(error => {
+          console.error("Failed to initialize GitHub sync:", error);
+          showNotification("Connected to GitHub but failed to load data. Using local data.", "info");
+          
+          // Start periodic sync anyway
+          syncInterval = setInterval(syncToGitHub, 300000);
+        });
+    }
+
+    async function loadFromGitHub() {
+      if (!githubToken) {
+        throw new Error("GitHub token not available");
+      }
+      
+      try {
+        // Get the latest payroll data from GitHub
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`, {
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            // File doesn't exist yet, that's okay
+            console.log("Payroll data file not found in repository. Will create on next sync.");
+            return;
+          }
+          throw new Error(`GitHub API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const fileContent = JSON.parse(atob(data.content));
+        
+        // Check if this is newer than our local data
+        const lastSync = localStorage.getItem(lastSyncKey);
+        if (!lastSync || new Date(fileContent.lastSync) > new Date(lastSync)) {
+          // Update local data
+          employees = fileContent.employees || [];
+          payrollHistory = fileContent.payrollHistory || [];
+          managerName = fileContent.managerName || "John Manager";
+          currentPaymentDate = fileContent.currentPaymentDate || new Date().toISOString().split('T')[0];
+          
+          // Save to localStorage
+          localStorage.setItem(lastSyncKey, fileContent.lastSync);
+          saveData();
+          
+          // Update UI
+          renderTable();
+          renderHistory();
+          document.getElementById('managerName').value = managerName;
+          
+          showNotification("Loaded latest payroll data from GitHub", "success");
+        }
+      } catch (error) {
+        console.error("Error loading from GitHub:", error);
+        throw error;
+      }
+    }
+
+    async function syncToGitHub() {
+      if (!githubToken || !currentUser) {
+        return;
+      }
+      
+      try {
+        // Update sync status
+        document.getElementById('syncStatusText').textContent = "Syncing with GitHub...";
+        document.getElementById('syncStatus').className = 'sync-status syncing';
+        
+        // Get the current commit SHA (needed for updating)
+        const shaResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`, {
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        
+        let sha = null;
+        if (shaResponse.ok) {
+          const shaData = await shaResponse.json();
+          sha = shaData.sha;
+        }
+        
+        // Prepare the data to send
+        const now = new Date().toISOString();
+        const data = {
+          employees,
+          payrollHistory,
+          managerName,
+          currentPaymentDate,
+          lastSync: now
+        };
+        
+        const payload = {
+          message: `Update payroll data - ${now}`,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+          branch: "main"
+        };
+        
+        if (sha) {
+          payload.sha = sha;
+        }
+        
+        // Send the update to GitHub
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`, {
+          method: sha ? 'PUT' : 'POST',
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `GitHub API error: ${response.status}`);
+        }
+        
+        // Update local sync timestamp
+        localStorage.setItem(lastSyncKey, now);
+        
+        // Update UI
+        document.getElementById('syncStatusText').textContent = "Data synchronized";
+        document.getElementById('syncStatus').className = 'sync-status';
+        
+        showNotification("Payroll data synchronized with GitHub", "success");
+      } catch (error) {
+        console.error("Error syncing to GitHub:", error);
+        document.getElementById('syncStatusText').textContent = "Sync failed. Click to retry.";
+        document.getElementById('syncStatus').className = 'sync-status error';
+        document.getElementById('syncStatus').onclick = syncToGitHub;
+        
+        showNotification(`Sync failed: ${error.message}`, "error");
+      }
+    }
+
     // === UI Functions ===
     window.onload = () => {
-      acquireEditLock();
-      loadData();
-      document.getElementById('paymentDate').value = currentPaymentDate;
-      renderTable();
-      renderHistory();
-      // Initialize toggles
-      document.getElementById('toggleDeductions').onchange = (e) => {
-        document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
-      };
-      document.getElementById('toggleCalculated').onchange = (e) => {
-        document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
-      };
-      // Load contacts from work manager on startup
-      loadContactsFromWorkManager();
+      // Check if we have a user session
+      const savedUser = localStorage.getItem('aptPayrollUser');
+      const savedToken = localStorage.getItem('aptPayrollToken');
+      
+      if (savedUser && savedToken) {
+        try {
+          currentUser = JSON.parse(savedUser);
+          githubToken = savedToken;
+          
+          // Update UI with user info
+          document.getElementById('userName').textContent = currentUser.name;
+          document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+          if (currentUser.avatarUrl) {
+            document.getElementById('userAvatar').style.backgroundImage = `url(${currentUser.avatarUrl})`;
+            document.getElementById('userAvatar').style.backgroundSize = 'cover';
+            document.getElementById('userAvatar').style.color = 'transparent';
+          }
+          
+          // Start GitHub sync
+          initializeGitHubSync();
+          
+          // Load payroll data
+          acquireEditLock();
+          loadData();
+          document.getElementById('paymentDate').value = currentPaymentDate;
+          renderTable();
+          renderHistory();
+          
+          // Initialize toggles
+          document.getElementById('toggleDeductions').onchange = (e) => {
+            document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
+          };
+          document.getElementById('toggleCalculated').onchange = (e) => {
+            document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
+          };
+          
+          // Load contacts from work manager on startup
+          loadContactsFromWorkManager();
+          
+          // Hide login screen
+          hideLoginScreen();
+        } catch (e) {
+          console.error("Failed to restore user session:", e);
+          showLoginScreen();
+        }
+      } else {
+        showLoginScreen();
+      }
     };
 
     function switchTab(tabId) {
@@ -932,55 +1418,79 @@
 
     // === Sync Contacts from apt-work-manager.html ===
     async function loadContactsFromWorkManager() {
-      const WORK_MANAGER_URL = 'https://raw.githubusercontent.com/Apt-EWorks/aework_manager.github.io/main/apt-work-manager.html';
       try {
-        const response = await fetch(WORK_MANAGER_URL);
-        if (!response.ok) throw new Error('Failed to fetch work manager');
-        const html = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const script = Array.from(doc.scripts).find(s => s.textContent.includes('getData'));
-        if (!script) throw new Error('Work manager script not found');
-
-        // Extract contacts data
-        const contactsMatch = script.textContent.match(/getData\s*\(\s*['"]contacts['"]\s*\)\s*=\s*(\[[^\]]+\])/);
-        if (!contactsMatch) throw new Error('Contacts data not found in work manager');
-
-        availableContacts = JSON.parse(contactsMatch[1]);
-        
-        // Update any existing employees with contact info
-        employees.forEach(emp => {
-          const contact = availableContacts.find(c => c.name === emp.name);
-          if (contact) {
-            // Update status based on designation
-            if (contact.designation && contact.designation.toLowerCase().includes('contract')) {
-              emp.status = "Contract";
+        // First try to get contacts from GitHub
+        if (githubToken) {
+          try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONTACTS_FILE_PATH}`, {
+              headers: {
+                'Authorization': `token ${githubToken}`,
+                'Accept': 'application/vnd.github.v3+json'
+              }
+            });
+            
+            if (response.ok) {
+              const data = await response.json();
+              availableContacts = JSON.parse(atob(data.content));
+              showNotification("Contacts loaded from GitHub!", "success");
+              return;
             }
+          } catch (error) {
+            console.warn("Could not load contacts from GitHub:", error);
           }
-        });
-        
-        renderTable();
-        showNotification("Contacts loaded from Work Manager!", "success");
-      } catch (error) {
-        console.warn("Could not load contacts from work manager:", error.message);
-        showNotification("Using local data. Could not sync contacts.", "info");
-        // Keep existing data or default
-        if (employees.length === 0) {
-          resetToDefault();
-          renderTable();
         }
+        
+        // Fallback to local storage
+        const contactsStr = localStorage.getItem('aptWorkManager_contacts');
+        if (contactsStr) {
+          availableContacts = JSON.parse(contactsStr);
+          showNotification("Contacts loaded from local storage", "info");
+          return;
+        }
+        
+        // Fallback to default contacts
+        availableContacts = [
+          { name: "John Manager", designation: "Project Manager" },
+          { name: "Abe Abiola", designation: "Permanent Staff" },
+          { name: "Jeremiah Dennis", designation: "Contract Staff" },
+          { name: "Chinwe Okonkwo", designation: "Permanent Staff" },
+          { name: "Oluwaseun Adebayo", designation: "Contract Staff" }
+        ];
+        
+        showNotification("Using default contacts. Sync contacts for full functionality.", "info");
+      } catch (error) {
+        console.error("Error loading contacts:", error);
+        showNotification("Error loading contacts: " + error.message, "error");
+        
+        // Use default contacts on error
+        availableContacts = [
+          { name: "John Manager", designation: "Project Manager" },
+          { name: "Abe Abiola", designation: "Permanent Staff" },
+          { name: "Jeremiah Dennis", designation: "Contract Staff" },
+          { name: "Chinwe Okonkwo", designation: "Permanent Staff" },
+          { name: "Oluwaseun Adebayo", designation: "Contract Staff" }
+        ];
       }
+      
+      // Update any existing employees with contact info
+      employees.forEach(emp => {
+        const contact = availableContacts.find(c => c.name === emp.name);
+        if (contact) {
+          // Update status based on designation
+          if (contact.designation && contact.designation.toLowerCase().includes('contract')) {
+            emp.status = "Contract";
+          }
+        }
+      });
+      
+      renderTable();
     }
 
     // === Sync Payroll Employees to Work Manager Contacts ===
     function syncEmployeeToWorkManager(employee) {
       try {
-        // Get current contacts from localStorage
-        let contacts = [];
-        const contactsStr = localStorage.getItem('aptWorkManager_contacts');
-        if (contactsStr) {
-          contacts = JSON.parse(contactsStr);
-        }
+        // Get current contacts
+        let contacts = [...availableContacts];
         
         // Check if contact already exists
         const exists = contacts.some(c => c.name === employee.name);
@@ -994,16 +1504,72 @@
           email1: ""
         });
         
-        // Save back to localStorage
+        // Save to availableContacts
+        availableContacts = contacts;
+        
+        // Save to localStorage
         localStorage.setItem('aptWorkManager_contacts', JSON.stringify(contacts));
         
-        // Dispatch event to notify work manager (if loaded)
-        window.dispatchEvent(new Event('workManagerDataUpdated'));
+        // If logged in, save to GitHub
+        if (githubToken) {
+          saveContactsToGitHub(contacts);
+        }
         
         return true;
       } catch (error) {
         console.error("Error syncing to work manager:", error);
         return false;
+      }
+    }
+
+    async function saveContactsToGitHub(contacts) {
+      try {
+        // Get the current commit SHA
+        const shaResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONTACTS_FILE_PATH}`, {
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        
+        let sha = null;
+        if (shaResponse.ok) {
+          const shaData = await shaResponse.json();
+          sha = shaData.sha;
+        }
+        
+        // Prepare the data to send
+        const now = new Date().toISOString();
+        const payload = {
+          message: `Update contacts data - ${now}`,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(contacts, null, 2)))),
+          branch: "main"
+        };
+        
+        if (sha) {
+          payload.sha = sha;
+        }
+        
+        // Send the update to GitHub
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONTACTS_FILE_PATH}`, {
+          method: sha ? 'PUT' : 'POST',
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `GitHub API error: ${response.status}`);
+        }
+        
+        showNotification("Contacts synchronized with GitHub", "success");
+      } catch (error) {
+        console.error("Error saving contacts to GitHub:", error);
+        showNotification(`Contacts sync failed: ${error.message}`, "error");
       }
     }
 
@@ -1357,6 +1923,12 @@
       payrollHistory.unshift(run);
       saveData();
       renderHistory();
+      
+      // Sync to GitHub
+      if (githubToken) {
+        syncToGitHub();
+      }
+      
       alert(`Payroll saved for ${formatDate(currentPaymentDate)}!`);
     }
 
@@ -1450,7 +2022,13 @@
     }
 
     function backupData() {
-      const data = { employees, payrollHistory, managerName, currentPaymentDate, signatureImage };
+      const data = { 
+        employees, 
+        payrollHistory, 
+        managerName, 
+        currentPaymentDate,
+        signatureImage
+      };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -1488,6 +2066,11 @@
             document.getElementById('managerName').value = managerName;
             updateSignaturePreview();
             alert("Data restored.");
+            
+            // If logged in, sync to GitHub
+            if (githubToken) {
+              syncToGitHub();
+            }
           }
         } catch (err) {
           alert("Error: " + err.message);
@@ -1508,6 +2091,11 @@
         document.getElementById('managerName').value = managerName;
         updateSignaturePreview();
         alert("Data reset.");
+        
+        // If logged in, sync to GitHub
+        if (githubToken) {
+          syncToGitHub();
+        }
       }
     }
 
