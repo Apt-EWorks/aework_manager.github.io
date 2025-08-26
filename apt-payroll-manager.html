@@ -142,6 +142,19 @@
       font-size: 13px;
       transition: border-color 0.3s;
     }
+    .contact-selector {
+      display: flex;
+      gap: 5px;
+      margin-top: 2px;
+    }
+    .contact-selector button {
+      padding: 4px 8px;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
     /* Button Styles */
     .action-buttons {
       display: flex;
@@ -262,6 +275,100 @@
       display: none;
     }
 
+    /* Contact Selection Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    .modal-header {
+      padding: 15px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 15px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .modal-footer {
+      padding: 15px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .contact-item {
+      padding: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .contact-item:hover {
+      background: #f7fafc;
+    }
+    .contact-item.selected {
+      background: #ebf8ff;
+      border-left: 3px solid #3182ce;
+    }
+    .contact-search {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+    }
+
+    /* Signature Section */
+    .signature-section {
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #ccc;
+    }
+    .signature-upload {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .signature-preview {
+      width: 200px;
+      height: 80px;
+      border: 1px dashed #cbd5e0;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+    }
+    .signature-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .signature-actions {
+      display: flex;
+      gap: 10px;
+    }
+
     /* Payslip Styles - A4 Landscape, Two A5 Portrait Pages */
     .payslip-container {
       display: none;
@@ -314,6 +421,10 @@
         margin-top: 6px;
       }
       .print-button { display: none; }
+      .signature-preview img {
+        max-width: 100%;
+        max-height: 30px;
+      }
     }
 
     .payslip-dual {
@@ -371,6 +482,12 @@
       height: 1px;
       background: #000;
       margin: 10px 0 5px;
+    }
+    .signature-image {
+      max-width: 150px;
+      max-height: 40px;
+      margin: 0 auto;
+      display: block;
     }
     .confidential-footer {
       margin-top: 10px;
@@ -551,6 +668,30 @@
             <label for="managerName"><i class="fas fa-signature"></i> Manager Name for Payslips</label>
             <input type="text" id="managerName" value="John Manager" onchange="updateManagerName(this.value)">
           </div>
+          
+          <!-- Signature Upload Section -->
+          <div class="form-group" style="margin-top: 20px;">
+            <label><i class="fas fa-file-signature"></i> Manager Signature</label>
+            <div class="signature-upload">
+              <div class="signature-preview" id="signaturePreview">
+                <span id="signaturePlaceholder" style="color: #a0aec0;">No signature uploaded</span>
+              </div>
+              <div class="signature-actions">
+                <input type="file" id="signatureUpload" accept="image/*" style="display: none;"
+                       onchange="handleSignatureUpload(event)">
+                <button class="btn btn-info" onclick="document.getElementById('signatureUpload').click()">
+                  <i class="fas fa-upload"></i> Upload
+                </button>
+                <button class="btn btn-danger" onclick="removeSignature()">
+                  <i class="fas fa-trash"></i> Remove
+                </button>
+              </div>
+            </div>
+            <p style="font-size: 11px; color: #718096; margin-top: 8px;">
+              Upload a clear image of your signature (PNG, JPG). Recommended size: 300x100 pixels.
+            </p>
+          </div>
+          
           <div class="action-buttons">
             <button class="btn btn-info" onclick="backupData()">
               <i class="fas fa-file-export"></i> Backup Data
@@ -563,6 +704,25 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Selection Modal -->
+  <div class="modal" id="contactModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Select Contact</h3>
+        <button onclick="closeContactModal()" style="background: none; border: none; font-size: 18px;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="contactSearch" class="contact-search" placeholder="Search contacts..." 
+               oninput="filterContacts()">
+        <div id="contactsList"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" onclick="closeContactModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmContactSelection()">Select</button>
       </div>
     </div>
   </div>
@@ -593,8 +753,10 @@
     let employees = [];
     let payrollHistory = [];
     let managerName = "John Manager";
+    let signatureImage = null;
     let currentPaymentDate = new Date().toISOString().split('T')[0];
     const localStorageKey = "aptEngineeringPayrollData";
+    const signatureStorageKey = "aptPayrollSignature";
 
     // Default sample data
     function resetToDefault() {
@@ -606,6 +768,7 @@
       ];
       payrollHistory = [];
       managerName = "John Manager";
+      signatureImage = null;
       currentPaymentDate = new Date().toISOString().split('T')[0];
     }
 
@@ -626,6 +789,9 @@
       } else {
         resetToDefault();
       }
+      
+      // Load signature
+      loadSignature();
     }
 
     function saveData() {
@@ -683,6 +849,87 @@
       saveData();
     }
 
+    // === Contact Selection System ===
+    let availableContacts = [];
+    let currentEmployeeIndex = null;
+    let selectedContactIndex = null;
+
+    function openContactModal(employeeIndex) {
+      currentEmployeeIndex = employeeIndex;
+      selectedContactIndex = null;
+      
+      const modal = document.getElementById('contactModal');
+      const contactsList = document.getElementById('contactsList');
+      const contactSearch = document.getElementById('contactSearch');
+      
+      // Reset search
+      contactSearch.value = '';
+      
+      // Populate contacts list
+      contactsList.innerHTML = '';
+      if (availableContacts.length === 0) {
+        contactsList.innerHTML = '<div class="contact-item">No contacts available. Sync from Work Manager first.</div>';
+        return;
+      }
+      
+      availableContacts.forEach((contact, index) => {
+        const contactItem = document.createElement('div');
+        contactItem.className = 'contact-item';
+        contactItem.innerHTML = `
+          <div><strong>${contact.name}</strong></div>
+          <div style="font-size: 12px; color: #718096;">${contact.designation || 'No designation'}</div>
+        `;
+        contactItem.onclick = () => {
+          document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('selected'));
+          contactItem.classList.add('selected');
+          selectedContactIndex = index;
+        };
+        contactsList.appendChild(contactItem);
+      });
+      
+      modal.style.display = 'flex';
+    }
+
+    function closeContactModal() {
+      document.getElementById('contactModal').style.display = 'none';
+      currentEmployeeIndex = null;
+      selectedContactIndex = null;
+    }
+
+    function filterContacts() {
+      const searchTerm = document.getElementById('contactSearch').value.toLowerCase();
+      const contactsList = document.getElementById('contactsList');
+      
+      document.querySelectorAll('.contact-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+      });
+    }
+
+    function confirmContactSelection() {
+      if (selectedContactIndex === null) {
+        showNotification("Please select a contact first", "error");
+        return;
+      }
+      
+      const contact = availableContacts[selectedContactIndex];
+      const employee = employees[currentEmployeeIndex];
+      
+      // Update employee with contact info
+      employee.name = contact.name;
+      
+      // Update status based on designation
+      if (contact.designation && contact.designation.toLowerCase().includes('contract')) {
+        employee.status = "Contract";
+      } else {
+        employee.status = "Permanent";
+      }
+      
+      renderTable();
+      closeContactModal();
+      showNotification(`Selected contact: ${contact.name}`, "success");
+    }
+
     // === Sync Contacts from apt-work-manager.html ===
     async function loadContactsFromWorkManager() {
       const WORK_MANAGER_URL = 'https://raw.githubusercontent.com/Apt-EWorks/aework_manager.github.io/main/apt-work-manager.html';
@@ -699,31 +946,21 @@
         const contactsMatch = script.textContent.match(/getData\s*\(\s*['"]contacts['"]\s*\)\s*=\s*(\[[^\]]+\])/);
         if (!contactsMatch) throw new Error('Contacts data not found in work manager');
 
-        const contacts = JSON.parse(contactsMatch[1]);
-        const newEmployees = contacts
-          .filter(c => c.name && c.name.trim() !== '')
-          .map(c => {
-            const existing = employees.find(e => e.name === c.name);
-            return {
-              name: c.name,
-              idNo: existing ? existing.idNo : `AEWP-${String(employees.length + 1).padStart(3, '0')}`,
-              status: existing ? existing.status : "Permanent",
-              daysWorked: existing ? existing.daysWorked : 22,
-              basic: existing ? existing.basic : 30000,
-              transport: existing ? existing.transport : 10000,
-              housing: existing ? existing.housing : 12000,
-              iou: existing ? existing.iou : 0
-            };
-          });
-
-        // Replace only if we have valid contacts
-        if (newEmployees.length > 0) {
-          employees = newEmployees;
-          renderTable();
-          showNotification("Employee list synced from Work Manager!", "success");
-        } else {
-          showNotification("No valid contacts found in Work Manager.", "info");
-        }
+        availableContacts = JSON.parse(contactsMatch[1]);
+        
+        // Update any existing employees with contact info
+        employees.forEach(emp => {
+          const contact = availableContacts.find(c => c.name === emp.name);
+          if (contact) {
+            // Update status based on designation
+            if (contact.designation && contact.designation.toLowerCase().includes('contract')) {
+              emp.status = "Contract";
+            }
+          }
+        });
+        
+        renderTable();
+        showNotification("Contacts loaded from Work Manager!", "success");
       } catch (error) {
         console.warn("Could not load contacts from work manager:", error.message);
         showNotification("Using local data. Could not sync contacts.", "info");
@@ -795,7 +1032,14 @@
         const personnelCost = deductions.staffPension + deductions.companyPension;
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td><input class="input-field" type="text" value="${emp.name}" onchange="updateField(${index}, 'name', this.value)"></td>
+          <td>
+            <div class="contact-selector">
+              <input class="input-field" type="text" value="${emp.name}" onchange="updateField(${index}, 'name', this.value)">
+              <button onclick="openContactModal(${index})" title="Select from contacts">
+                <i class="fas fa-address-book"></i>
+              </button>
+            </div>
+          </td>
           <td><input class="input-field" type="text" value="${emp.idNo}" onchange="updateField(${index}, 'idNo', this.value)"></td>
           <td><select class="input-field" onchange="updateField(${index}, 'status', this.value)">
             <option ${emp.status==='Permanent'?'selected':''}>Permanent</option>
@@ -860,6 +1104,59 @@
       // Immediately sync the new employee to work manager
       if (syncEmployeeToWorkManager(newEmployee)) {
         showNotification(`Employee "${newEmployee.name}" added to Work Manager contacts`, "success");
+      }
+    }
+
+    // === Signature Management ===
+    function loadSignature() {
+      signatureImage = localStorage.getItem(signatureStorageKey);
+      updateSignaturePreview();
+    }
+
+    function updateSignaturePreview() {
+      const preview = document.getElementById('signaturePreview');
+      const placeholder = document.getElementById('signaturePlaceholder');
+      
+      if (signatureImage) {
+        preview.innerHTML = `<img src="${signatureImage}" alt="Manager Signature">`;
+        placeholder.style.display = 'none';
+      } else {
+        preview.innerHTML = `<span id="signaturePlaceholder" style="color: #a0aec0;">No signature uploaded</span>`;
+      }
+    }
+
+    function handleSignatureUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // Check file type
+      if (!file.type.match('image.*')) {
+        showNotification("Please select an image file (PNG, JPG)", "error");
+        return;
+      }
+      
+      // Check file size (max 1MB)
+      if (file.size > 1024 * 1024) {
+        showNotification("File too large. Maximum size is 1MB", "error");
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        signatureImage = e.target.result;
+        localStorage.setItem(signatureStorageKey, signatureImage);
+        updateSignaturePreview();
+        showNotification("Signature uploaded successfully", "success");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeSignature() {
+      if (confirm("Are you sure you want to remove the signature?")) {
+        signatureImage = null;
+        localStorage.removeItem(signatureStorageKey);
+        updateSignaturePreview();
+        showNotification("Signature removed", "success");
       }
     }
 
@@ -969,7 +1266,10 @@
               <h4>Net Pay</h4>
               <h2 style="color:#2c5282; text-align:center;">${formatCurrency(net)}</h2>
               <div class="signature-section">
-                <div class="signature-box"><div>Staff Signature</div><div class="signature-line"></div></div>
+                <div class="signature-box">
+                  <div>Staff Signature</div>
+                  <div class="signature-line"></div>
+                </div>
               </div>
             </div>
 
@@ -1006,7 +1306,10 @@
               <h4>Net Pay</h4>
               <h2 style="color:#2c5282; text-align:center;">${formatCurrency(net)}</h2>
               <div class="signature-section">
-                <div class="signature-box"><div>Manager: ${managerName}</div><div class="signature-line"></div></div>
+                <div class="signature-box">
+                  <div>Manager: ${managerName}</div>
+                  ${signatureImage ? `<img src="${signatureImage}" class="signature-image">` : '<div class="signature-line"></div>'}
+                </div>
               </div>
             </div>
           </div>
@@ -1147,7 +1450,7 @@
     }
 
     function backupData() {
-      const data = { employees, payrollHistory, managerName, currentPaymentDate };
+      const data = { employees, payrollHistory, managerName, currentPaymentDate, signatureImage };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -1171,11 +1474,19 @@
             payrollHistory = data.payrollHistory || [];
             managerName = data.managerName || "John Manager";
             currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
+            signatureImage = data.signatureImage || null;
+            
+            // Save signature to localStorage
+            if (signatureImage) {
+              localStorage.setItem(signatureStorageKey, signatureImage);
+            }
+            
             saveData();
             renderTable();
             renderHistory();
             document.getElementById('paymentDate').value = currentPaymentDate;
             document.getElementById('managerName').value = managerName;
+            updateSignaturePreview();
             alert("Data restored.");
           }
         } catch (err) {
@@ -1189,11 +1500,13 @@
     function resetData() {
       if (confirm("Reset all data?")) {
         localStorage.removeItem(localStorageKey);
+        localStorage.removeItem(signatureStorageKey);
         resetToDefault();
         renderTable();
         renderHistory();
         document.getElementById('paymentDate').value = currentPaymentDate;
         document.getElementById('managerName').value = managerName;
+        updateSignaturePreview();
         alert("Data reset.");
       }
     }
