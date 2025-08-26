@@ -6,7 +6,6 @@
   <title>Apt Engineering Works Payroll System</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Base Styles */
     * {
       margin: 0;
       padding: 0;
@@ -23,8 +22,7 @@
       max-width: 1400px;
       margin: 0 auto;
     }
-
-    /* Header Styles - Mobile Optimized */
+    /* Header Styles */
     header {
       background: linear-gradient(to right, #1a3a6c, #2c5282);
       color: white;
@@ -32,105 +30,39 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
     }
-    .header-content {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-container {
-      background: white;
-      border-radius: 8px;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .logo-placeholder {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(45deg, #2c5282, #1a3a6c);
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .logo-placeholder span {
-      transform: rotate(-15deg);
-    }
-    .header-text {
-      flex: 1;
-      min-width: 0;
-    }
-    .header-text h1 {
+    header h1 {
       font-size: 18px;
-      margin-bottom: 3px;
     }
-    .header-text p {
+    header p {
       opacity: 0.9;
       font-size: 13px;
     }
-    .controls {
+    /* Tab Navigation */
+    .tab-navigation {
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      width: 100%;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 15px;
     }
-    .upload-btn {
-      background: white;
-      color: #2c5282;
+    .tab-btn {
+      padding: 10px 15px;
+      background: none;
       border: none;
-      padding: 8px 10px;
-      border-radius: 6px;
+      border-bottom: 3px solid transparent;
       font-weight: 600;
+      color: #4a5568;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      font-size: 13px;
-      flex: 1;
-      min-width: 140px;
-      justify-content: center;
+      transition: all 0.3s;
     }
-    .upload-btn:hover {
-      background: #f0f4f8;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    .tab-btn.active {
+      color: #2c5282;
+      border-bottom-color: #2c5282;
     }
-    #logoInput {
-      display: none;
+    .tab-btn:hover:not(.active) {
+      color: #3182ce;
+      border-bottom-color: #bee3f8;
     }
-
-    /* Mobile Navigation */
-    .mobile-menu-btn {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      display: block;
-      padding: 5px;
-    }
-
-    /* Content Layout - Stacked on Mobile */
-    .content {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    /* Panel Styles - Collapsible on Mobile */
+    /* Panel Styles */
     .panel {
       background: white;
       border-radius: 10px;
@@ -155,17 +87,24 @@
     .panel-content {
       margin-top: 15px;
     }
-    .collapsed .panel-content {
-      display: none;
-    }
-    .toggle-icon {
-      transition: transform 0.3s;
-    }
-    .collapsed .toggle-icon {
-      transform: rotate(180deg);
-    }
-
     /* Form Styles */
+    .payment-date-selector {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .payment-date-selector label {
+      font-weight: 500;
+      color: #4a5568;
+      white-space: nowrap;
+    }
+    .payment-date-selector input {
+      padding: 8px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 13px;
+    }
     .toggle-container {
       display: flex;
       align-items: center;
@@ -203,13 +142,7 @@
       font-size: 13px;
       transition: border-color 0.3s;
     }
-    .form-group input:focus, .form-group select:focus {
-      outline: none;
-      border-color: #4299e1;
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-    }
-
-    /* Button Styles - Larger for Mobile */
+    /* Button Styles */
     .action-buttons {
       display: flex;
       gap: 10px;
@@ -231,39 +164,20 @@
       min-width: 140px;
       justify-content: center;
     }
-    .btn-primary {
-      background: linear-gradient(to right, #3182ce, #2b6cb0);
-      color: white;
-    }
-    .btn-success {
-      background: linear-gradient(to right, #38a169, #2f855a);
-      color: white;
-    }
-    .btn-warning {
-      background: linear-gradient(to right, #ed8936, #dd6b20);
-      color: white;
-    }
-    .btn-danger {
-      background: linear-gradient(to right, #e53e3e, #c53030);
-      color: white;
-    }
-    .btn-info {
-      background: linear-gradient(to right, #00b5d8, #0987a0);
-      color: white;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
+    .btn-primary { background: linear-gradient(to right, #3182ce, #2b6cb0); color: white; }
+    .btn-success { background: linear-gradient(to right, #38a169, #2f855a); color: white; }
+    .btn-warning { background: linear-gradient(to right, #ed8936, #dd6b20); color: white; }
+    .btn-danger { background: linear-gradient(to right, #e53e3e, #c53030); color: white; }
+    .btn-info { background: linear-gradient(to right, #00b5d8, #0987a0); color: white; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
 
-    /* Table Styles - Scrollable on Mobile */
+    /* Table Styles */
     .table-container {
       overflow-x: auto;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       margin-top: 10px;
       background: white;
-      -webkit-overflow-scrolling: touch;
     }
     table {
       width: 100%;
@@ -285,12 +199,7 @@
       text-align: center;
       font-size: 12px;
     }
-    tr:last-child td {
-      border-bottom: none;
-    }
-    tr:nth-child(even) {
-      background-color: #f8fafc;
-    }
+    tr:nth-child(even) { background-color: #f8fafc; }
 
     /* Input Fields */
     .input-field {
@@ -300,7 +209,6 @@
       border-radius: 4px;
       background: #fff9c4;
       font-size: 12px;
-      min-width: 60px;
     }
     .calculated-value {
       width: 100%;
@@ -311,21 +219,15 @@
       font-weight: 500;
       font-size: 12px;
       text-align: center;
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    /* Summary Section - Stacked on Mobile */
+    /* Summary Section */
     .summary {
       background: white;
       border-radius: 10px;
       padding: 15px;
       margin-top: 15px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      font-weight: 600;
-      color: #2d3748;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -343,108 +245,90 @@
       font-size: 14px;
       color: #2c5282;
       margin-top: 5px;
-      white-space: nowrap;
     }
 
-    /* Payslip Styles */
+    /* Edit Lock Warning */
+    .edit-lock-warning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #c53030;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      z-index: 9999;
+      display: none;
+    }
+
+    /* Payslip Styles - A4 Landscape, Two A5 Portrait Pages */
     .payslip-container {
       display: none;
     }
-    .payslip-page {
-      page-break-after: always;
-      padding: 10px;
+
+    @media print {
+      body { visibility: hidden; }
+      .payslip-container { display: block !important; visibility: visible; }
+      @page {
+        size: A4 landscape;
+        margin: 0.5cm;
+      }
+      .payslip-page {
+        width: 100%;
+        height: 100%;
+        display: block;
+        margin: 0;
+        padding: 0;
+      }
+      .payslip-dual {
+        display: flex;
+        width: 100%;
+        height: 100%;
+      }
+      .payslip-copy {
+        width: 50%;
+        height: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        page-break-inside: avoid;
+      }
+      .payslip-table {
+        font-size: 9px;
+      }
+      .payslip-table th, .payslip-table td {
+        padding: 3px;
+        line-height: 1.2;
+      }
+      .signature-section {
+        margin-top: 10px;
+        font-size: 9px;
+      }
+      .signature-line {
+        height: 1px;
+        background: #000;
+        margin: 8px 0 4px;
+      }
+      .confidential-footer {
+        font-size: 8px;
+        margin-top: 6px;
+      }
+      .print-button { display: none; }
     }
-    .payslip {
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 15px auto;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 100%;
-      font-size: 12px;
-    }
-    .payslip-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #eee;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .payslip-logo img {
-      max-width: 80px;
-      height: auto;
-    }
-    .payslip-company-details h2 {
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-    .payslip-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-    .payslip-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 10px;
-      font-size: 11px;
-    }
-    .payslip-table th,
-    .payslip-table td {
-      border: 1px solid #aaa;
-      padding: 4px 6px;
-      font-size: 10px;
-    }
-    .payslip-table th {
-      background: #f0f0f0;
-      font-weight: bold;
-    }
-    .confidential-footer {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 8px;
-      color: #666;
-      font-style: italic;
-      border-top: 1px solid #eee;
-      padding-top: 8px;
-    }
-    .print-button {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .signature-section {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-      padding-top: 10px;
-      border-top: 1px solid #ccc;
-    }
-    .signature-box {
-      width: 48%;
-      text-align: center;
-    }
-    .signature-line {
-      height: 1px;
-      background: #000;
-      margin: 5px 0 10px;
-    }
+
     .payslip-dual {
       display: flex;
-      gap: 15px;
-      margin-top: 15px;
+      width: 100%;
+      gap: 0;
     }
     .payslip-copy {
-      width: 48%;
+      width: 50%;
       border: 1px solid #ddd;
       border-radius: 5px;
       padding: 10px;
+      box-sizing: border-box;
       position: relative;
+      page-break-inside: avoid;
     }
     .copy-label {
       position: absolute;
@@ -456,352 +340,79 @@
       font-size: 9px;
       font-weight: bold;
     }
-    
-    /* NEW: Print-specific Styles */
-    @media print {
-      body {
-        background: white;
-        color: black;
-        font-size: 12px;
-        margin: 0;
-        padding: 0;
-      }
-      body > *:not(.payslip-container) {
-        display: none !important;
-      }
-      .payslip-container {
-        display: block !important;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      .payslip-page {
-        width: 100%;
-        page-break-after: always;
-        margin: 0;
-        padding: 0;
-      }
-      .payslip {
-        width: 100%;
-        margin: 0;
-        box-shadow: none;
-        border: none;
-        padding: 10px;
-      }
-      .payslip-table th,
-      .payslip-table td {
-        border: 1px solid #000;
-      }
-      .print-button {
-        display: none;
-      }
-      .confidential-footer {
-        font-size: 8px;
-      }
-      .signature-section {
-        display: flex;
-      }
-      .signature-box {
-        width: 48%;
-      }
-      .payslip-dual {
-        display: flex;
-        gap: 15px;
-      }
-      .payslip-copy {
-        width: 48%;
-        border: 1px solid #000;
-      }
-      @page {
-        size: A4 landscape;
-        margin: 1cm;
-      }
-    }
-
-    /* Toggle for Calculated Fields */
-    #payrollTable.hide-calculated .calculated-cell {
-      display: none;
-    }
-    #payrollTable.hide-calculated .input-field {
-      white-space: normal;
-      overflow: visible;
-      text-overflow: clip;
-      width: auto;
-    }
-    #payrollTable.hide-calculated td:not(.calculated-cell) {
-      width: auto;
-    }
-
-    /* History Panel Styles */
-    .history-panel {
-      background: white;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-    .history-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .history-header h2 {
-      color: #2c5282;
-      font-size: 17px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .history-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 15px;
-    }
-    .history-card {
-      background: white;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid #2c5282;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .history-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    .history-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .payslip-table {
+      width: 100%;
+      border-collapse: collapse;
       margin-bottom: 10px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #eee;
-    }
-    .history-card-title {
-      font-weight: 600;
-      color: #2c5282;
-      font-size: 15px;
-    }
-    .history-card-date {
-      font-size: 12px;
-      color: #718096;
-    }
-    .history-card-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .history-card-item {
-      margin-bottom: 5px;
-    }
-    .history-card-label {
-      font-size: 11px;
-      color: #718096;
-      font-weight: 500;
-    }
-    .history-card-value {
-      font-size: 13px;
-      font-weight: 600;
-      color: #2d3748;
-    }
-    .history-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    .history-btn {
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .history-btn i {
       font-size: 10px;
     }
-
-    /* Payment Date Selector */
-    .payment-date-selector {
+    .payslip-table th, .payslip-table td {
+      border: 1px solid #aaa;
+      padding: 5px;
+      font-size: 10px;
+    }
+    .payslip-table th {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+    .signature-section {
       display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 15px;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #ccc;
+      font-size: 12px;
     }
-    .payment-date-selector label {
-      font-weight: 500;
-      color: #4a5568;
-      white-space: nowrap;
+    .signature-box {
+      width: 48%;
+      text-align: center;
     }
-    .payment-date-selector input {
-      padding: 8px;
-      border: 1px solid #cbd5e0;
-      border-radius: 6px;
-      font-size: 13px;
+    .signature-line {
+      height: 1px;
+      background: #000;
+      margin: 10px 0 5px;
     }
-
-    /* Tab Navigation */
-    .tab-navigation {
-      display: flex;
-      border-bottom: 1px solid #e2e8f0;
-      margin-bottom: 15px;
-      overflow-x: auto; /* Enable horizontal scrolling for tabs */
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
+    .confidential-footer {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 8px;
+      color: #666;
+      font-style: italic;
+      border-top: 1px solid #eee;
+      padding-top: 5px;
     }
-    .tab-btn {
-      padding: 10px 15px;
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      font-weight: 600;
-      color: #4a5568;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .tab-btn.active {
-      color: #2c5282;
-      border-bottom-color: #2c5282;
-    }
-    .tab-btn:hover:not(.active) {
-      color: #3182ce;
-      border-bottom-color: #bee3f8;
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Mobile-specific Styles */
-    @media (max-width: 480px) {
-      body {
-        padding: 8px;
-      }
-      .header-text h1 {
-        font-size: 16px;
-      }
-      .header-text p {
-        font-size: 12px;
-      }
-      .logo-placeholder {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-      }
-      .panel-header h2 {
-        font-size: 16px;
-      }
-      .summary {
-        flex-direction: column;
-        gap: 8px;
-      }
-      .summary-item {
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 8px;
-        background: #f8fafc;
-        border-radius: 6px;
-      }
-      .action-buttons {
-        flex-direction: column;
-      }
-      .btn {
-        width: 100%;
-      }
-      .controls {
-        gap: 5px;
-      }
-      .upload-btn {
-        min-width: 0;
-      }
-      .history-grid {
-        grid-template-columns: 1fr;
-      }
-      .payment-date-selector {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-    
-    /* Tablet Styles */
-    @media (min-width: 768px) {
-      .content {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 20px;
-      }
-      .panel {
-        margin-bottom: 0;
-      }
-      header {
-        flex-direction: row;
-        justify-content: space-between;
-      }
-      .controls {
-        width: auto;
-        margin-top: 0;
-      }
-    }
-    
-    /* Desktop Styles */
-    @media (min-width: 992px) {
-      .content {
-        grid-template-columns: 1fr 1.8fr;
-      }
-      .mobile-menu-btn {
-        display: none;
-      }
+    .print-button {
+      text-align: center;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <div class="header-content">
-      <button class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="logo-container">
-        <div class="logo-placeholder" id="companyLogo">
-          <span>AE</span>
-        </div>
-      </div>
-      <div class="header-text">
-        <h1>Apt Engineering Works Ltd</h1>
-        <p>Advanced Payroll Management System</p>
-      </div>
-    </div>
-    <div class="controls">
-      <button class="upload-btn" onclick="document.getElementById('logoInput').click()">
-        <i class="fas fa-upload"></i> Upload Logo
-      </button>
-      <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
-    </div>
-  </header>
-  
-  <!-- Tab Navigation -->
-  <div class="tab-navigation">
-    <button class="tab-btn active" onclick="switchTab('current')">
-      <i class="fas fa-file-invoice-dollar"></i> Current Payroll
-    </button>
-    <button class="tab-btn" onclick="switchTab('history')">
-      <i class="fas fa-history"></i> Payment History
-    </button>
-    <button class="tab-btn" onclick="switchTab('settings')">
-      <i class="fas fa-cog"></i> Settings
-    </button>
+  <div class="edit-lock-warning" id="editLockWarning">
+    ⚠️ Another session is editing this payroll. Avoid concurrent edits.
   </div>
-  
-  <!-- Current Payroll Tab -->
-  <div id="currentTab" class="tab-content active">
-    <div class="content">
+
+  <div class="container">
+    <header>
+      <h1>Apt Engineering Works Ltd</h1>
+      <p>Advanced Payroll Management System</p>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" onclick="switchTab('current')">
+        <i class="fas fa-file-invoice-dollar"></i> Current Payroll
+      </button>
+      <button class="tab-btn" onclick="switchTab('history')">
+        <i class="fas fa-history"></i> Payment History
+      </button>
+      <button class="tab-btn" onclick="switchTab('settings')">
+        <i class="fas fa-cog"></i> Settings
+      </button>
+    </div>
+
+    <!-- Current Payroll Tab -->
+    <div id="currentTab" class="tab-content active">
       <div class="panel">
         <div class="panel-header" onclick="togglePanel(this)">
           <h2><i class="fas fa-cog"></i> Deduction Settings</h2>
@@ -821,7 +432,6 @@
             <label for="toggleCalculated">Show Calculated Fields</label>
           </div>
           <div class="deductions-grid" id="deductionsPanel">
-            <!-- Deduction Fields -->
             <div class="form-group">
               <label><i class="fas fa-percent"></i> PAYE - Permanent (%)</label>
               <input type="number" id="payePermanent" value="12" step="0.1">
@@ -851,623 +461,746 @@
             <button class="btn btn-warning" onclick="addEmployee()">
               <i class="fas fa-user-plus"></i> Add Employee
             </button>
-            <button class="btn btn-success" onclick="saveData()">
-              <i class="fas fa-save"></i> Save Data
+            <button class="btn btn-info" onclick="loadContactsFromWorkManager()">
+              <i class="fas fa-sync"></i> Sync Contacts
             </button>
-            <button class="btn btn-primary" onclick="printPayslips()">
-              <i class="fas fa-print"></i> Print Payslips
+            <button class="btn btn-info" onclick="syncAllEmployeesToWorkManager()">
+              <i class="fas fa-sync-alt"></i> Sync to Work Manager
+            </button>
+            <button class="btn btn-success" onclick="exportCSV()">
+              <i class="fas fa-file-export"></i> Export CSV
+            </button>
+            <button class="btn btn-primary" onclick="savePayrollRun()">
+              <i class="fas fa-save"></i> Save Payroll Run
             </button>
           </div>
         </div>
       </div>
-      
+
       <div class="panel">
         <div class="panel-header" onclick="togglePanel(this)">
-          <h2><i class="fas fa-table"></i> Payroll Summary & Table</h2>
+          <h2><i class="fas fa-users"></i> Employee List <span id="employeeCount">0</span></h2>
           <i class="fas fa-chevron-down toggle-icon"></i>
         </div>
         <div class="panel-content">
-          <div class="summary" id="summaryPanel">
-            <!-- Summary data will be rendered here -->
-          </div>
           <div class="table-container">
             <table id="payrollTable">
               <thead>
-              <tr>
-                <th>#</th>
-                <th>Employee Name</th>
-                <th>Staff ID</th>
-                <th>Type</th>
-                <th>Bank</th>
-                <th>Account</th>
-                <th>Base Pay</th>
-                <th>Overtime</th>
-                <th>Allowances</th>
-                <th class="calculated-cell">Gross Pay</th>
-                <th>Deductions</th>
-                <th class="calculated-cell">Total Deductions</th>
-                <th class="calculated-cell">Net Pay</th>
-                <th>Actions</th>
-              </tr>
+                <tr>
+                  <th>Name</th><th>ID No</th><th>Status</th><th>Days</th><th>Basic</th>
+                  <th>Transport</th><th>Housing</th><th>IOU</th>
+                  <th class="calculated-cell">Gross Pay</th><th class="calculated-cell">Net Pay</th>
+                  <th class="calculated-cell">Personnel Cost</th><th class="calculated-cell">External</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
-              <tbody>
-              <!-- Employee rows will be rendered here -->
-              </tbody>
+              <tbody id="tableBody"></tbody>
             </table>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-  <!-- Payment History Tab -->
-  <div id="historyTab" class="tab-content">
-    <div class="history-panel">
-      <div class="history-header">
-        <h2><i class="fas fa-history"></i> Payment History</h2>
+
+      <div class="summary" id="summary">
+        <div class="summary-item">
+          <div><i class="fas fa-users"></i> Total Employees</div>
+          <div class="summary-value" id="totalEmployees">0</div>
+        </div>
+        <div class="summary-item">
+          <div><i class="fas fa-money-bill-wave"></i> Total Gross Pay</div>
+          <div class="summary-value" id="totalGross">₦0.00</div>
+        </div>
+        <div class="summary-item">
+          <div><i class="fas fa-wallet"></i> Total Net Pay</div>
+          <div class="summary-value" id="totalNet">₦0.00</div>
+        </div>
+        <div class="summary-item">
+          <div><i class="fas fa-building"></i> Total Personnel Cost</div>
+          <div class="summary-value" id="totalPersonnel">₦0.00</div>
+        </div>
       </div>
-      <div class="history-grid" id="historyGrid">
-        <!-- History cards will be rendered here -->
+    </div>
+
+    <!-- History Tab -->
+    <div id="historyTab" class="tab-content">
+      <div class="panel">
+        <div class="panel-header">
+          <h2><i class="fas fa-history"></i> Payroll History</h2>
+        </div>
+        <div class="panel-content">
+          <div class="form-group" style="width: 200px;">
+            <select id="historyFilter" class="input-field" onchange="filterHistory()">
+              <option value="all">All Months</option>
+              <option value="last3">Last 3 Months</option>
+              <option value="last6">Last 6 Months</option>
+              <option value="year">This Year</option>
+            </select>
+          </div>
+          <div class="history-grid" id="historyContainer"></div>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <!-- Settings Tab -->
-  <div id="settingsTab" class="tab-content">
-    <div class="history-panel">
-      <div class="history-header">
-        <h2><i class="fas fa-cog"></i> System Settings</h2>
-        <div class="action-buttons">
-          <button class="btn btn-info" onclick="exportData()">
-            <i class="fas fa-file-export"></i> Export Data
-          </button>
-          <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)">
-          <button class="btn btn-info" onclick="document.getElementById('importFile').click()">
-            <i class="fas fa-file-import"></i> Import Data
-          </button>
-          <button class="btn btn-danger" onclick="resetData()">
-            <i class="fas fa-trash-alt"></i> Reset All Data
-          </button>
+
+    <!-- Settings Tab -->
+    <div id="settingsTab" class="tab-content">
+      <div class="panel">
+        <div class="panel-header">
+          <h2><i class="fas fa-user-tie"></i> Manager Settings</h2>
+        </div>
+        <div class="panel-content">
+          <div class="form-group">
+            <label for="managerName"><i class="fas fa-signature"></i> Manager Name for Payslips</label>
+            <input type="text" id="managerName" value="John Manager" onchange="updateManagerName(this.value)">
+          </div>
+          <div class="action-buttons">
+            <button class="btn btn-info" onclick="backupData()">
+              <i class="fas fa-file-export"></i> Backup Data
+            </button>
+            <button class="btn btn-warning" onclick="restoreData()">
+              <i class="fas fa-file-import"></i> Restore Data
+            </button>
+            <button class="btn btn-danger" onclick="resetData()">
+              <i class="fas fa-trash-alt"></i> Reset All Data
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Payslip Print Preview Container -->
-<div class="payslip-container" id="payslipContainer">
-  <!-- Payslips will be generated here for printing -->
-</div>
+  <!-- Payslip Container -->
+  <div class="payslip-container" id="payslipContainer"></div>
 
-<script>
-    // Global state
+  <!-- Hidden File Input for Restore -->
+  <input type="file" id="restoreFileInput" accept=".json" style="display: none;">
+
+  <script>
+    // === Edit Lock System ===
+    const LOCK_KEY = "aptPayrollEditLock";
+    const LOCK_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+
+    function acquireEditLock() {
+      const now = Date.now();
+      const existing = localStorage.getItem(LOCK_KEY);
+      if (existing && (now - parseInt(existing) < LOCK_TIMEOUT)) {
+        document.getElementById("editLockWarning").style.display = "block";
+      } else {
+        localStorage.setItem(LOCK_KEY, now);
+      }
+      setInterval(() => localStorage.setItem(LOCK_KEY, Date.now()), 120000);
+    }
+
+    // === Data Management ===
     let employees = [];
-    let history = [];
-    const localStorageKey = 'aptPayrollData';
-    let companyLogo = null;
-    let paymentDate = new Date().toISOString().split('T')[0];
+    let payrollHistory = [];
+    let managerName = "John Manager";
+    let currentPaymentDate = new Date().toISOString().split('T')[0];
+    const localStorageKey = "aptEngineeringPayrollData";
 
-    // Functions to handle data and rendering
-    const formatCurrency = (value) => {
-        return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(value);
-    };
+    // Default sample data
+    function resetToDefault() {
+      employees = [
+        { name: "Abe Abiola", idNo: "AEWP-001", status: "Permanent", daysWorked: 22, basic: 35000, transport: 15000, housing: 15000, iou: 0 },
+        { name: "Jeremiah Dennis", idNo: "AEWP-004", status: "Contract", daysWorked: 16, basic: 60000, transport: 3500, housing: 0, iou: 0 },
+        { name: "Chinwe Okonkwo", idNo: "AEWP-007", status: "Permanent", daysWorked: 20, basic: 42000, transport: 12000, housing: 18000, iou: 5000 },
+        { name: "Oluwaseun Adebayo", idNo: "AEWP-012", status: "Contract", daysWorked: 18, basic: 55000, transport: 8000, housing: 0, iou: 2500 }
+      ];
+      payrollHistory = [];
+      managerName = "John Manager";
+      currentPaymentDate = new Date().toISOString().split('T')[0];
+    }
 
-    const saveData = () => {
-        const data = {
-            employees: employees,
-            history: history,
-            deductionRates: {
-                payePermanent: parseFloat(document.getElementById('payePermanent').value),
-                payeContract: parseFloat(document.getElementById('payeContract').value),
-                staffPensionPermanent: parseFloat(document.getElementById('staffPensionPermanent').value),
-                companyPension: parseFloat(document.getElementById('companyPension').value),
-                medicals: parseFloat(document.getElementById('medicals').value),
-                workmen: parseFloat(document.getElementById('workmen').value),
-            },
-            paymentDate: paymentDate,
-            logo: companyLogo
-        };
-        localStorage.setItem(localStorageKey, JSON.stringify(data));
-        renderSummary();
-    };
-
-    const loadData = () => {
+    function loadData() {
+      const savedData = localStorage.getItem(localStorageKey);
+      if (savedData) {
         try {
-            const data = JSON.parse(localStorage.getItem(localStorageKey));
-            if (data) {
-                employees = data.employees || [];
-                history = data.history || [];
-                document.getElementById('payePermanent').value = data.deductionRates?.payePermanent || 12;
-                document.getElementById('payeContract').value = data.deductionRates?.payeContract || 5;
-                document.getElementById('staffPensionPermanent').value = data.deductionRates?.staffPensionPermanent || 7.5;
-                document.getElementById('companyPension').value = data.deductionRates?.companyPension || 15;
-                document.getElementById('medicals').value = data.deductionRates?.medicals || 1;
-                document.getElementById('workmen').value = data.deductionRates?.workmen || 1;
-                paymentDate = data.paymentDate || new Date().toISOString().split('T')[0];
-                companyLogo = data.logo || null;
-
-                if (companyLogo) {
-                    setLogo(companyLogo);
-                }
-
-            } else {
-                resetToDefaultData();
-            }
+          const data = JSON.parse(savedData);
+          employees = data.employees || [];
+          payrollHistory = data.payrollHistory || [];
+          managerName = data.managerName || "John Manager";
+          currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
+          document.getElementById('managerName').value = managerName;
         } catch (e) {
-            console.error("Error loading data from localStorage:", e);
-            resetToDefaultData();
+          console.error("Failed to load data", e);
+          resetToDefault();
         }
+      } else {
+        resetToDefault();
+      }
+    }
+
+    function saveData() {
+      const data = { employees, payrollHistory, managerName, currentPaymentDate };
+      localStorage.setItem(localStorageKey, JSON.stringify(data));
+    }
+
+    // === Notification System ===
+    function showNotification(message, type = "info") {
+      const notif = document.createElement("div");
+      notif.style.cssText = `
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background: ${type === 'success' ? '#48bb78' : type === 'error' ? '#e53e3e' : '#3182ce'};
+        color: white; padding: 10px 20px; border-radius: 6px; z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 14px;
+      `;
+      notif.textContent = message;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 4000);
+    }
+
+    // === UI Functions ===
+    window.onload = () => {
+      acquireEditLock();
+      loadData();
+      document.getElementById('paymentDate').value = currentPaymentDate;
+      renderTable();
+      renderHistory();
+      // Initialize toggles
+      document.getElementById('toggleDeductions').onchange = (e) => {
+        document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
+      };
+      document.getElementById('toggleCalculated').onchange = (e) => {
+        document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
+      };
+      // Load contacts from work manager on startup
+      loadContactsFromWorkManager();
     };
 
-    const resetToDefaultData = () => {
-        employees = [];
-        history = [];
-        document.getElementById('payePermanent').value = 12;
-        document.getElementById('payeContract').value = 5;
-        document.getElementById('staffPensionPermanent').value = 7.5;
-        document.getElementById('companyPension').value = 15;
-        document.getElementById('medicals').value = 1;
-        document.getElementById('workmen').value = 1;
-        paymentDate = new Date().toISOString().split('T')[0];
-        companyLogo = null;
-        localStorage.removeItem(localStorageKey);
-        localStorage.removeItem('companyLogo');
-    };
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId + 'Tab').classList.add('active');
+      event.currentTarget.classList.add('active');
+      if (tabId === 'history') renderHistory();
+    }
 
-    const calculateTotals = (employee) => {
-        const payeRate = employee.type === 'Permanent' ? parseFloat(document.getElementById('payePermanent').value) : parseFloat(document.getElementById('payeContract').value);
-        const staffPensionRate = employee.type === 'Permanent' ? parseFloat(document.getElementById('staffPensionPermanent').value) : 0;
-        const companyPensionRate = employee.type === 'Permanent' ? parseFloat(document.getElementById('companyPension').value) : 0;
-        const medicalsRate = parseFloat(document.getElementById('medicals').value);
-        const workmenRate = parseFloat(document.getElementById('workmen').value);
+    function updatePaymentDate() {
+      currentPaymentDate = document.getElementById('paymentDate').value;
+      saveData();
+    }
 
-        const grossPay = parseFloat(employee.basePay) + parseFloat(employee.overtime) + parseFloat(employee.allowances);
-        const payeDeduction = (grossPay * payeRate) / 100;
-        const staffPensionDeduction = (grossPay * staffPensionRate) / 100;
-        const medicalsDeduction = (grossPay * medicalsRate) / 100;
-        const workmenDeduction = (grossPay * workmenRate) / 100;
+    function updateManagerName(name) {
+      managerName = name;
+      saveData();
+    }
 
-        const totalDeductions = payeDeduction + staffPensionDeduction + medicalsDeduction + workmenDeduction + parseFloat(employee.otherDeductions);
-        const netPay = grossPay - totalDeductions;
+    // === Sync Contacts from apt-work-manager.html ===
+    async function loadContactsFromWorkManager() {
+      const WORK_MANAGER_URL = 'https://raw.githubusercontent.com/Apt-EWorks/aework_manager.github.io/main/apt-work-manager.html';
+      try {
+        const response = await fetch(WORK_MANAGER_URL);
+        if (!response.ok) throw new Error('Failed to fetch work manager');
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const script = Array.from(doc.scripts).find(s => s.textContent.includes('getData'));
+        if (!script) throw new Error('Work manager script not found');
 
-        return {
-            grossPay: grossPay,
-            paye: payeDeduction,
-            staffPension: staffPensionDeduction,
-            medicals: medicalsDeduction,
-            workmen: workmenDeduction,
-            totalDeductions: totalDeductions,
-            netPay: netPay,
-            companyPension: (grossPay * companyPensionRate) / 100, // Company contribution
-            payeRate: payeRate,
-            staffPensionRate: staffPensionRate,
-            medicalsRate: medicalsRate,
-            workmenRate: workmenRate
-        };
-    };
+        // Extract contacts data
+        const contactsMatch = script.textContent.match(/getData\s*\(\s*['"]contacts['"]\s*\)\s*=\s*(\[[^\]]+\])/);
+        if (!contactsMatch) throw new Error('Contacts data not found in work manager');
 
-    const renderTable = () => {
-        const tableBody = document.querySelector('#payrollTable tbody');
-        tableBody.innerHTML = '';
-        employees.forEach((employee, index) => {
-            const totals = calculateTotals(employee);
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td><input type="text" class="input-field" value="${employee.name}" onchange="updateEmployee(${index}, 'name', this.value)"></td>
-                <td><input type="text" class="input-field" value="${employee.staffID}" onchange="updateEmployee(${index}, 'staffID', this.value)"></td>
-                <td>
-                    <select class="input-field" onchange="updateEmployee(${index}, 'type', this.value)">
-                        <option value="Permanent" ${employee.type === 'Permanent' ? 'selected' : ''}>Permanent</option>
-                        <option value="Contract" ${employee.type === 'Contract' ? 'selected' : ''}>Contract</option>
-                    </select>
-                </td>
-                <td><input type="text" class="input-field" value="${employee.bank}" onchange="updateEmployee(${index}, 'bank', this.value)"></td>
-                <td><input type="text" class="input-field" value="${employee.account}" onchange="updateEmployee(${index}, 'account', this.value)"></td>
-                <td><input type="number" class="input-field" value="${employee.basePay}" step="0.01" onchange="updateEmployee(${index}, 'basePay', parseFloat(this.value))"></td>
-                <td><input type="number" class="input-field" value="${employee.overtime}" step="0.01" onchange="updateEmployee(${index}, 'overtime', parseFloat(this.value))"></td>
-                <td><input type="number" class="input-field" value="${employee.allowances}" step="0.01" onchange="updateEmployee(${index}, 'allowances', parseFloat(this.value))"></td>
-                <td class="calculated-cell"><span class="calculated-value">${formatCurrency(totals.grossPay)}</span></td>
-                <td><input type="number" class="input-field" value="${employee.otherDeductions}" step="0.01" onchange="updateEmployee(${index}, 'otherDeductions', parseFloat(this.value))"></td>
-                <td class="calculated-cell"><span class="calculated-value">${formatCurrency(totals.totalDeductions)}</span></td>
-                <td class="calculated-cell"><span class="calculated-value">${formatCurrency(totals.netPay)}</span></td>
-                <td>
-                    <button class="btn btn-danger" onclick="deleteEmployee(${index})"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            `;
-            tableBody.appendChild(row);
+        const contacts = JSON.parse(contactsMatch[1]);
+        const newEmployees = contacts
+          .filter(c => c.name && c.name.trim() !== '')
+          .map(c => {
+            const existing = employees.find(e => e.name === c.name);
+            return {
+              name: c.name,
+              idNo: existing ? existing.idNo : `AEWP-${String(employees.length + 1).padStart(3, '0')}`,
+              status: existing ? existing.status : "Permanent",
+              daysWorked: existing ? existing.daysWorked : 22,
+              basic: existing ? existing.basic : 30000,
+              transport: existing ? existing.transport : 10000,
+              housing: existing ? existing.housing : 12000,
+              iou: existing ? existing.iou : 0
+            };
+          });
+
+        // Replace only if we have valid contacts
+        if (newEmployees.length > 0) {
+          employees = newEmployees;
+          renderTable();
+          showNotification("Employee list synced from Work Manager!", "success");
+        } else {
+          showNotification("No valid contacts found in Work Manager.", "info");
+        }
+      } catch (error) {
+        console.warn("Could not load contacts from work manager:", error.message);
+        showNotification("Using local data. Could not sync contacts.", "info");
+        // Keep existing data or default
+        if (employees.length === 0) {
+          resetToDefault();
+          renderTable();
+        }
+      }
+    }
+
+    // === Sync Payroll Employees to Work Manager Contacts ===
+    function syncEmployeeToWorkManager(employee) {
+      try {
+        // Get current contacts from localStorage
+        let contacts = [];
+        const contactsStr = localStorage.getItem('aptWorkManager_contacts');
+        if (contactsStr) {
+          contacts = JSON.parse(contactsStr);
+        }
+        
+        // Check if contact already exists
+        const exists = contacts.some(c => c.name === employee.name);
+        if (exists) return false;
+        
+        // Add new contact
+        contacts.push({
+          name: employee.name,
+          designation: employee.status + " Staff",
+          phone1: "",
+          email1: ""
         });
-        renderSummary();
-    };
+        
+        // Save back to localStorage
+        localStorage.setItem('aptWorkManager_contacts', JSON.stringify(contacts));
+        
+        // Dispatch event to notify work manager (if loaded)
+        window.dispatchEvent(new Event('workManagerDataUpdated'));
+        
+        return true;
+      } catch (error) {
+        console.error("Error syncing to work manager:", error);
+        return false;
+      }
+    }
 
-    const updateEmployee = (index, key, value) => {
-        employees[index][key] = value;
-        saveData();
-        renderTable();
-    };
+    function syncAllEmployeesToWorkManager() {
+      let syncedCount = 0;
+      employees.forEach(employee => {
+        if (syncEmployeeToWorkManager(employee)) {
+          syncedCount++;
+        }
+      });
+      
+      if (syncedCount > 0) {
+        showNotification(`Synced ${syncedCount} new employees to Work Manager`, "success");
+      } else {
+        showNotification("All employees are already in Work Manager contacts", "info");
+      }
+    }
 
-    const addEmployee = () => {
-        employees.push({
-            name: 'New Employee',
-            staffID: '',
-            type: 'Permanent',
-            bank: '',
-            account: '',
-            basePay: 0,
-            overtime: 0,
-            allowances: 0,
-            otherDeductions: 0
-        });
-        saveData();
-        renderTable();
-    };
+    function renderTable() {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+      employees.forEach((emp, index) => {
+        const gross = calculateGross(emp);
+        const deductions = calculateDeductions(emp, gross);
+        const net = calculateNet(emp, gross, deductions);
+        const personnelCost = deductions.staffPension + deductions.companyPension;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><input class="input-field" type="text" value="${emp.name}" onchange="updateField(${index}, 'name', this.value)"></td>
+          <td><input class="input-field" type="text" value="${emp.idNo}" onchange="updateField(${index}, 'idNo', this.value)"></td>
+          <td><select class="input-field" onchange="updateField(${index}, 'status', this.value)">
+            <option ${emp.status==='Permanent'?'selected':''}>Permanent</option>
+            <option ${emp.status==='Contract'?'selected':''}>Contract</option>
+          </select></td>
+          <td><input class="input-field" type="number" value="${emp.daysWorked}" onchange="updateField(${index}, 'daysWorked', parseFloat(this.value))"></td>
+          <td><input class="input-field" type="number" value="${emp.basic}" onchange="updateField(${index}, 'basic', parseFloat(this.value))"></td>
+          <td><input class="input-field" type="number" value="${emp.transport}" onchange="updateField(${index}, 'transport', parseFloat(this.value))"></td>
+          <td><input class="input-field" type="number" value="${emp.housing}" onchange="updateField(${index}, 'housing', parseFloat(this.value))"></td>
+          <td><input class="input-field" type="number" value="${emp.iou}" onchange="updateField(${index}, 'iou', parseFloat(this.value))"></td>
+          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(gross)}</div></td>
+          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(net)}</div></td>
+          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(personnelCost)}</div></td>
+          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(net)}</div></td>
+          <td>
+            <button class="btn btn-primary" onclick="generatePayslip(${index})"><i class="fas fa-file-alt"></i> Slip</button>
+            <button class="btn btn-danger" onclick="deleteEmployee(${index})"><i class="fas fa-trash-alt"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      updateSummary();
+      saveData();
+    }
 
-    const deleteEmployee = (index) => {
-      const confirmDelete = window.confirm(`Are you sure you want to delete ${employees[index].name}?`);
-      if (confirmDelete) {
+    function updateField(index, field, value) {
+      employees[index][field] = value;
+      renderTable();
+      
+      // If updating name, sync to work manager
+      if (field === 'name') {
+        const employee = employees[index];
+        if (syncEmployeeToWorkManager(employee)) {
+          showNotification(`Updated contact "${employee.name}" in Work Manager`, "success");
+        }
+      }
+    }
+
+    function deleteEmployee(index) {
+      if (confirm("Delete this employee?")) {
         employees.splice(index, 1);
-        saveData();
         renderTable();
       }
-    };
+    }
 
-    const renderSummary = () => {
-        const summaryPanel = document.getElementById('summaryPanel');
-        const totalGrossPay = employees.reduce((acc, emp) => acc + calculateTotals(emp).grossPay, 0);
-        const totalDeductions = employees.reduce((acc, emp) => acc + calculateTotals(emp).totalDeductions, 0);
-        const totalNetPay = employees.reduce((acc, emp) => acc + calculateTotals(emp).netPay, 0);
+    function addEmployee() {
+      const newId = `AEWP-${String(employees.length + 1).padStart(3, '0')}`;
+      const newEmployee = {
+        name: "New Employee",
+        idNo: newId,
+        status: "Permanent",
+        daysWorked: 22,
+        basic: 30000,
+        transport: 10000,
+        housing: 12000,
+        iou: 0
+      };
+      
+      employees.push(newEmployee);
+      renderTable();
+      
+      // Immediately sync the new employee to work manager
+      if (syncEmployeeToWorkManager(newEmployee)) {
+        showNotification(`Employee "${newEmployee.name}" added to Work Manager contacts`, "success");
+      }
+    }
 
-        summaryPanel.innerHTML = `
-            <div class="summary-item">
-                <span>Total Employees</span>
-                <span class="summary-value">${employees.length}</span>
-            </div>
-            <div class="summary-item">
-                <span>Total Gross Pay</span>
-                <span class="summary-value">${formatCurrency(totalGrossPay)}</span>
-            </div>
-            <div class="summary-item">
-                <span>Total Deductions</span>
-                <span class="summary-value">${formatCurrency(totalDeductions)}</span>
-            </div>
-            <div class="summary-item">
-                <span>Total Net Pay</span>
-                <span class="summary-value">${formatCurrency(totalNetPay)}</span>
-            </div>
-        `;
-    };
+    // === Calculations ===
+    function calculateGross(emp) {
+      return emp.status === "Permanent"
+        ? (emp.basic + emp.transport + emp.housing) * emp.daysWorked
+        : (emp.basic + emp.transport) * emp.daysWorked;
+    }
 
-    const togglePanel = (header) => {
-        header.closest('.panel').classList.toggle('collapsed');
-    };
+    function calculateDeductions(emp, gross) {
+      const payeRate = emp.status === "Permanent"
+        ? parseFloat(document.getElementById("payePermanent").value) / 100
+        : parseFloat(document.getElementById("payeContract").value) / 100;
+      const staffPensionRate = emp.status === "Permanent"
+        ? parseFloat(document.getElementById("staffPensionPermanent").value) / 100
+        : 0;
+      const companyPensionRate = parseFloat(document.getElementById("companyPension").value) / 100;
+      const medicalsRate = parseFloat(document.getElementById("medicals").value) / 100;
+      const workmenRate = parseFloat(document.getElementById("workmen").value) / 100;
 
-    const handleLogoUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                companyLogo = e.target.result;
-                setLogo(companyLogo);
-                saveData();
-            };
-            reader.readAsDataURL(file);
+      return {
+        paye: gross * payeRate,
+        staffPension: gross * staffPensionRate,
+        companyPension: gross * companyPensionRate,
+        medicals: gross * medicalsRate,
+        workmen: gross * workmenRate
+      };
+    }
+
+    function calculateNet(emp, gross, deductions) {
+      const totalDeductions = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen + emp.iou;
+      return gross - totalDeductions;
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(value || 0);
+    }
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function updateSummary() {
+      const totalGross = employees.reduce((sum, e) => sum + calculateGross(e), 0);
+      const totalNet = employees.reduce((sum, e) => {
+        const gross = calculateGross(e);
+        const deductions = calculateDeductions(e, gross);
+        return sum + calculateNet(e, gross, deductions);
+      }, 0);
+      const totalPersonnel = employees.reduce((sum, e) => {
+        const gross = calculateGross(e);
+        const deductions = calculateDeductions(e, gross);
+        return sum + (deductions.staffPension + deductions.companyPension);
+      }, 0);
+
+      document.getElementById("totalEmployees").textContent = employees.length;
+      document.getElementById("totalGross").textContent = formatCurrency(totalGross);
+      document.getElementById("totalNet").textContent = formatCurrency(totalNet);
+      document.getElementById("totalPersonnel").textContent = formatCurrency(totalPersonnel);
+      document.getElementById("employeeCount").textContent = employees.length;
+    }
+
+    // === Payslip Generation ===
+    function generatePayslip(index) {
+      const emp = employees[index];
+      const gross = calculateGross(emp);
+      const deductions = calculateDeductions(emp, gross);
+      const totalDeductions = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen + emp.iou;
+      const net = calculateNet(emp, gross, deductions);
+      const month = new Date().toLocaleString('default', { month: 'long' });
+
+      const container = document.getElementById("payslipContainer");
+      container.innerHTML = `
+        <div class="payslip-page">
+          <div class="payslip-dual">
+            <!-- Personnel Copy -->
+            <div class="payslip-copy">
+              <div class="copy-label">PERSONNEL COPY</div>
+              <h3 style="margin:10px 0;">Apt Engineering Works Ltd</h3>
+              <div style="font-size:11px; margin-bottom:10px;">
+                <strong>Month:</strong> ${month} |
+                <strong>Payment Date:</strong> ${formatDate(currentPaymentDate)}
+              </div>
+              <table class="payslip-table">
+                <tr><th>Employee Name:</th><td>${emp.name}</td></tr>
+                <tr><th>ID Number:</th><td>${emp.idNo}</td></tr>
+                <tr><th>Status:</th><td>${emp.status}</td></tr>
+                <tr><th>Days Worked:</th><td>${emp.daysWorked}</td></tr>
+              </table>
+              <h4>Earnings</h4>
+              <table class="payslip-table">
+                <tr><td>Basic Pay</td><td>${formatCurrency(emp.basic)}</td></tr>
+                <tr><td>Transport</td><td>${formatCurrency(emp.transport)}</td></tr>
+                <tr><td>Housing</td><td>${formatCurrency(emp.housing)}</td></tr>
+                <tr><th>Gross Pay</th><td>${formatCurrency(gross)}</td></tr>
+              </table>
+              <h4>Deductions</h4>
+              <table class="payslip-table">
+                <tr><td>PAYE</td><td>${formatCurrency(deductions.paye)}</td></tr>
+                <tr><td>Staff Pension</td><td>${formatCurrency(deductions.staffPension)}</td></tr>
+                <tr><td>Medicals</td><td>${formatCurrency(deductions.medicals)}</td></tr>
+                <tr><td>Workmen</td><td>${formatCurrency(deductions.workmen)}</td></tr>
+                <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
+                <tr><th>Total Deductions</th><td>${formatCurrency(totalDeductions)}</td></tr>
+              </table>
+              <h4>Net Pay</h4>
+              <h2 style="color:#2c5282; text-align:center;">${formatCurrency(net)}</h2>
+              <div class="signature-section">
+                <div class="signature-box"><div>Staff Signature</div><div class="signature-line"></div></div>
+              </div>
+            </div>
+
+            <!-- Company Copy -->
+            <div class="payslip-copy">
+              <div class="copy-label">COMPANY COPY</div>
+              <h3 style="margin:10px 0;">Apt Engineering Works Ltd</h3>
+              <div style="font-size:11px; margin-bottom:10px;">
+                <strong>Month:</strong> ${month} |
+                <strong>Payment Date:</strong> ${formatDate(currentPaymentDate)}
+              </div>
+              <table class="payslip-table">
+                <tr><th>Employee Name:</th><td>${emp.name}</td></tr>
+                <tr><th>ID Number:</th><td>${emp.idNo}</td></tr>
+                <tr><th>Status:</th><td>${emp.status}</td></tr>
+                <tr><th>Days Worked:</th><td>${emp.daysWorked}</td></tr>
+              </table>
+              <h4>Earnings</h4>
+              <table class="payslip-table">
+                <tr><td>Basic Pay</td><td>${formatCurrency(emp.basic)}</td></tr>
+                <tr><td>Transport</td><td>${formatCurrency(emp.transport)}</td></tr>
+                <tr><td>Housing</td><td>${formatCurrency(emp.housing)}</td></tr>
+                <tr><th>Gross Pay</th><td>${formatCurrency(gross)}</td></tr>
+              </table>
+              <h4>Deductions</h4>
+              <table class="payslip-table">
+                <tr><td>PAYE</td><td>${formatCurrency(deductions.paye)}</td></tr>
+                <tr><td>Staff Pension</td><td>${formatCurrency(deductions.staffPension)}</td></tr>
+                <tr><td>Medicals</td><td>${formatCurrency(deductions.medicals)}</td></tr>
+                <tr><td>Workmen</td><td>${formatCurrency(deductions.workmen)}</td></tr>
+                <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
+                <tr><th>Total Deductions</th><td>${formatCurrency(totalDeductions)}</td></tr>
+              </table>
+              <h4>Net Pay</h4>
+              <h2 style="color:#2c5282; text-align:center;">${formatCurrency(net)}</h2>
+              <div class="signature-section">
+                <div class="signature-box"><div>Manager: ${managerName}</div><div class="signature-line"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="confidential-footer">This document contains confidential information.</div>
+          <div class="print-button">
+            <button class="btn btn-primary" onclick="printPayslip()"><i class="fas fa-print"></i> Print Payslip</button>
+          </div>
+        </div>
+      `;
+      container.style.display = 'block';
+    }
+
+    function printPayslip() {
+      window.print();
+    }
+
+    // === History & Backup ===
+    function savePayrollRun() {
+      if (!currentPaymentDate) return alert("Select payment date.");
+      const run = {
+        id: Date.now(),
+        date: currentPaymentDate,
+        employees: JSON.parse(JSON.stringify(employees)),
+        totals: {
+          employees: employees.length,
+          gross: employees.reduce((s, e) => s + calculateGross(e), 0),
+          net: employees.reduce((s, e) => {
+            const g = calculateGross(e); const d = calculateDeductions(e, g);
+            return s + calculateNet(e, g, d);
+          }, 0),
+          personnelCost: employees.reduce((s, e) => {
+            const g = calculateGross(e); const d = calculateDeductions(e, g);
+            return s + (d.staffPension + d.companyPension);
+          }, 0)
+        },
+        deductions: {
+          payePermanent: parseFloat(document.getElementById("payePermanent").value),
+          payeContract: parseFloat(document.getElementById("payeContract").value),
+          staffPensionPermanent: parseFloat(document.getElementById("staffPensionPermanent").value),
+          companyPension: parseFloat(document.getElementById("companyPension").value),
+          medicals: parseFloat(document.getElementById("medicals").value),
+          workmen: parseFloat(document.getElementById("workmen").value)
         }
-    };
+      };
+      payrollHistory.unshift(run);
+      saveData();
+      renderHistory();
+      alert(`Payroll saved for ${formatDate(currentPaymentDate)}!`);
+    }
 
-    const setLogo = (logoData) => {
-        const logoPlaceholder = document.getElementById('companyLogo');
-        logoPlaceholder.innerHTML = `<img src="${logoData}" alt="Company Logo">`;
-    };
-    
-    // NEW: Function to generate and print payslips
-    const printPayslips = () => {
-        const payslipContainer = document.getElementById('payslipContainer');
-        payslipContainer.innerHTML = ''; // Clear previous payslips
+    function renderHistory() {
+      const container = document.getElementById("historyContainer");
+      container.innerHTML = "";
+      const filter = document.getElementById("historyFilter").value;
+      let filtered = [...payrollHistory];
+      const now = new Date();
+      if (filter === "last3") {
+        const d = new Date(); d.setMonth(d.getMonth() - 3);
+        filtered = filtered.filter(r => new Date(r.date) >= d);
+      } else if (filter === "last6") {
+        const d = new Date(); d.setMonth(d.getMonth() - 6);
+        filtered = filtered.filter(r => new Date(r.date) >= d);
+      } else if (filter === "year") {
+        filtered = filtered.filter(r => new Date(r.date).getFullYear() === now.getFullYear());
+      }
 
-        if (employees.length === 0) {
-            alert('No employees to generate payslips for. Please add employees first.');
-            return;
-        }
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center;padding:20px;color:#718096;">No history found.</div>`;
+        return;
+      }
 
-        const payslipsHTML = employees.map(emp => {
-            const totals = calculateTotals(emp);
-            
-            const payslipContent = (copyType) => `
-                <div class="payslip-copy">
-                    <span class="copy-label">${copyType} Copy</span>
-                    <div class="payslip-header">
-                        <div class="payslip-logo">
-                            ${companyLogo ? `<img src="${companyLogo}" alt="Company Logo">` : '<div class="logo-placeholder"><span>AE</span></div>'}
-                        </div>
-                        <div class="payslip-company-details">
-                            <h2>Apt Engineering Works Ltd</h2>
-                            <p><strong>Payslip for Period:</strong> ${paymentDate}</p>
-                            <p><strong>Employee:</strong> ${emp.name}</p>
-                        </div>
-                    </div>
-                    <div class="payslip-meta">
-                        <div><strong>Staff ID:</strong> ${emp.staffID}</div>
-                        <div><strong>Bank:</strong> ${emp.bank}</div>
-                        <div><strong>Account No:</strong> ${emp.account}</div>
-                    </div>
-                    
-                    <table class="payslip-table">
-                        <thead>
-                            <tr>
-                                <th>Earnings</th>
-                                <th>Amount (NGN)</th>
-                                <th>Deductions</th>
-                                <th>Amount (NGN)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Base Pay</td>
-                                <td>${formatCurrency(emp.basePay)}</td>
-                                <td>PAYE Tax (${totals.payeRate}%)</td>
-                                <td>${formatCurrency(totals.paye)}</td>
-                            </tr>
-                            <tr>
-                                <td>Overtime</td>
-                                <td>${formatCurrency(emp.overtime)}</td>
-                                <td>Staff Pension (${totals.staffPensionRate}%)</td>
-                                <td>${formatCurrency(totals.staffPension)}</td>
-                            </tr>
-                            <tr>
-                                <td>Allowances</td>
-                                <td>${formatCurrency(emp.allowances)}</td>
-                                <td>Medicals (${totals.medicalsRate}%)</td>
-                                <td>${formatCurrency(totals.medicals)}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"></td>
-                                <td>Workmen Insurance (${totals.workmenRate}%)</td>
-                                <td>${formatCurrency(totals.workmen)}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"></td>
-                                <td>Other Deductions</td>
-                                <td>${formatCurrency(emp.otherDeductions)}</td>
-                            </tr>
-                            <tr style="font-weight: bold;">
-                                <td>Gross Pay</td>
-                                <td>${formatCurrency(totals.grossPay)}</td>
-                                <td>Total Deductions</td>
-                                <td>${formatCurrency(totals.totalDeductions)}</td>
-                            </tr>
-                            <tr style="font-weight: bold; background-color: #f0f0f0;">
-                                <td colspan="3" style="text-align: right;">Net Pay</td>
-                                <td>${formatCurrency(totals.netPay)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <div class="signature-section">
-                        <div class="signature-box">
-                            <div class="signature-line"></div>
-                            <span>Employee Signature</span>
-                        </div>
-                        <div class="signature-box">
-                            <div class="signature-line"></div>
-                            <span>Company Signature</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            return `
-                <div class="payslip-page">
-                    <div class="payslip-dual">
-                        ${payslipContent('Company')}
-                        ${payslipContent('Personnel')}
-                    </div>
-                </div>
-            `;
-        }).join('');
+      filtered.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "history-card";
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;"><b>${formatDate(r.date)}</b><span>${r.employees.length} emp</span></div>
+          <div style="margin:10px 0;">
+            <div><b>Total Gross:</b> ${formatCurrency(r.totals.gross)}</div>
+            <div><b>Net Pay:</b> ${formatCurrency(r.totals.net)}</div>
+          </div>
+          <div style="display:flex;gap:5px;">
+            <button class="btn" style="background:#3182ce;color:white;" onclick="viewPayrollRun(${r.id})"><i class="fas fa-eye"></i> View</button>
+            <button class="btn" style="background:#dd6b20;color:white;" onclick="reusePayrollRun(${r.id})"><i class="fas fa-redo"></i> Reuse</button>
+            <button class="btn" style="background:#e53e3e;color:white;" onclick="deletePayrollRun(${r.id})"><i class="fas fa-trash"></i> Delete</button>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
 
-        payslipContainer.innerHTML = payslipsHTML;
+    function viewPayrollRun(id) {
+      const run = payrollHistory.find(r => r.id === id);
+      if (!run) return;
+      const temp = [...employees];
+      employees = JSON.parse(JSON.stringify(run.employees));
+      currentPaymentDate = run.date;
+      document.getElementById('paymentDate').value = currentPaymentDate;
+      Object.keys(run.deductions).forEach(k => document.getElementById(k).value = run.deductions[k]);
+      renderTable();
+      switchTab('current');
+      setTimeout(() => employees = temp, 100);
+      alert("Viewing historical payroll. Changes not saved unless saved explicitly.");
+    }
 
-        // Print the content of the payslip container
-        window.print();
-    };
+    function reusePayrollRun(id) {
+      if (!confirm("Replace current data with this run?")) return;
+      const run = payrollHistory.find(r => r.id === id);
+      if (!run) return;
+      employees = JSON.parse(JSON.stringify(run.employees));
+      currentPaymentDate = new Date().toISOString().split('T')[0];
+      document.getElementById('paymentDate').value = currentPaymentDate;
+      Object.keys(run.deductions).forEach(k => document.getElementById(k).value = run.deductions[k]);
+      renderTable();
+      switchTab('current');
+    }
 
-    const updatePaymentDate = () => {
-        paymentDate = document.getElementById('paymentDate').value;
-        saveData();
-    };
-
-    const exportData = () => {
-        const data = {
-            employees: employees,
-            history: history,
-            deductionRates: {
-                payePermanent: parseFloat(document.getElementById('payePermanent').value),
-                payeContract: parseFloat(document.getElementById('payeContract').value),
-                staffPensionPermanent: parseFloat(document.getElementById('staffPensionPermanent').value),
-                companyPension: parseFloat(document.getElementById('companyPension').value),
-                medicals: parseFloat(document.getElementById('medicals').value),
-                workmen: parseFloat(document.getElementById('workmen').value),
-            },
-            paymentDate: paymentDate,
-            logo: companyLogo
-        };
-        const dataStr = JSON.stringify(data, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `apt-payroll-data-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    const importData = (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            try {
-                const data = JSON.parse(event.target.result);
-                employees = data.employees || [];
-                history = data.history || [];
-                
-                if (data.deductionRates) {
-                    document.getElementById('payePermanent').value = data.deductionRates.payePermanent || 12;
-                    document.getElementById('payeContract').value = data.deductionRates.payeContract || 5;
-                    document.getElementById('staffPensionPermanent').value = data.deductionRates.staffPensionPermanent || 7.5;
-                    document.getElementById('companyPension').value = data.deductionRates.companyPension || 15;
-                    document.getElementById('medicals').value = data.deductionRates.medicals || 1;
-                    document.getElementById('workmen').value = data.deductionRates.workmen || 1;
-                }
-                
-                paymentDate = data.paymentDate || new Date().toISOString().split('T')[0];
-                document.getElementById('paymentDate').value = paymentDate;
-                
-                if (data.logo) {
-                    companyLogo = data.logo;
-                    setLogo(companyLogo);
-                } else {
-                    companyLogo = null;
-                    document.getElementById('companyLogo').innerHTML = '<span>AE</span>';
-                }
-
-                saveData();
-                renderTable();
-                renderHistory();
-                alert("Data restored successfully!");
-            } catch (err) {
-                alert("Error restoring data: " + err.message);
-            }
-        };
-        reader.readAsText(file);
-        e.target.value = ''; // Reset file input
-    };
-
-    const renderHistory = () => {
-        const historyGrid = document.getElementById('historyGrid');
-        historyGrid.innerHTML = '';
-        history.forEach((h, index) => {
-            const card = document.createElement('div');
-            card.className = 'history-card';
-            card.innerHTML = `
-                <div class="history-card-header">
-                    <span class="history-card-title">Payroll for ${h.date}</span>
-                    <span class="history-card-date">${h.employees.length} employees</span>
-                </div>
-                <div class="history-actions">
-                    <button class="btn btn-info history-btn" onclick="restoreHistory(${index})">
-                        <i class="fas fa-undo"></i> Restore
-                    </button>
-                    <button class="btn btn-danger history-btn" onclick="deleteHistory(${index})">
-                        <i class="fas fa-trash-alt"></i> Delete
-                    </button>
-                </div>
-            `;
-            historyGrid.appendChild(card);
-        });
-    };
-
-    const saveToHistory = () => {
-        const historyData = {
-            date: paymentDate,
-            employees: JSON.parse(JSON.stringify(employees)),
-            deductionRates: {
-                payePermanent: parseFloat(document.getElementById('payePermanent').value),
-                payeContract: parseFloat(document.getElementById('payeContract').value),
-                staffPensionPermanent: parseFloat(document.getElementById('staffPensionPermanent').value),
-                companyPension: parseFloat(document.getElementById('companyPension').value),
-                medicals: parseFloat(document.getElementById('medicals').value),
-                workmen: parseFloat(document.getElementById('workmen').value),
-            },
-            logo: companyLogo
-        };
-        history.push(historyData);
+    function deletePayrollRun(id) {
+      if (confirm("Delete this payroll run?")) {
+        payrollHistory = payrollHistory.filter(r => r.id !== id);
         saveData();
         renderHistory();
-        alert('Current payroll saved to history!');
-    };
+      }
+    }
 
-    const restoreHistory = (index) => {
-        const h = history[index];
-        const confirmRestore = window.confirm(`Are you sure you want to restore the payroll from ${h.date}? This will overwrite your current data.`);
-        if (confirmRestore) {
-            employees = JSON.parse(JSON.stringify(h.employees));
-            document.getElementById('payePermanent').value = h.deductionRates.payePermanent;
-            document.getElementById('payeContract').value = h.deductionRates.payeContract;
-            document.getElementById('staffPensionPermanent').value = h.deductionRates.staffPensionPermanent;
-            document.getElementById('companyPension').value = h.deductionRates.companyPension;
-            document.getElementById('medicals').value = h.deductionRates.medicals;
-            document.getElementById('workmen').value = h.deductionRates.workmen;
-            paymentDate = h.date;
-            document.getElementById('paymentDate').value = paymentDate;
-            companyLogo = h.logo;
-            setLogo(companyLogo);
+    function exportCSV() {
+      let csv = "Name,ID,Status,Days,Basic,Transport,Housing,IOU,Gross,Net,Personnel,External\n";
+      employees.forEach(emp => {
+        const g = calculateGross(emp);
+        const d = calculateDeductions(emp, g);
+        const n = calculateNet(emp, g, d);
+        const p = d.staffPension + d.companyPension;
+        csv += `"${emp.name}","${emp.idNo}","${emp.status}",${emp.daysWorked},${emp.basic},${emp.transport},${emp.housing},${emp.iou},${g},${n},${p},${n}\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `payroll_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    }
 
+    function backupData() {
+      const data = { employees, payrollHistory, managerName, currentPaymentDate };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    }
+
+    function restoreData() {
+      document.getElementById('restoreFileInput').click();
+    }
+
+    document.getElementById('restoreFileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (confirm(`Restore ${data.employees.length} employees and ${data.payrollHistory.length} runs?`)) {
+            employees = data.employees || [];
+            payrollHistory = data.payrollHistory || [];
+            managerName = data.managerName || "John Manager";
+            currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
             saveData();
             renderTable();
-            renderSummary();
-            alert('Payroll data restored successfully!');
+            renderHistory();
+            document.getElementById('paymentDate').value = currentPaymentDate;
+            document.getElementById('managerName').value = managerName;
+            alert("Data restored.");
+          }
+        } catch (err) {
+          alert("Error: " + err.message);
         }
-    };
-
-    const deleteHistory = (index) => {
-      const confirmDelete = window.confirm(`Are you sure you want to delete this payroll history entry?`);
-      if (confirmDelete) {
-        history.splice(index, 1);
-        saveData();
-        renderHistory();
-        alert('History entry deleted.');
-      }
-    };
-    
-    const resetData = () => {
-      if (window.confirm("This will permanently delete ALL payroll data (employees, history, settings). Continue?")) {
-        localStorage.removeItem(localStorageKey);
-        localStorage.removeItem('companyLogo');
-        resetToDefaultData();
-        renderTable();
-        renderHistory();
-        document.getElementById('paymentDate').value = paymentDate;
-        alert("All data has been reset to default values");
-      }
-    };
-
-    const switchTab = (tab) => {
-        document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`${tab}Tab`).style.display = 'block';
-        document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
-    };
-
-    // Initial load
-    document.addEventListener('DOMContentLoaded', () => {
-        loadData();
-        renderTable();
-        renderHistory();
-        document.getElementById('paymentDate').value = paymentDate;
-
-        // Toggle event listeners
-        document.getElementById('toggleDeductions').addEventListener('change', e => {
-            const isChecked = e.target.checked;
-            document.getElementById('deductionsPanel').style.display = isChecked ? 'grid' : 'none';
-        });
-
-        document.getElementById('toggleCalculated').addEventListener('change', e => {
-            const table = document.getElementById("payrollTable");
-            table.classList.toggle('hide-calculated', !e.target.checked);
-        });
-
-        // Event listener for mobile menu button
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const controls = document.querySelector('.controls');
-        mobileMenuBtn.addEventListener('click', () => {
-            controls.classList.toggle('active');
-        });
+      };
+      reader.readAsText(file);
+      e.target.value = '';
     });
-</script>
+
+    function resetData() {
+      if (confirm("Reset all data?")) {
+        localStorage.removeItem(localStorageKey);
+        resetToDefault();
+        renderTable();
+        renderHistory();
+        document.getElementById('paymentDate').value = currentPaymentDate;
+        document.getElementById('managerName').value = managerName;
+        alert("Data reset.");
+      }
+    }
+
+    function togglePanel(el) {
+      el.closest('.panel').classList.toggle('collapsed');
+    }
+  </script>
 </body>
 </html>
