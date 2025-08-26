@@ -6,6 +6,7 @@
   <title>Apt Engineering Works Payroll System</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Base Styles */
     * {
       margin: 0;
       padding: 0;
@@ -455,8 +456,8 @@
       font-size: 9px;
       font-weight: bold;
     }
-
-    /* Print Styles */
+    
+    /* NEW: Print-specific Styles */
     @media print {
       body {
         background: white;
@@ -528,7 +529,7 @@
       text-overflow: clip;
       width: auto;
     }
-    #payrollTable.hide-calculated td:not(.calculated-cell)) {
+    #payrollTable.hide-calculated td:not(.calculated-cell) {
       width: auto;
     }
 
@@ -648,6 +649,9 @@
       display: flex;
       border-bottom: 1px solid #e2e8f0;
       margin-bottom: 15px;
+      overflow-x: auto; /* Enable horizontal scrolling for tabs */
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
     }
     .tab-btn {
       padding: 10px 15px;
@@ -724,13 +728,8 @@
         flex-direction: column;
         align-items: flex-start;
       }
-      .tab-navigation {
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
     }
-
+    
     /* Tablet Styles */
     @media (min-width: 768px) {
       .content {
@@ -750,7 +749,7 @@
         margin-top: 0;
       }
     }
-
+    
     /* Desktop Styles */
     @media (min-width: 992px) {
       .content {
@@ -763,847 +762,712 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="header-content">
-        <button class="mobile-menu-btn">
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="logo-container">
-          <div class="logo-placeholder" id="companyLogo">
-            <span>AE</span>
-          </div>
-        </div>
-        <div class="header-text">
-          <h1>Apt Engineering Works Ltd</h1>
-          <p>Advanced Payroll Management System</p>
+<div class="container">
+  <header>
+    <div class="header-content">
+      <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="logo-container">
+        <div class="logo-placeholder" id="companyLogo">
+          <span>AE</span>
         </div>
       </div>
-      <div class="controls">
-        <button class="upload-btn" onclick="document.getElementById('logoInput').click()">
-          <i class="fas fa-upload"></i> Upload Logo
-        </button>
-        <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
-      </div>
-    </header>
-
-    <!-- Tab Navigation -->
-    <div class="tab-navigation">
-      <button class="tab-btn active" onclick="switchTab('current')">
-        <i class="fas fa-file-invoice-dollar"></i> Current Payroll
-      </button>
-      <button class="tab-btn" onclick="switchTab('history')">
-        <i class="fas fa-history"></i> Payment History
-      </button>
-      <button class="tab-btn" onclick="switchTab('settings')">
-        <i class="fas fa-cog"></i> Settings
-      </button>
-    </div>
-
-    <!-- Current Payroll Tab -->
-    <div id="currentTab" class="tab-content active">
-      <div class="content">
-        <div class="panel">
-          <div class="panel-header" onclick="togglePanel(this)">
-            <h2><i class="fas fa-cog"></i> Deduction Settings</h2>
-            <i class="fas fa-chevron-down toggle-icon"></i>
-          </div>
-          <div class="panel-content">
-            <div class="payment-date-selector">
-              <label for="paymentDate"><i class="far fa-calendar-alt"></i> Payment Date:</label>
-              <input type="date" id="paymentDate" onchange="updatePaymentDate()">
-            </div>
-            <div class="toggle-container">
-              <input type="checkbox" id="toggleDeductions" checked>
-              <label for="toggleDeductions">Show Deduction Rates</label>
-            </div>
-            <div class="toggle-container">
-              <input type="checkbox" id="toggleCalculated" checked>
-              <label for="toggleCalculated">Show Calculated Fields</label>
-            </div>
-            <div class="deductions-grid" id="deductionsPanel">
-              <!-- Deduction Fields -->
-              <div class="form-group">
-                <label><i class="fas fa-percent"></i> PAYE - Permanent (%)</label>
-                <input type="number" id="payePermanent" value="12" step="0.1">
-              </div>
-              <div class="form-group">
-                <label><i class="fas fa-percent"></i> PAYE - Contract (%)</label>
-                <input type="number" id="payeContract" value="5" step="0.1">
-              </div>
-              <div class="form-group">
-                <label><i class="fas fa-money-bill-wave"></i> Staff Pension - Permanent (%)</label>
-                <input type="number" id="staffPensionPermanent" value="7.5" step="0.1">
-              </div>
-              <div class="form-group">
-                <label><i class="fas fa-building"></i> Company Pension (%)</label>
-                <input type="number" id="companyPension" value="15" step="0.1">
-              </div>
-              <div class="form-group">
-                <label><i class="fas fa-heartbeat"></i> Medicals Insurance (%)</label>
-                <input type="number" id="medicals" value="1" step="0.1">
-              </div>
-              <div class="form-group">
-                <label><i class="fas fa-hard-hat"></i> Workmen Insurance (%)</label>
-                <input type="number" id="workmen" value="1" step="0.1">
-              </div>
-            </div>
-            <div class="action-buttons">
-              <button class="btn btn-warning" onclick="addEmployee()">
-                <i class="fas fa-user-plus"></i> Add Employee
-              </button>
-              <button class="btn btn-success" onclick="exportCSV()">
-                <i class="fas fa-file-export"></i> Export CSV
-              </button>
-              <button class="btn btn-primary" onclick="savePayrollRun()">
-                <i class="fas fa-save"></i> Save Payroll Run
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header" onclick="togglePanel(this)">
-            <h2><i class="fas fa-users"></i> Employee List <span class="employee-count" id="employeeCount">0</span></h2>
-            <i class="fas fa-chevron-down toggle-icon"></i>
-          </div>
-          <div class="panel-content">
-            <div class="table-container">
-              <table id="payrollTable">
-                <thead>
-                  <tr>
-                    <th>Name</th><th>ID No</th><th>Status</th><th>Days</th><th>Basic</th>
-                    <th>Transport</th><th>Housing</th><th>IOU</th>
-                    <th class="calculated-cell">Gross Pay</th><th class="calculated-cell">Net Pay</th>
-                    <th class="calculated-cell">Personnel Cost</th><th class="calculated-cell">External</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="summary" id="summary">
-        <div class="summary-item">
-          <div><i class="fas fa-users"></i> Total Employees</div>
-          <div class="summary-value" id="totalEmployees">0</div>
-        </div>
-        <div class="summary-item">
-          <div><i class="fas fa-money-bill-wave"></i> Total Gross Pay</div>
-          <div class="summary-value" id="totalGross">₦0.00</div>
-        </div>
-        <div class="summary-item">
-          <div><i class="fas fa-wallet"></i> Total Net Pay</div>
-          <div class="summary-value" id="totalNet">₦0.00</div>
-        </div>
-        <div class="summary-item">
-          <div><i class="fas fa-building"></i> Total Personnel Cost</div>
-          <div class="summary-value" id="totalPersonnel">₦0.00</div>
-        </div>
+      <div class="header-text">
+        <h1>Apt Engineering Works Ltd</h1>
+        <p>Advanced Payroll Management System</p>
       </div>
     </div>
-
-    <!-- History Tab -->
-    <div id="historyTab" class="tab-content">
-      <div class="history-panel">
-        <div class="history-header">
-          <h2><i class="fas fa-history"></i> Payroll History</h2>
-          <div class="form-group" style="width: 200px;">
-            <select id="historyFilter" class="input-field" onchange="filterHistory()">
-              <option value="all">All Months</option>
-              <option value="last3">Last 3 Months</option>
-              <option value="last6">Last 6 Months</option>
-              <option value="year">This Year</option>
-            </select>
-          </div>
-        </div>
-        <div class="history-grid" id="historyContainer">
-          <!-- History cards will be inserted here -->
-        </div>
-      </div>
+    <div class="controls">
+      <button class="upload-btn" onclick="document.getElementById('logoInput').click()">
+        <i class="fas fa-upload"></i> Upload Logo
+      </button>
+      <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
     </div>
-
-    <!-- Settings Tab -->
-    <div id="settingsTab" class="tab-content">
+  </header>
+  
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button class="tab-btn active" onclick="switchTab('current')">
+      <i class="fas fa-file-invoice-dollar"></i> Current Payroll
+    </button>
+    <button class="tab-btn" onclick="switchTab('history')">
+      <i class="fas fa-history"></i> Payment History
+    </button>
+    <button class="tab-btn" onclick="switchTab('settings')">
+      <i class="fas fa-cog"></i> Settings
+    </button>
+  </div>
+  
+  <!-- Current Payroll Tab -->
+  <div id="currentTab" class="tab-content active">
+    <div class="content">
       <div class="panel">
-        <div class="panel-header">
-          <h2><i class="fas fa-user-tie"></i> Manager Settings</h2>
+        <div class="panel-header" onclick="togglePanel(this)">
+          <h2><i class="fas fa-cog"></i> Deduction Settings</h2>
+          <i class="fas fa-chevron-down toggle-icon"></i>
         </div>
         <div class="panel-content">
-          <div class="form-group">
-            <label for="managerName"><i class="fas fa-signature"></i> Manager Name for Payslips</label>
-            <input type="text" id="managerName" value="John Manager" onchange="updateManagerName(this.value)">
+          <div class="payment-date-selector">
+            <label for="paymentDate"><i class="far fa-calendar-alt"></i> Payment Date:</label>
+            <input type="date" id="paymentDate" onchange="updatePaymentDate()">
           </div>
-          <div class="form-group">
-            <label><i class="fas fa-database"></i> Data Management</label>
-            <div class="action-buttons">
-              <button class="btn btn-info" onclick="backupData()">
-                <i class="fas fa-file-export"></i> Backup Data
-              </button>
-              <button class="btn btn-warning" onclick="restoreData()">
-                <i class="fas fa-file-import"></i> Restore Data
-              </button>
-              <button class="btn btn-danger" onclick="resetData()">
-                <i class="fas fa-trash-alt"></i> Reset All Data
-              </button>
+          <div class="toggle-container">
+            <input type="checkbox" id="toggleDeductions" checked>
+            <label for="toggleDeductions">Show Deduction Rates</label>
+          </div>
+          <div class="toggle-container">
+            <input type="checkbox" id="toggleCalculated" checked>
+            <label for="toggleCalculated">Show Calculated Fields</label>
+          </div>
+          <div class="deductions-grid" id="deductionsPanel">
+            <!-- Deduction Fields -->
+            <div class="form-group">
+              <label><i class="fas fa-percent"></i> PAYE - Permanent (%)</label>
+              <input type="number" id="payePermanent" value="12" step="0.1">
             </div>
+            <div class="form-group">
+              <label><i class="fas fa-percent"></i> PAYE - Contract (%)</label>
+              <input type="number" id="payeContract" value="5" step="0.1">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-money-bill-wave"></i> Staff Pension - Permanent (%)</label>
+              <input type="number" id="staffPensionPermanent" value="7.5" step="0.1">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-building"></i> Company Pension (%)</label>
+              <input type="number" id="companyPension" value="15" step="0.1">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-heartbeat"></i> Medicals Insurance (%)</label>
+              <input type="number" id="medicals" value="1" step="0.1">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-hard-hat"></i> Workmen Insurance (%)</label>
+              <input type="number" id="workmen" value="1" step="0.1">
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn btn-warning" onclick="addEmployee()">
+              <i class="fas fa-user-plus"></i> Add Employee
+            </button>
+            <button class="btn btn-success" onclick="saveData()">
+              <i class="fas fa-save"></i> Save Data
+            </button>
+            <button class="btn btn-primary" onclick="printPayslips()">
+              <i class="fas fa-print"></i> Print Payslips
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel(this)">
+          <h2><i class="fas fa-table"></i> Payroll Summary & Table</h2>
+          <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+        <div class="panel-content">
+          <div class="summary" id="summaryPanel">
+            <!-- Summary data will be rendered here -->
+          </div>
+          <div class="table-container">
+            <table id="payrollTable">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Employee Name</th>
+                <th>Staff ID</th>
+                <th>Type</th>
+                <th>Bank</th>
+                <th>Account</th>
+                <th>Base Pay</th>
+                <th>Overtime</th>
+                <th>Allowances</th>
+                <th class="calculated-cell">Gross Pay</th>
+                <th>Deductions</th>
+                <th class="calculated-cell">Total Deductions</th>
+                <th class="calculated-cell">Net Pay</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- Employee rows will be rendered here -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- Payment History Tab -->
+  <div id="historyTab" class="tab-content">
+    <div class="history-panel">
+      <div class="history-header">
+        <h2><i class="fas fa-history"></i> Payment History</h2>
+      </div>
+      <div class="history-grid" id="historyGrid">
+        <!-- History cards will be rendered here -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- Settings Tab -->
+  <div id="settingsTab" class="tab-content">
+    <div class="history-panel">
+      <div class="history-header">
+        <h2><i class="fas fa-cog"></i> System Settings</h2>
+        <div class="action-buttons">
+          <button class="btn btn-info" onclick="exportData()">
+            <i class="fas fa-file-export"></i> Export Data
+          </button>
+          <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)">
+          <button class="btn btn-info" onclick="document.getElementById('importFile').click()">
+            <i class="fas fa-file-import"></i> Import Data
+          </button>
+          <button class="btn btn-danger" onclick="resetData()">
+            <i class="fas fa-trash-alt"></i> Reset All Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- Payslip Template -->
-  <div class="payslip-container" id="payslipContainer"></div>
+<!-- Payslip Print Preview Container -->
+<div class="payslip-container" id="payslipContainer">
+  <!-- Payslips will be generated here for printing -->
+</div>
 
-  <!-- Hidden file input for data restore -->
-  <input type="file" id="restoreFileInput" accept=".json" style="display: none;">
-
-  <script>
+<script>
+    // Global state
     let employees = [];
-    let payrollHistory = [];
+    let history = [];
+    const localStorageKey = 'aptPayrollData';
     let companyLogo = null;
-    let lastValues = {};
-    let managerName = "John Manager";
-    let currentPaymentDate = new Date().toISOString().split('T')[0];
-    const localStorageKey = "aptEngineeringPayrollData";
+    let paymentDate = new Date().toISOString().split('T')[0];
 
-    // Initialize the app
-    window.onload = () => {
-      loadData();
-      document.getElementById('paymentDate').value = currentPaymentDate;
-      document.getElementById('deductionsPanel').style.display = 'grid';
-      renderTable();
-      renderHistory();
-      const savedLogo = localStorage.getItem('companyLogo');
-      if (savedLogo) setLogo(savedLogo);
+    // Functions to handle data and rendering
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(value);
     };
 
-    function loadData() {
-      const savedData = localStorage.getItem(localStorageKey);
-      if (savedData) {
+    const saveData = () => {
+        const data = {
+            employees: employees,
+            history: history,
+            deductionRates: {
+                payePermanent: parseFloat(document.getElementById('payePermanent').value),
+                payeContract: parseFloat(document.getElementById('payeContract').value),
+                staffPensionPermanent: parseFloat(document.getElementById('staffPensionPermanent').value),
+                companyPension: parseFloat(document.getElementById('companyPension').value),
+                medicals: parseFloat(document.getElementById('medicals').value),
+                workmen: parseFloat(document.getElementById('workmen').value),
+            },
+            paymentDate: paymentDate,
+            logo: companyLogo
+        };
+        localStorage.setItem(localStorageKey, JSON.stringify(data));
+        renderSummary();
+    };
+
+    const loadData = () => {
         try {
-          const parsedData = JSON.parse(savedData);
-          employees = parsedData.employees || [];
-          payrollHistory = parsedData.payrollHistory || [];
-          managerName = parsedData.managerName || "John Manager";
-          currentPaymentDate = parsedData.currentPaymentDate || new Date().toISOString().split('T')[0];
+            const data = JSON.parse(localStorage.getItem(localStorageKey));
+            if (data) {
+                employees = data.employees || [];
+                history = data.history || [];
+                document.getElementById('payePermanent').value = data.deductionRates?.payePermanent || 12;
+                document.getElementById('payeContract').value = data.deductionRates?.payeContract || 5;
+                document.getElementById('staffPensionPermanent').value = data.deductionRates?.staffPensionPermanent || 7.5;
+                document.getElementById('companyPension').value = data.deductionRates?.companyPension || 15;
+                document.getElementById('medicals').value = data.deductionRates?.medicals || 1;
+                document.getElementById('workmen').value = data.deductionRates?.workmen || 1;
+                paymentDate = data.paymentDate || new Date().toISOString().split('T')[0];
+                companyLogo = data.logo || null;
+
+                if (companyLogo) {
+                    setLogo(companyLogo);
+                }
+
+            } else {
+                resetToDefaultData();
+            }
         } catch (e) {
-          console.error("Error loading saved data", e);
-          resetToDefaultData();
+            console.error("Error loading data from localStorage:", e);
+            resetToDefaultData();
         }
-      } else {
-        resetToDefaultData();
-      }
-    }
+    };
 
-    function resetToDefaultData() {
-      employees = [
-        { name: "Abe Abiola", idNo: "AEWP-001", status: "Permanent", daysWorked: 22, basic: 35000, transport: 15000, housing: 15000, iou: 0 },
-        { name: "Jeremiah Dennis", idNo: "AEWP-004", status: "Contract", daysWorked: 16, basic: 60000, transport: 3500, housing: 0, iou: 0 },
-        { name: "Chinwe Okonkwo", idNo: "AEWP-007", status: "Permanent", daysWorked: 20, basic: 42000, transport: 12000, housing: 18000, iou: 5000 },
-        { name: "Oluwaseun Adebayo", idNo: "AEWP-012", status: "Contract", daysWorked: 18, basic: 55000, transport: 8000, housing: 0, iou: 2500 }
-      ];
-      payrollHistory = [];
-      managerName = "John Manager";
-      currentPaymentDate = new Date().toISOString().split('T')[0];
-    }
+    const resetToDefaultData = () => {
+        employees = [];
+        history = [];
+        document.getElementById('payePermanent').value = 12;
+        document.getElementById('payeContract').value = 5;
+        document.getElementById('staffPensionPermanent').value = 7.5;
+        document.getElementById('companyPension').value = 15;
+        document.getElementById('medicals').value = 1;
+        document.getElementById('workmen').value = 1;
+        paymentDate = new Date().toISOString().split('T')[0];
+        companyLogo = null;
+        localStorage.removeItem(localStorageKey);
+        localStorage.removeItem('companyLogo');
+    };
 
-    function saveData() {
-      const data = {
-        employees: employees,
-        payrollHistory: payrollHistory,
-        managerName: managerName,
-        currentPaymentDate: currentPaymentDate
-      };
-      localStorage.setItem(localStorageKey, JSON.stringify(data));
-    }
+    const calculateTotals = (employee) => {
+        const payeRate = employee.type === 'Permanent' ? parseFloat(document.getElementById('payePermanent').value) : parseFloat(document.getElementById('payeContract').value);
+        const staffPensionRate = employee.type === 'Permanent' ? parseFloat(document.getElementById('staffPensionPermanent').value) : 0;
+        const companyPensionRate = employee.type === 'Permanent' ? parseFloat(document.getElementById('companyPension').value) : 0;
+        const medicalsRate = parseFloat(document.getElementById('medicals').value);
+        const workmenRate = parseFloat(document.getElementById('workmen').value);
 
-    function togglePanel(element) {
-      const panel = element.closest('.panel');
-      panel.classList.toggle('collapsed');
-    }
+        const grossPay = parseFloat(employee.basePay) + parseFloat(employee.overtime) + parseFloat(employee.allowances);
+        const payeDeduction = (grossPay * payeRate) / 100;
+        const staffPensionDeduction = (grossPay * staffPensionRate) / 100;
+        const medicalsDeduction = (grossPay * medicalsRate) / 100;
+        const workmenDeduction = (grossPay * workmenRate) / 100;
 
-    function switchTab(tabId) {
-      // Hide all tabs
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      // Deactivate all tab buttons
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      // Show selected tab
-      document.getElementById(tabId + 'Tab').classList.add('active');
-      // Activate clicked button
-      event.currentTarget.classList.add('active');
-      
-      // Special handling for history tab
-      if (tabId === 'history') {
-        renderHistory();
-      }
-    }
+        const totalDeductions = payeDeduction + staffPensionDeduction + medicalsDeduction + workmenDeduction + parseFloat(employee.otherDeductions);
+        const netPay = grossPay - totalDeductions;
 
-    function updatePaymentDate() {
-      currentPaymentDate = document.getElementById('paymentDate').value;
-      saveData();
-    }
+        return {
+            grossPay: grossPay,
+            paye: payeDeduction,
+            staffPension: staffPensionDeduction,
+            medicals: medicalsDeduction,
+            workmen: workmenDeduction,
+            totalDeductions: totalDeductions,
+            netPay: netPay,
+            companyPension: (grossPay * companyPensionRate) / 100, // Company contribution
+            payeRate: payeRate,
+            staffPensionRate: staffPensionRate,
+            medicalsRate: medicalsRate,
+            workmenRate: workmenRate
+        };
+    };
 
-    function updateManagerName(name) {
-      managerName = name;
-      saveData();
-    }
+    const renderTable = () => {
+        const tableBody = document.querySelector('#payrollTable tbody');
+        tableBody.innerHTML = '';
+        employees.forEach((employee, index) => {
+            const totals = calculateTotals(employee);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td><input type="text" class="input-field" value="${employee.name}" onchange="updateEmployee(${index}, 'name', this.value)"></td>
+                <td><input type="text" class="input-field" value="${employee.staffID}" onchange="updateEmployee(${index}, 'staffID', this.value)"></td>
+                <td>
+                    <select class="input-field" onchange="updateEmployee(${index}, 'type', this.value)">
+                        <option value="Permanent" ${employee.type === 'Permanent' ? 'selected' : ''}>Permanent</option>
+                        <option value="Contract" ${employee.type === 'Contract' ? 'selected' : ''}>Contract</option>
+                    </select>
+                </td>
+                <td><input type="text" class="input-field" value="${employee.bank}" onchange="updateEmployee(${index}, 'bank', this.value)"></td>
+                <td><input type="text" class="input-field" value="${employee.account}" onchange="updateEmployee(${index}, 'account', this.value)"></td>
+                <td><input type="number" class="input-field" value="${employee.basePay}" step="0.01" onchange="updateEmployee(${index}, 'basePay', parseFloat(this.value))"></td>
+                <td><input type="number" class="input-field" value="${employee.overtime}" step="0.01" onchange="updateEmployee(${index}, 'overtime', parseFloat(this.value))"></td>
+                <td><input type="number" class="input-field" value="${employee.allowances}" step="0.01" onchange="updateEmployee(${index}, 'allowances', parseFloat(this.value))"></td>
+                <td class="calculated-cell"><span class="calculated-value">${formatCurrency(totals.grossPay)}</span></td>
+                <td><input type="number" class="input-field" value="${employee.otherDeductions}" step="0.01" onchange="updateEmployee(${index}, 'otherDeductions', parseFloat(this.value))"></td>
+                <td class="calculated-cell"><span class="calculated-value">${formatCurrency(totals.totalDeductions)}</span></td>
+                <td class="calculated-cell"><span class="calculated-value">${formatCurrency(totals.netPay)}</span></td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteEmployee(${index})"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+        renderSummary();
+    };
 
-    function handleLogoUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const logoData = e.target.result;
-        setLogo(logoData);
-        localStorage.setItem('companyLogo', logoData);
-      };
-      reader.readAsDataURL(file);
-    }
+    const updateEmployee = (index, key, value) => {
+        employees[index][key] = value;
+        saveData();
+        renderTable();
+    };
 
-    function setLogo(logoData) {
-      companyLogo = logoData;
-      const logoElement = document.getElementById('companyLogo');
-      logoElement.innerHTML = '';
-      logoElement.style.backgroundImage = `url(${logoData})`;
-      logoElement.style.backgroundSize = 'contain';
-      logoElement.style.backgroundPosition = 'center';
-      logoElement.style.backgroundRepeat = 'no-repeat';
-    }
+    const addEmployee = () => {
+        employees.push({
+            name: 'New Employee',
+            staffID: '',
+            type: 'Permanent',
+            bank: '',
+            account: '',
+            basePay: 0,
+            overtime: 0,
+            allowances: 0,
+            otherDeductions: 0
+        });
+        saveData();
+        renderTable();
+    };
 
-    function renderTable() {
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
-      employees.forEach((emp, index) => {
-        const gross = calculateGross(emp);
-        const deductions = calculateDeductions(emp, gross);
-        const net = calculateNet(emp, gross, deductions);
-        const personnelCost = deductions.staffPension + deductions.companyPension;
-        const empKey = `${index}-gross`;
-        const hasChanged = lastValues[empKey] !== gross;
-        if (hasChanged) lastValues[empKey] = gross;
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><input class="input-field" type="text" value="${emp.name}" onchange="updateField(${index}, 'name', this.value)"></td>
-          <td><input class="input-field" type="text" value="${emp.idNo}" onchange="updateField(${index}, 'idNo', this.value)"></td>
-          <td>
-            <select class="input-field" onchange="updateField(${index}, 'status', this.value)">
-              <option ${emp.status === "Permanent" ? "selected" : ""}>Permanent</option>
-              <option ${emp.status === "Contract" ? "selected" : ""}>Contract</option>
-            </select>
-          </td>
-          <td><input class="input-field" type="number" value="${emp.daysWorked}" onchange="updateField(${index}, 'daysWorked', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.basic}" onchange="updateField(${index}, 'basic', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.transport}" onchange="updateField(${index}, 'transport', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.housing}" onchange="updateField(${index}, 'housing', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.iou}" onchange="updateField(${index}, 'iou', parseFloat(this.value))"></td>
-          <td class="calculated-cell"><div class="calculated-value ${hasChanged ? 'changed' : ''}">${formatCurrency(gross)}</div></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(net)}</div></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(personnelCost)}</div></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(net)}</div></td>
-          <td class="actions-cell">
-            <button class="btn btn-primary action-btn" onclick="generatePayslip(${index})">
-              <i class="fas fa-file-alt"></i> Slip
-            </button>
-            <button class="btn btn-danger action-btn" onclick="deleteEmployee(${index})">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      updateSummary();
-      document.getElementById('employeeCount').textContent = employees.length;
-      saveData();
-    }
-
-    function deleteEmployee(index) {
-      if (confirm("Are you sure you want to delete this employee record?")) {
+    const deleteEmployee = (index) => {
+      const confirmDelete = window.confirm(`Are you sure you want to delete ${employees[index].name}?`);
+      if (confirmDelete) {
         employees.splice(index, 1);
+        saveData();
         renderTable();
       }
-    }
+    };
 
-    function updateField(index, field, value) {
-      employees[index][field] = value;
-      renderTable();
-    }
+    const renderSummary = () => {
+        const summaryPanel = document.getElementById('summaryPanel');
+        const totalGrossPay = employees.reduce((acc, emp) => acc + calculateTotals(emp).grossPay, 0);
+        const totalDeductions = employees.reduce((acc, emp) => acc + calculateTotals(emp).totalDeductions, 0);
+        const totalNetPay = employees.reduce((acc, emp) => acc + calculateTotals(emp).netPay, 0);
 
-    function calculateGross(emp) {
-      return emp.status === "Permanent"
-        ? (emp.basic + emp.transport + emp.housing) * emp.daysWorked
-        : (emp.basic + emp.transport) * emp.daysWorked;
-    }
-
-    function calculateDeductions(emp, gross) {
-      const payeRate = emp.status === "Permanent"
-        ? parseFloat(document.getElementById("payePermanent").value) / 100
-        : parseFloat(document.getElementById("payeContract").value) / 100;
-      const staffPensionRate = emp.status === "Permanent"
-        ? parseFloat(document.getElementById("staffPensionPermanent").value) / 100
-        : 0;
-      const companyPensionRate = parseFloat(document.getElementById("companyPension").value) / 100;
-      const medicalsRate = parseFloat(document.getElementById("medicals").value) / 100;
-      const workmenRate = parseFloat(document.getElementById("workmen").value) / 100;
-      return {
-        paye: gross * payeRate,
-        staffPension: gross * staffPensionRate,
-        companyPension: gross * companyPensionRate,
-        medicals: gross * medicalsRate,
-        workmen: gross * workmenRate
-      };
-    }
-
-    function calculateNet(emp, gross, deductions) {
-      const totalDeductions = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen;
-      return emp.status === "Permanent"
-        ? gross - totalDeductions - emp.iou
-        : gross - totalDeductions - emp.iou;
-    }
-
-    function formatCurrency(value) {
-      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(value || 0);
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    function addEmployee() {
-      employees.push({
-        name: "New Employee",
-        idNo: `AEWP-${String(employees.length + 1).padStart(3, '0')}`,
-        status: "Permanent",
-        daysWorked: 22,
-        basic: 30000,
-        transport: 10000,
-        housing: 12000,
-        iou: 0
-      });
-      renderTable();
-    }
-
-    function exportCSV() {
-      const now = new Date();
-      const month = now.toLocaleString('default', { month: 'long' });
-      const year = now.getFullYear();
-      let csv = "Name,ID No,Status,Days Worked,Basic,Transport,Housing,IOU,Gross Pay,Net Pay,Personnel Cost,External Payment\n";
-      employees.forEach(emp => {
-        const gross = calculateGross(emp);
-        const deductions = calculateDeductions(emp, gross);
-        const net = calculateNet(emp, gross, deductions);
-        const personnelCost = deductions.staffPension + deductions.companyPension;
-        csv += `"${emp.name}","${emp.idNo}","${emp.status}",${emp.daysWorked},${emp.basic},${emp.transport},${emp.housing},${emp.iou},${gross},${net},${personnelCost},${net}\n`;
-      });
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `apt_engineering_payroll_${new Date().toLocaleString('default', { month: 'long' })}_${new Date().getFullYear()}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function updateSummary() {
-      const totalEmployees = employees.length;
-      const totalGross = employees.reduce((sum, emp) => sum + calculateGross(emp), 0);
-      const totalNet = employees.reduce((sum, emp) => {
-        const gross = calculateGross(emp);
-        const deductions = calculateDeductions(emp, gross);
-        return sum + calculateNet(emp, gross, deductions);
-      }, 0);
-      const totalPersonnelCost = employees.reduce((sum, emp) => {
-        const gross = calculateGross(emp);
-        const deductions = calculateDeductions(emp, gross);
-        return sum + (deductions.staffPension + deductions.companyPension);
-      }, 0);
-      document.getElementById("totalEmployees").textContent = totalEmployees;
-      document.getElementById("totalGross").textContent = formatCurrency(totalGross);
-      document.getElementById("totalNet").textContent = formatCurrency(totalNet);
-      document.getElementById("totalPersonnel").textContent = formatCurrency(totalPersonnelCost);
-    }
-
-    function savePayrollRun() {
-      if (!currentPaymentDate) {
-        alert("Please select a payment date first");
-        return;
-      }
-      
-      const payrollRun = {
-        id: Date.now(),
-        date: currentPaymentDate,
-        employees: JSON.parse(JSON.stringify(employees)),
-        totals: {
-          employees: employees.length,
-          gross: employees.reduce((sum, emp) => sum + calculateGross(emp), 0),
-          net: employees.reduce((sum, emp) => {
-            const gross = calculateGross(emp);
-            const deductions = calculateDeductions(emp, gross);
-            return sum + calculateNet(emp, gross, deductions);
-          }, 0),
-          personnelCost: employees.reduce((sum, emp) => {
-            const gross = calculateGross(emp);
-            const deductions = calculateDeductions(emp, gross);
-            return sum + (deductions.staffPension + deductions.companyPension);
-          }, 0)
-        },
-        deductions: {
-          payePermanent: parseFloat(document.getElementById("payePermanent").value),
-          payeContract: parseFloat(document.getElementById("payeContract").value),
-          staffPensionPermanent: parseFloat(document.getElementById("staffPensionPermanent").value),
-          companyPension: parseFloat(document.getElementById("companyPension").value),
-          medicals: parseFloat(document.getElementById("medicals").value),
-          workmen: parseFloat(document.getElementById("workmen").value)
-        }
-      };
-      
-      payrollHistory.unshift(payrollRun);
-      saveData();
-      renderHistory();
-      alert(`Payroll run for ${formatDate(currentPaymentDate)} saved successfully!`);
-    }
-
-    function renderHistory() {
-      const container = document.getElementById("historyContainer");
-      container.innerHTML = "";
-      
-      // Filter history based on selected option
-      const filter = document.getElementById("historyFilter").value;
-      let filteredHistory = [...payrollHistory];
-      
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      
-      if (filter === "last3") {
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-        filteredHistory = payrollHistory.filter(run => new Date(run.date) >= threeMonthsAgo);
-      } else if (filter === "last6") {
-        const sixMonthsAgo = new Date();
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-        filteredHistory = payrollHistory.filter(run => new Date(run.date) >= sixMonthsAgo);
-      } else if (filter === "year") {
-        filteredHistory = payrollHistory.filter(run => new Date(run.date).getFullYear() === currentYear);
-      }
-      
-      if (filteredHistory.length === 0) {
-        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #718096;">
-          <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 10px;"></i>
-          <p>No payroll history found for the selected filter</p>
-        </div>`;
-        return;
-      }
-      
-      filteredHistory.forEach(run => {
-        const card = document.createElement("div");
-        card.className = "history-card";
-        card.innerHTML = `
-          <div class="history-card-header">
-            <div class="history-card-title">${formatDate(run.date)}</div>
-            <div class="history-card-date">${run.employees.length} employees</div>
-          </div>
-          <div class="history-card-body">
-            <div class="history-card-item">
-              <div class="history-card-label">Total Gross Pay</div>
-              <div class="history-card-value">${formatCurrency(run.totals.gross)}</div>
+        summaryPanel.innerHTML = `
+            <div class="summary-item">
+                <span>Total Employees</span>
+                <span class="summary-value">${employees.length}</span>
             </div>
-            <div class="history-card-item">
-              <div class="history-card-label">Total Net Pay</div>
-              <div class="history-card-value">${formatCurrency(run.totals.net)}</div>
+            <div class="summary-item">
+                <span>Total Gross Pay</span>
+                <span class="summary-value">${formatCurrency(totalGrossPay)}</span>
             </div>
-            <div class="history-card-item">
-              <div class="history-card-label">Personnel Cost</div>
-              <div class="history-card-value">${formatCurrency(run.totals.personnelCost)}</div>
+            <div class="summary-item">
+                <span>Total Deductions</span>
+                <span class="summary-value">${formatCurrency(totalDeductions)}</span>
             </div>
-            <div class="history-card-item">
-              <div class="history-card-label">PAYE Rate</div>
-              <div class="history-card-value">${run.deductions.payePermanent}% / ${run.deductions.payeContract}%</div>
+            <div class="summary-item">
+                <span>Total Net Pay</span>
+                <span class="summary-value">${formatCurrency(totalNetPay)}</span>
             </div>
-          </div>
-          <div class="history-actions">
-            <button class="history-btn" style="background: #ebf8ff; color: #3182ce;" onclick="viewPayrollRun('${run.id}')">
-              <i class="fas fa-eye"></i> View
-            </button>
-            <button class="history-btn" style="background: #feebc8; color: #dd6b20;" onclick="reusePayrollRun('${run.id}')">
-              <i class="fas fa-redo"></i> Reuse
-            </button>
-            <button class="history-btn" style="background: #fff5f5; color: #e53e3e;" onclick="deletePayrollRun('${run.id}')">
-              <i class="fas fa-trash-alt"></i> Delete
-            </button>
-          </div>
         `;
-        container.appendChild(card);
-      });
-    }
+    };
 
-    function filterHistory() {
-      renderHistory();
-    }
+    const togglePanel = (header) => {
+        header.closest('.panel').classList.toggle('collapsed');
+    };
 
-    function viewPayrollRun(id) {
-      const run = payrollHistory.find(r => r.id.toString() === id);
-      if (!run) return;
-      
-      // Create a temporary employees array
-      const tempEmployees = [...employees];
-      employees = run.employees;
-      
-      // Set the payment date
-      currentPaymentDate = run.date;
-      document.getElementById('paymentDate').value = currentPaymentDate;
-      
-      // Set the deduction rates
-      document.getElementById('payePermanent').value = run.deductions.payePermanent;
-      document.getElementById('payeContract').value = run.deductions.payeContract;
-      document.getElementById('staffPensionPermanent').value = run.deductions.staffPensionPermanent;
-      document.getElementById('companyPension').value = run.deductions.companyPension;
-      document.getElementById('medicals').value = run.deductions.medicals;
-      document.getElementById('workmen').value = run.deductions.workmen;
-      
-      // Render the table
-      renderTable();
-      
-      // Switch to current payroll tab
-      switchTab('current');
-      
-      // Restore original employees array after a delay
-      setTimeout(() => {
-        employees = tempEmployees;
-      }, 100);
-      
-      alert(`Viewing payroll run from ${formatDate(run.date)}. Changes will not be saved unless you click "Save Payroll Run".`);
-    }
-
-    function reusePayrollRun(id) {
-      if (!confirm("This will replace your current payroll data with this historical run. Continue?")) return;
-      
-      const run = payrollHistory.find(r => r.id.toString() === id);
-      if (!run) return;
-      
-      employees = JSON.parse(JSON.stringify(run.employees));
-      currentPaymentDate = new Date().toISOString().split('T')[0];
-      document.getElementById('paymentDate').value = currentPaymentDate;
-      
-      // Set the deduction rates
-      document.getElementById('payePermanent').value = run.deductions.payePermanent;
-      document.getElementById('payeContract').value = run.deductions.payeContract;
-      document.getElementById('staffPensionPermanent').value = run.deductions.staffPensionPermanent;
-      document.getElementById('companyPension').value = run.deductions.companyPension;
-      document.getElementById('medicals').value = run.deductions.medicals;
-      document.getElementById('workmen').value = run.deductions.workmen;
-      
-      renderTable();
-      switchTab('current');
-    }
-
-    function deletePayrollRun(id) {
-      if (!confirm("Are you sure you want to delete this payroll run? This cannot be undone.")) return;
-      
-      payrollHistory = payrollHistory.filter(r => r.id.toString() !== id);
-      saveData();
-      renderHistory();
-    }
-
-    function generatePayslip(index) {
-      const emp = employees[index];
-      const gross = calculateGross(emp);
-      const deductions = calculateDeductions(emp, gross);
-      const totalDeductions = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen + emp.iou;
-      const net = calculateNet(emp, gross, deductions);
-      const now = new Date();
-      const month = now.toLocaleString('default', { month: 'long' });
-      const dateStr = now.toLocaleDateString();
-      const container = document.getElementById("payslipContainer");
-      
-      container.innerHTML = `
-        <div class="payslip-page">
-          <div class="payslip">
-            <div class="payslip-header">
-              <div class="payslip-logo">
-                <img src="${companyLogo || ''}" alt="Company Logo">
-              </div>
-              <div class="payslip-company-details">
-                <h2>Apt Engineering Works Ltd</h2>
-                <p>Payroll Department</p>
-                <p>Lagos, Nigeria</p>
-              </div>
-            </div>
-            <div class="payslip-meta">
-              <div><strong>Month:</strong> ${month}</div>
-              <div><strong>Payment Date:</strong> ${formatDate(currentPaymentDate)}</div>
-              <div><strong>Generated on:</strong> ${dateStr}</div>
-            </div>
-            <table class="payslip-table">
-              <tr><th>Employee Name:</th><td>${emp.name}</td></tr>
-              <tr><th>ID Number:</th><td>${emp.idNo}</td></tr>
-              <tr><th>Status:</th><td>${emp.status}</td></tr>
-              <tr><th>Days Worked:</th><td>${emp.daysWorked}</td></tr>
-            </table>
-            
-            <div class="payslip-dual">
-              <div class="payslip-copy">
-                <div class="copy-label">COMPANY COPY</div>
-                <h4 style="margin: 10px 0 5px;">Earnings</h4>
-                <table class="payslip-table">
-                  <tr><td>Basic Pay</td><td>${formatCurrency(emp.basic)}</td></tr>
-                  <tr><td>Transport Allowance</td><td>${formatCurrency(emp.transport)}</td></tr>
-                  <tr><td>Housing Allowance</td><td>${formatCurrency(emp.housing)}</td></tr>
-                  <tr><th>Gross Pay</th><td>${formatCurrency(gross)}</td></tr>
-                </table>
-                <h4 style="margin: 10px 0 5px;">Deductions</h4>
-                <table class="payslip-table">
-                  <tr><td>PAYE</td><td>${formatCurrency(deductions.paye)}</td></tr>
-                  <tr><td>Staff Pension</td><td>${formatCurrency(deductions.staffPension)}</td></tr>
-                  <tr><td>Medicals Insurance</td><td>${formatCurrency(deductions.medicals)}</td></tr>
-                  <tr><td>Workmen Insurance</td><td>${formatCurrency(deductions.workmen)}</td></tr>
-                  <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
-                  <tr><th>Total Deductions</th><td>${formatCurrency(totalDeductions)}</td></tr>
-                </table>
-                <h4 style="margin: 10px 0 5px;">Net Pay</h4>
-                <h2 style="text-align: center; color: #2c5282;">${formatCurrency(net)}</h2>
-              </div>
-              
-              <div class="payslip-copy">
-                <div class="copy-label">STAFF COPY</div>
-                <h4 style="margin: 10px 0 5px;">Earnings</h4>
-                <table class="payslip-table">
-                  <tr><td>Basic Pay</td><td>${formatCurrency(emp.basic)}</td></tr>
-                  <tr><td>Transport Allowance</td><td>${formatCurrency(emp.transport)}</td></tr>
-                  <tr><td>Housing Allowance</td><td>${formatCurrency(emp.housing)}</td></tr>
-                  <tr><th>Gross Pay</th><td>${formatCurrency(gross)}</td></tr>
-                </table>
-                <h4 style="margin: 10px 0 5px;">Deductions</h4>
-                <table class="payslip-table">
-                  <tr><td>PAYE</td><td>${formatCurrency(deductions.paye)}</td></tr>
-                  <tr><td>Staff Pension</td><td>${formatCurrency(deductions.staffPension)}</td></tr>
-                  <tr><td>Medicals Insurance</td><td>${formatCurrency(deductions.medicals)}</td></tr>
-                  <tr><td>Workmen Insurance</td><td>${formatCurrency(deductions.workmen)}</td></tr>
-                  <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
-                  <tr><th>Total Deductions</th><td>${formatCurrency(totalDeductions)}</td></tr>
-                </table>
-                <h4 style="margin: 10px 0 5px;">Net Pay</h4>
-                <h2 style="text-align: center; color: #2c5282;">${formatCurrency(net)}</h2>
-              </div>
-            </div>
-            
-            <div class="signature-section">
-              <div class="signature-box">
-                <div>Manager Name: ${managerName}</div>
-                <div class="signature-line"></div>
-                <div>Manager Signature</div>
-              </div>
-              <div class="signature-box">
-                <div>Staff Name: ${emp.name}</div>
-                <div class="signature-line"></div>
-                <div>Staff Signature</div>
-              </div>
-            </div>
-            
-            <div class="confidential-footer">
-              This document contains confidential information and should be treated as such.
-            </div>
-            <div class="print-button">
-              <button class="btn btn-primary" onclick="printPayslip()">
-                <i class="fas fa-print"></i> Print Payslip
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-      container.style.display = 'block';
-    }
-
-    function printPayslip() {
-      window.print();
-    }
-
-    function backupData() {
-      const data = {
-        employees: employees,
-        payrollHistory: payrollHistory,
-        managerName: managerName,
-        currentPaymentDate: currentPaymentDate,
-        logo: localStorage.getItem('companyLogo')
-      };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `apt_engineering_payroll_backup_${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function restoreData() {
-      document.getElementById('restoreFileInput').click();
-    }
-
-    document.getElementById('restoreFileInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          if (!confirm(`This will replace all current data with the backup. Continue?\n\nBackup contains:\n- ${data.employees.length} employees\n- ${data.payrollHistory.length} historical runs`)) {
-            return;
-          }
-          
-          employees = data.employees || [];
-          payrollHistory = data.payrollHistory || [];
-          managerName = data.managerName || "John Manager";
-          currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
-          
-          if (data.logo) {
-            setLogo(data.logo);
-            localStorage.setItem('companyLogo', data.logo);
-          }
-          
-          saveData();
-          renderTable();
-          renderHistory();
-          document.getElementById('paymentDate').value = currentPaymentDate;
-          alert("Data restored successfully!");
-        } catch (err) {
-          alert("Error restoring data: " + err.message);
+    const handleLogoUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                companyLogo = e.target.result;
+                setLogo(companyLogo);
+                saveData();
+            };
+            reader.readAsDataURL(file);
         }
-      };
-      reader.readAsText(file);
-      e.target.value = ''; // Reset file input
-    });
+    };
 
-    function resetData() {
-      if (!confirm("This will permanently delete ALL payroll data (employees, history, settings). Continue?")) return;
-      
-      localStorage.removeItem(localStorageKey);
-      localStorage.removeItem('companyLogo');
-      resetToDefaultData();
-      renderTable();
-      renderHistory();
-      document.getElementById('paymentDate').value = currentPaymentDate;
-      alert("All data has been reset to default values");
-    }
+    const setLogo = (logoData) => {
+        const logoPlaceholder = document.getElementById('companyLogo');
+        logoPlaceholder.innerHTML = `<img src="${logoData}" alt="Company Logo">`;
+    };
+    
+    // NEW: Function to generate and print payslips
+    const printPayslips = () => {
+        const payslipContainer = document.getElementById('payslipContainer');
+        payslipContainer.innerHTML = ''; // Clear previous payslips
 
-    // Initialize toggle events
-    document.getElementById('toggleDeductions').addEventListener('change', e => {
-      document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
-    });
+        if (employees.length === 0) {
+            alert('No employees to generate payslips for. Please add employees first.');
+            return;
+        }
 
-    document.getElementById('toggleCalculated').addEventListener('change', e => {
-      const table = document.getElementById("payrollTable");
-      table.classList.toggle('hide-calculated', !e.target.checked);
+        const payslipsHTML = employees.map(emp => {
+            const totals = calculateTotals(emp);
+            
+            const payslipContent = (copyType) => `
+                <div class="payslip-copy">
+                    <span class="copy-label">${copyType} Copy</span>
+                    <div class="payslip-header">
+                        <div class="payslip-logo">
+                            ${companyLogo ? `<img src="${companyLogo}" alt="Company Logo">` : '<div class="logo-placeholder"><span>AE</span></div>'}
+                        </div>
+                        <div class="payslip-company-details">
+                            <h2>Apt Engineering Works Ltd</h2>
+                            <p><strong>Payslip for Period:</strong> ${paymentDate}</p>
+                            <p><strong>Employee:</strong> ${emp.name}</p>
+                        </div>
+                    </div>
+                    <div class="payslip-meta">
+                        <div><strong>Staff ID:</strong> ${emp.staffID}</div>
+                        <div><strong>Bank:</strong> ${emp.bank}</div>
+                        <div><strong>Account No:</strong> ${emp.account}</div>
+                    </div>
+                    
+                    <table class="payslip-table">
+                        <thead>
+                            <tr>
+                                <th>Earnings</th>
+                                <th>Amount (NGN)</th>
+                                <th>Deductions</th>
+                                <th>Amount (NGN)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Base Pay</td>
+                                <td>${formatCurrency(emp.basePay)}</td>
+                                <td>PAYE Tax (${totals.payeRate}%)</td>
+                                <td>${formatCurrency(totals.paye)}</td>
+                            </tr>
+                            <tr>
+                                <td>Overtime</td>
+                                <td>${formatCurrency(emp.overtime)}</td>
+                                <td>Staff Pension (${totals.staffPensionRate}%)</td>
+                                <td>${formatCurrency(totals.staffPension)}</td>
+                            </tr>
+                            <tr>
+                                <td>Allowances</td>
+                                <td>${formatCurrency(emp.allowances)}</td>
+                                <td>Medicals (${totals.medicalsRate}%)</td>
+                                <td>${formatCurrency(totals.medicals)}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td>Workmen Insurance (${totals.workmenRate}%)</td>
+                                <td>${formatCurrency(totals.workmen)}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td>Other Deductions</td>
+                                <td>${formatCurrency(emp.otherDeductions)}</td>
+                            </tr>
+                            <tr style="font-weight: bold;">
+                                <td>Gross Pay</td>
+                                <td>${formatCurrency(totals.grossPay)}</td>
+                                <td>Total Deductions</td>
+                                <td>${formatCurrency(totals.totalDeductions)}</td>
+                            </tr>
+                            <tr style="font-weight: bold; background-color: #f0f0f0;">
+                                <td colspan="3" style="text-align: right;">Net Pay</td>
+                                <td>${formatCurrency(totals.netPay)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="signature-section">
+                        <div class="signature-box">
+                            <div class="signature-line"></div>
+                            <span>Employee Signature</span>
+                        </div>
+                        <div class="signature-box">
+                            <div class="signature-line"></div>
+                            <span>Company Signature</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return `
+                <div class="payslip-page">
+                    <div class="payslip-dual">
+                        ${payslipContent('Company')}
+                        ${payslipContent('Personnel')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        payslipContainer.innerHTML = payslipsHTML;
+
+        // Print the content of the payslip container
+        window.print();
+    };
+
+    const updatePaymentDate = () => {
+        paymentDate = document.getElementById('paymentDate').value;
+        saveData();
+    };
+
+    const exportData = () => {
+        const data = {
+            employees: employees,
+            history: history,
+            deductionRates: {
+                payePermanent: parseFloat(document.getElementById('payePermanent').value),
+                payeContract: parseFloat(document.getElementById('payeContract').value),
+                staffPensionPermanent: parseFloat(document.getElementById('staffPensionPermanent').value),
+                companyPension: parseFloat(document.getElementById('companyPension').value),
+                medicals: parseFloat(document.getElementById('medicals').value),
+                workmen: parseFloat(document.getElementById('workmen').value),
+            },
+            paymentDate: paymentDate,
+            logo: companyLogo
+        };
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `apt-payroll-data-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const importData = (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                employees = data.employees || [];
+                history = data.history || [];
+                
+                if (data.deductionRates) {
+                    document.getElementById('payePermanent').value = data.deductionRates.payePermanent || 12;
+                    document.getElementById('payeContract').value = data.deductionRates.payeContract || 5;
+                    document.getElementById('staffPensionPermanent').value = data.deductionRates.staffPensionPermanent || 7.5;
+                    document.getElementById('companyPension').value = data.deductionRates.companyPension || 15;
+                    document.getElementById('medicals').value = data.deductionRates.medicals || 1;
+                    document.getElementById('workmen').value = data.deductionRates.workmen || 1;
+                }
+                
+                paymentDate = data.paymentDate || new Date().toISOString().split('T')[0];
+                document.getElementById('paymentDate').value = paymentDate;
+                
+                if (data.logo) {
+                    companyLogo = data.logo;
+                    setLogo(companyLogo);
+                } else {
+                    companyLogo = null;
+                    document.getElementById('companyLogo').innerHTML = '<span>AE</span>';
+                }
+
+                saveData();
+                renderTable();
+                renderHistory();
+                alert("Data restored successfully!");
+            } catch (err) {
+                alert("Error restoring data: " + err.message);
+            }
+        };
+        reader.readAsText(file);
+        e.target.value = ''; // Reset file input
+    };
+
+    const renderHistory = () => {
+        const historyGrid = document.getElementById('historyGrid');
+        historyGrid.innerHTML = '';
+        history.forEach((h, index) => {
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = `
+                <div class="history-card-header">
+                    <span class="history-card-title">Payroll for ${h.date}</span>
+                    <span class="history-card-date">${h.employees.length} employees</span>
+                </div>
+                <div class="history-actions">
+                    <button class="btn btn-info history-btn" onclick="restoreHistory(${index})">
+                        <i class="fas fa-undo"></i> Restore
+                    </button>
+                    <button class="btn btn-danger history-btn" onclick="deleteHistory(${index})">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            `;
+            historyGrid.appendChild(card);
+        });
+    };
+
+    const saveToHistory = () => {
+        const historyData = {
+            date: paymentDate,
+            employees: JSON.parse(JSON.stringify(employees)),
+            deductionRates: {
+                payePermanent: parseFloat(document.getElementById('payePermanent').value),
+                payeContract: parseFloat(document.getElementById('payeContract').value),
+                staffPensionPermanent: parseFloat(document.getElementById('staffPensionPermanent').value),
+                companyPension: parseFloat(document.getElementById('companyPension').value),
+                medicals: parseFloat(document.getElementById('medicals').value),
+                workmen: parseFloat(document.getElementById('workmen').value),
+            },
+            logo: companyLogo
+        };
+        history.push(historyData);
+        saveData();
+        renderHistory();
+        alert('Current payroll saved to history!');
+    };
+
+    const restoreHistory = (index) => {
+        const h = history[index];
+        const confirmRestore = window.confirm(`Are you sure you want to restore the payroll from ${h.date}? This will overwrite your current data.`);
+        if (confirmRestore) {
+            employees = JSON.parse(JSON.stringify(h.employees));
+            document.getElementById('payePermanent').value = h.deductionRates.payePermanent;
+            document.getElementById('payeContract').value = h.deductionRates.payeContract;
+            document.getElementById('staffPensionPermanent').value = h.deductionRates.staffPensionPermanent;
+            document.getElementById('companyPension').value = h.deductionRates.companyPension;
+            document.getElementById('medicals').value = h.deductionRates.medicals;
+            document.getElementById('workmen').value = h.deductionRates.workmen;
+            paymentDate = h.date;
+            document.getElementById('paymentDate').value = paymentDate;
+            companyLogo = h.logo;
+            setLogo(companyLogo);
+
+            saveData();
+            renderTable();
+            renderSummary();
+            alert('Payroll data restored successfully!');
+        }
+    };
+
+    const deleteHistory = (index) => {
+      const confirmDelete = window.confirm(`Are you sure you want to delete this payroll history entry?`);
+      if (confirmDelete) {
+        history.splice(index, 1);
+        saveData();
+        renderHistory();
+        alert('History entry deleted.');
+      }
+    };
+    
+    const resetData = () => {
+      if (window.confirm("This will permanently delete ALL payroll data (employees, history, settings). Continue?")) {
+        localStorage.removeItem(localStorageKey);
+        localStorage.removeItem('companyLogo');
+        resetToDefaultData();
+        renderTable();
+        renderHistory();
+        document.getElementById('paymentDate').value = paymentDate;
+        alert("All data has been reset to default values");
+      }
+    };
+
+    const switchTab = (tab) => {
+        document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`${tab}Tab`).style.display = 'block';
+        document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+    };
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        renderTable();
+        renderHistory();
+        document.getElementById('paymentDate').value = paymentDate;
+
+        // Toggle event listeners
+        document.getElementById('toggleDeductions').addEventListener('change', e => {
+            const isChecked = e.target.checked;
+            document.getElementById('deductionsPanel').style.display = isChecked ? 'grid' : 'none';
+        });
+
+        document.getElementById('toggleCalculated').addEventListener('change', e => {
+            const table = document.getElementById("payrollTable");
+            table.classList.toggle('hide-calculated', !e.target.checked);
+        });
+
+        // Event listener for mobile menu button
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const controls = document.querySelector('.controls');
+        mobileMenuBtn.addEventListener('click', () => {
+            controls.classList.toggle('active');
+        });
     });
-  </script>
+</script>
 </body>
 </html>
