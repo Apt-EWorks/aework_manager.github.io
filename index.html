@@ -145,10 +145,11 @@
             background: #e0e0e0;
             color: #333;
         }
+        /* Styles for the iframe container */
         .iframe-container {
             position: relative;
             width: 100%;
-            height: 700px;
+            height: 700px; /* Adjust height as needed */
             border: 1px solid #ddd;
             border-radius: 5px;
             overflow: hidden;
@@ -158,6 +159,7 @@
             height: 100%;
             border: none;
         }
+        /* --- Add Import/Export Styles --- */
         .header-actions {
             margin-left: auto;
             position: relative;
@@ -223,6 +225,9 @@
         .notification.error {
             background-color: #dc3545;
         }
+        /* --- End Import/Export Styles --- */
+        
+        /* Login Modal Styles */
         .login-modal {
             position: fixed;
             top: 0;
@@ -382,6 +387,8 @@
             align-items: center;
             z-index: 2001;
         }
+        
+        /* --- Error Reporting Styles --- */
         .error-report-button {
             position: fixed;
             bottom: 20px;
@@ -530,6 +537,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
+            align-items: center;
         }
         .error-module {
             font-weight: 600;
@@ -545,6 +553,7 @@
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 0.8rem;
+            margin-bottom: 5px;
         }
         .error-description {
             color: #333;
@@ -591,6 +600,8 @@
         .screenshot-capture-btn:hover {
             background: #2980b9;
         }
+        
+        /* --- Admin Error Dashboard Styles --- */
         .error-dashboard-modal {
             position: fixed;
             top: 0;
@@ -760,6 +771,7 @@
         .view-errors-btn:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+        /* --- End Admin Error Dashboard Styles --- */
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -774,7 +786,12 @@
             <div class="login-form">
                 <div class="form-group">
                     <label for="githubToken">GitHub Token</label>
-                    <input type="password" id="githubToken" placeholder="ghp_xxx..." required>
+                    <div class="password-input-container">
+                        <input type="password" id="githubToken" placeholder="ghp_xxx..." required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('githubToken')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <small>Get one: <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a></small>
                 </div>
                 <div class="form-group">
@@ -790,12 +807,100 @@
         </div>
     </div>
 
+    <!-- Register Modal -->
+    <div id="registerModal" class="login-modal" style="display: none;">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Create Account</h2>
+                <p>Register for a new account</p>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" placeholder="Choose a username">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="regPassword" placeholder="Create a password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('regPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regFullName">Full Name</label>
+                    <input type="text" id="regFullName" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="Your email address">
+                </div>
+                <div class="form-group">
+                    <label for="regRole">Role</label>
+                    <select id="regRole" style="padding: 12px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;">
+                        <option value="user">Standard User</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <button class="login-btn" onclick="register()">Create Account</button>
+                
+                <div class="register-link">
+                    <p>Already have an account? <a href="#" onclick="showLoginForm()">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="login-modal" style="display: none;">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Change Password</h2>
+                <p>You must change your password to continue</p>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="currentPassword" placeholder="Enter current password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="newPassword" placeholder="Enter new password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <div class="password-input-container">
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="login-btn" onclick="changePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Error Reporting Modal -->
     <div id="errorModal" class="error-modal">
         <div class="error-container">
             <div class="error-header">
                 <h2>Report an Issue</h2>
-                <button class="close-error-modal" onclick="closeErrorModal()">&times;</button>
+                <button class="close-error-modal" onclick="closeErrorModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="error-form">
                 <div class="error-form-group">
@@ -848,13 +953,17 @@
                     <img id="screenshotPreview" class="screenshot-preview" alt="Screenshot preview">
                 </div>
                 <button class="error-submit-btn" onclick="submitErrorReport()">Submit Report</button>
+                
                 <button type="button" class="toggle-error-list" onclick="toggleErrorList()">
                     <i class="fas fa-list"></i> View Previously Reported Issues
                 </button>
+                
                 <div class="error-list-container" id="errorListContainer">
                     <div class="error-list-header">
                         <div class="error-list-title">Your Reported Issues</div>
-                        <button class="close-error-modal" onclick="toggleErrorList()">&times;</button>
+                        <button class="close-error-modal" onclick="toggleErrorList()">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     <div id="errorList"></div>
                 </div>
@@ -867,8 +976,11 @@
         <div class="error-dashboard-container">
             <div class="error-dashboard-header">
                 <h2>Error Reports Dashboard</h2>
-                <button class="close-dashboard-modal" onclick="closeErrorDashboard()">&times;</button>
+                <button class="close-dashboard-modal" onclick="closeErrorDashboard()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
+            
             <div class="dashboard-filters">
                 <div class="dashboard-filter-group">
                     <label for="filterStatus">Status</label>
@@ -907,14 +1019,21 @@
                     </select>
                 </div>
             </div>
-            <div class="error-dashboard-list" id="errorDashboardList"></div>
+            
+            <div class="error-dashboard-list" id="errorDashboardList">
+                <!-- Error reports will be populated here -->
+            </div>
         </div>
     </div>
 
-    <!-- Main App -->
+    <!-- Floating Error Report Button -->
+    <button class="error-report-button" id="errorReportButton" onclick="openErrorModal()">
+        <i class="fas fa-bug"></i>
+    </button>
+
     <div class="app-container" id="mainApp" style="display: none;">
         <header>
-            <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Logo" class="logo" id="companyLogo">
+            <img src="logo/logo.jpg" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=LOGO';" alt="Apt Engineering Logo" class="logo" id="companyLogo">
             <h1>Apt Engineering Work Platform</h1>
             <div class="user-info" id="userInfo">
                 <div class="user-avatar" id="userAvatar">U</div>
@@ -926,6 +1045,8 @@
                 <button class="logout-btn" onclick="showChangePasswordModal()" style="margin-left: 10px;">
                     <i class="fas fa-key"></i> Change Password
                 </button>
+                
+                <!-- Admin Error Indicator -->
                 <div class="admin-error-indicator" id="adminErrorIndicator" style="display: none;">
                     <button class="view-errors-btn" onclick="openErrorDashboard()">
                         <i class="fas fa-bug"></i> View Errors
@@ -933,497 +1054,888 @@
                     </button>
                 </div>
             </div>
-            <div class="header-actions">
-                <button class="menu-button" onclick="toggleDropdown('importExportDropdown')">
-                    <i class="fas fa-file-export"></i> Import/Export
-                </button>
-                <div id="importExportDropdown" class="dropdown-menu">
-                    <button class="dropdown-item" onclick="exportData()">
-                        <i class="fas fa-download"></i> Export Data
-                    </button>
-                    <button class="dropdown-item" onclick="document.getElementById('importFile').click()">
-                        <i class="fas fa-upload"></i> Import Data
-                    </button>
-                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this.files[0])">
-                </div>
-            </div>
         </header>
 
-        <div class="logo-upload-container" id="logoUploadContainer">
-            <div class="logo-upload-instructions">
-                <i class="fas fa-info-circle" style="font-size: 24px;"></i>
-                <div>
-                    <p>To display your company logo, upload it below or place it at <strong>data/logo.png</strong> in your GitHub repo.</p>
-                    <p>Recommended size: 120x40 pixels.</p>
-                </div>
-            </div>
-            <div class="logo-upload-actions">
-                <input type="file" id="logoUpload" accept="image/*" style="display: none;" onchange="handleLogoUpload(this.files[0])">
-                <button class="logo-btn logo-primary" onclick="document.getElementById('logoUpload').click()">
-                    <i class="fas fa-upload"></i> Upload Logo
-                </button>
-                <button class="logo-btn logo-secondary" onclick="hideLogoUpload()">
-                    <i class="fas fa-times"></i> Dismiss
-                </button>
-            </div>
-        </div>
-
-        <div id="moduleSelector" class="module-selector">
-            <div class="module-card" data-module="project-board">
+        <div class="module-selector" id="moduleSelector">
+            <div class="module-card" onclick="loadModule('project-board')">
                 <div class="module-icon"><i class="fas fa-project-diagram"></i></div>
-                <h2 class="module-title">Project Board</h2>
-                <p class="module-description">Manage engineering projects, track progress, and assign resources to tasks.</p>
+                <h3 class="module-title">Project Board</h3>
+                <p class="module-description">Manage and track all engineering projects with detailed timelines, resources, and progress indicators.</p>
             </div>
-            <div class="module-card" data-module="kpi-monitor">
+            
+            <div class="module-card" onclick="loadModule('kpi-monitor')">
                 <div class="module-icon"><i class="fas fa-chart-line"></i></div>
-                <h2 class="module-title">KPI Monitor</h2>
-                <p class="module-description">Track key performance indicators and generate reports for management.</p>
+                <h3 class="module-title">KPI Monitor</h3>
+                <p class="module-description">Track key performance indicators across departments and projects with real-time analytics.</p>
             </div>
-            <div class="module-card" data-module="payroll-manager">
+            
+            <div class="module-card" onclick="loadModule('payroll-manager')">
                 <div class="module-icon"><i class="fas fa-money-check-alt"></i></div>
-                <h2 class="module-title">Payroll Manager</h2>
-                <p class="module-description">Process payroll, manage employee compensation, and generate payslips.</p>
+                <h3 class="module-title">Payroll Manager</h3>
+                <p class="module-description">Handle employee payroll, timesheets, and compensation management with automated calculations.</p>
             </div>
-            <div class="module-card" data-module="work-manager">
+            
+            <div class="module-card" onclick="loadModule('work-manager')">
                 <div class="module-icon"><i class="fas fa-tasks"></i></div>
-                <h2 class="module-title">Work Manager</h2>
-                <p class="module-description">Assign and track work assignments, monitor workloads, and schedule tasks.</p>
+                <h3 class="module-title">Work Manager</h3>
+                <p class="module-description">Assign and monitor work tasks, track completion status, and manage team workloads.</p>
             </div>
         </div>
 
-        <div id="moduleContent" class="module-content">
-            <button class="back-button" onclick="goBackToModules()">
+        <div class="module-content" id="moduleContent">
+            <button class="back-button" onclick="showModuleSelector()">
                 <i class="fas fa-arrow-left"></i> Back to Modules
             </button>
             <div class="iframe-container">
-                <iframe id="moduleFrame" class="module-iframe" frameborder="0"></iframe>
+                <iframe id="moduleIframe" class="module-iframe" src="" frameborder="0"></iframe>
             </div>
         </div>
     </div>
 
-    <!-- Floating Error Button -->
-    <button class="error-report-button" onclick="openErrorModal()">
-        <i class="fas fa-bug"></i>
-    </button>
-
     <!-- Notification -->
-    <div id="notification" class="notification"></div>
+    <div class="notification" id="notification"></div>
 
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
+        // Global variables
         let currentUser = null;
-        let users = [];
+        let githubToken = null;
+        let githubRepo = null;
+        let githubBranch = null;
+        let usersData = [];
         let errorReports = [];
-        let userSha = null;
-        let errorSha = null;
-        let logoSha = null;
+        let companyLogo = null;
 
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('apt-engineering-session');
-            if (saved) {
-                const session = JSON.parse(saved);
-                document.getElementById('githubRepo').value = session.repo;
-                document.getElementById('dataBranch').value = session.branch;
+        // DOM elements
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const changePasswordModal = document.getElementById('changePasswordModal');
+        const mainApp = document.getElementById('mainApp');
+        const moduleSelector = document.getElementById('moduleSelector');
+        const moduleContent = document.getElementById('moduleContent');
+        const moduleIframe = document.getElementById('moduleIframe');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userAvatar = document.getElementById('userAvatar');
+        const companyLogoImg = document.getElementById('companyLogo');
+        const errorModal = document.getElementById('errorModal');
+        const errorDashboardModal = document.getElementById('errorDashboardModal');
+        const adminErrorIndicator = document.getElementById('adminErrorIndicator');
+        const errorCountBadge = document.getElementById('errorCountBadge');
+        const errorReportButton = document.getElementById('errorReportButton');
+
+        // Initialize the application
+        function initApp() {
+            // Check if user is already logged in
+            const savedToken = localStorage.getItem('githubToken');
+            const savedRepo = localStorage.getItem('githubRepo');
+            const savedBranch = localStorage.getItem('githubBranch');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (savedToken && savedRepo && savedUser) {
+                githubToken = savedToken;
+                githubRepo = savedRepo;
+                githubBranch = savedBranch || 'main';
+                currentUser = JSON.parse(savedUser);
+                
+                // Load data and show main app
+                loadInitialData();
+            } else {
+                // Show login modal
+                loginModal.style.display = 'flex';
             }
-            document.getElementById('loginModal').style.display = 'flex';
-        });
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
 
-        // Login with GitHub Token
+        // Set up event listeners
+        function setupEventListeners() {
+            // Handle Enter key in login form
+            document.getElementById('githubToken').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginWithGitHub();
+                }
+            });
+            
+            // Handle Enter key in register form
+            document.getElementById('regPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    register();
+                }
+            });
+            
+            // Handle Enter key in change password form
+            document.getElementById('confirmPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    changePassword();
+                }
+            });
+        }
+
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggleButton = input.parentElement.querySelector('.password-toggle');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        }
+
+        // Login with GitHub token
         async function loginWithGitHub() {
             const token = document.getElementById('githubToken').value.trim();
             const repo = document.getElementById('githubRepo').value.trim();
-            const branch = document.getElementById('dataBranch').value.trim();
-
-            if (!token || !repo || !branch) return showNotification('Fill all fields', 'error');
-
-            try {
-                const userRes = await fetch('https://api.github.com/user', {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                if (!userRes.ok) throw new Error('Invalid token');
-                const ghUser = await userRes.json();
-
-                currentUser = {
-                    username: ghUser.login,
-                    fullName: ghUser.name || ghUser.login,
-                    avatar: ghUser.avatar_url,
-                    role: 'user',
-                    token, repo, branch
-                };
-
-                localStorage.setItem('apt-engineering-session', JSON.stringify({ repo, branch }));
-
-                await loadData();
-                initializeApp();
-                document.getElementById('loginModal').style.display = 'none';
-                showNotification(`Welcome, ${currentUser.fullName}!`, 'success');
-            } catch (err) {
-                showNotification('Login failed: ' + err.message, 'error');
+            const branch = document.getElementById('dataBranch').value.trim() || 'main';
+            
+            if (!token || !repo) {
+                showNotification('Please enter both GitHub token and repository', 'error');
+                return;
             }
-        }
-
-        // Load data from GitHub
-        async function loadData() {
-            const { token, repo, branch } = currentUser;
-            const files = [
-                { path: 'data/users.json', key: 'users', shaKey: 'userSha' },
-                { path: 'data/errors.json', key: 'errorReports', shaKey: 'errorSha' },
-                { path: 'data/logo.png', key: 'logoData', shaKey: 'logoSha' }
-            ];
-
-            for (const file of files) {
-                try {
-                    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${file.path}?ref=${branch}`, {
-                        headers: { 'Authorization': `token ${token}` }
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (file.key === 'logoData') {
-                            document.getElementById('companyLogo').src = `data:image/png;base64,${data.content}`;
-                        } else {
-                            window[file.key] = JSON.parse(atob(data.content));
-                        }
-                        window[file.shaKey] = data.sha;
-                        if (file.key === 'users') {
-                            const user = users.find(u => u.username === currentUser.username);
-                            currentUser.role = user ? user.role : 'user';
-                        }
-                    }
-                } catch (e) {
-                    if (file.key === 'users') window.users = [];
-                    if (file.key === 'errorReports') window.errorReports = [];
-                }
+            
+            // Validate token format (starts with ghp_ or github_pat_)
+            if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+                showNotification('Invalid GitHub token format', 'error');
+                return;
             }
-
-            // Populate user filter
-            const userFilter = document.getElementById('filterUser');
-            userFilter.innerHTML = '<option value="all">All Users</option>';
-            const uniqueUsers = [...new Set(errorReports.map(e => e.reportedBy))];
-            uniqueUsers.forEach(u => {
-                const opt = document.createElement('option');
-                opt.value = u;
-                opt.textContent = u;
-                userFilter.appendChild(opt);
-            });
-        }
-
-        // Save data to GitHub
-        async function saveData(data, path, message) {
-            const { token, repo, branch } = currentUser;
-            const content = btoa(JSON.stringify(data, null, 2));
-            const shaKey = path.replace(/\//g, '_') + 'Sha';
-            const sha = window[shaKey];
-
-            const payload = { message, content, branch, sha };
-
+            
+            // Validate repo format (owner/repo)
+            if (!repo.includes('/')) {
+                showNotification('Repository should be in format: owner/repo', 'error');
+                return;
+            }
+            
             try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
-                    method: 'PUT',
+                showNotification('Authenticating...', 'success');
+                
+                // Test the token and repo access
+                const testUrl = `https://api.github.com/repos/${repo}/contents/users.json?ref=${branch}`;
+                const response = await fetch(testUrl, {
                     headers: {
                         'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
                 });
-
-                if (res.ok) {
-                    const result = await res.json();
-                    window[shaKey] = result.content.sha;
+                
+                if (response.status === 401 || response.status === 403) {
+                    showNotification('Invalid GitHub token or insufficient permissions', 'error');
+                    return;
                 }
-            } catch (err) {
-                showNotification('Save failed: ' + err.message, 'error');
+                
+                if (response.status === 404) {
+                    // Repository or file doesn't exist, but we can create it
+                    showNotification('Repository found. Setting up initial data...', 'success');
+                } else if (!response.ok) {
+                    showNotification('Error accessing repository: ' + response.statusText, 'error');
+                    return;
+                }
+                
+                // Save credentials
+                githubToken = token;
+                githubRepo = repo;
+                githubBranch = branch;
+                localStorage.setItem('githubToken', token);
+                localStorage.setItem('githubRepo', repo);
+                localStorage.setItem('githubBranch', branch);
+                
+                // Load initial data
+                await loadInitialData();
+                
+                showNotification('Authentication successful', 'success');
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Error during authentication: ' + error.message, 'error');
             }
         }
 
-        function initializeApp() {
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('userName').textContent = currentUser.fullName;
-            document.getElementById('userRole').textContent = currentUser.role;
-            document.getElementById('userAvatar').textContent = currentUser.fullName.charAt(0).toUpperCase();
-            if (currentUser.role === 'admin') {
-                document.getElementById('adminErrorIndicator').style.display = 'block';
-                updateErrorCountBadge();
+        // Load initial data from GitHub
+        async function loadInitialData() {
+            try {
+                showNotification('Loading data...', 'success');
+                
+                // Load users data
+                await loadUsersData();
+                
+                // Load error reports
+                await loadErrorReports();
+                
+                // Load company logo
+                await loadCompanyLogo();
+                
+                // Show main application
+                loginModal.style.display = 'none';
+                mainApp.style.display = 'block';
+                
+                // Update UI with user info
+                updateUserInterface();
+                
+            } catch (error) {
+                console.error('Error loading initial data:', error);
+                showNotification('Error loading data: ' + error.message, 'error');
             }
         }
 
-        function logout() {
-            localStorage.removeItem('apt-engineering-session');
-            location.reload();
+        // Load users data from GitHub
+        async function loadUsersData() {
+            try {
+                const url = `https://api.github.com/repos/${githubRepo}/contents/users.json?ref=${githubBranch}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.status === 404) {
+                    // File doesn't exist, create initial users data
+                    usersData = [];
+                    await saveUsersData();
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load users: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                const content = atob(data.content);
+                usersData = JSON.parse(content);
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+                throw error;
+            }
         }
 
-        // Logo Upload
-        async function handleLogoUpload(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const base64 = e.target.result.split(',')[1];
-                const path = 'data/logo.png';
-                const message = 'Upload company logo';
-                const sha = logoSha;
-
-                const payload = { content: base64, message, branch: currentUser.branch, sha };
-                const res = await fetch(`https://api.github.com/repos/${currentUser.repo}/contents/${path}`, {
+        // Save users data to GitHub
+        async function saveUsersData() {
+            try {
+                // Get the current SHA of the file if it exists
+                let sha = null;
+                try {
+                    const url = `https://api.github.com/repos/${githubRepo}/contents/users.json?ref=${githubBranch}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `token ${githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        sha = data.sha;
+                    }
+                } catch (e) {
+                    // File doesn't exist, SHA remains null
+                }
+                
+                // Prepare the content
+                const content = JSON.stringify(usersData, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(content)));
+                
+                // Create the request body
+                const body = {
+                    message: 'Update users data',
+                    content: encodedContent,
+                    branch: githubBranch
+                };
+                
+                if (sha) {
+                    body.sha = sha;
+                }
+                
+                // Save the file
+                const url = `https://api.github.com/repos/${githubRepo}/contents/users.json`;
+                const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${currentUser.token}`,
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(body)
                 });
-
-                if (res.ok) {
-                    const result = await res.json();
-                    logoSha = result.content.sha;
-                    document.getElementById('companyLogo').src = e.target.result;
-                    hideLogoUpload();
-                    showNotification('Logo uploaded to GitHub!', 'success');
-                } else {
-                    showNotification('Upload failed', 'error');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to save users: ${response.status} ${response.statusText}`);
                 }
+                
+                return true;
+            } catch (error) {
+                console.error('Error saving users:', error);
+                throw error;
+            }
+        }
+
+        // Load error reports from GitHub
+        async function loadErrorReports() {
+            try {
+                const url = `https://api.github.com/repos/${githubRepo}/contents/error-reports.json?ref=${githubBranch}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.status === 404) {
+                    // File doesn't exist, create initial error reports data
+                    errorReports = [];
+                    await saveErrorReports();
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load error reports: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                const content = atob(data.content);
+                errorReports = JSON.parse(content);
+                
+                // Update error count badge for admins
+                if (currentUser && currentUser.role === 'admin') {
+                    const newErrorCount = errorReports.filter(e => e.status === 'new').length;
+                    errorCountBadge.textContent = newErrorCount;
+                }
+                
+            } catch (error) {
+                console.error('Error loading error reports:', error);
+                throw error;
+            }
+        }
+
+        // Save error reports to GitHub
+        async function saveErrorReports() {
+            try {
+                // Get the current SHA of the file if it exists
+                let sha = null;
+                try {
+                    const url = `https://api.github.com/repos/${githubRepo}/contents/error-reports.json?ref=${githubBranch}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `token ${githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        sha = data.sha;
+                    }
+                } catch (e) {
+                    // File doesn't exist, SHA remains null
+                }
+                
+                // Prepare the content
+                const content = JSON.stringify(errorReports, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(content)));
+                
+                // Create the request body
+                const body = {
+                    message: 'Update error reports',
+                    content: encodedContent,
+                    branch: githubBranch
+                };
+                
+                if (sha) {
+                    body.sha = sha;
+                }
+                
+                // Save the file
+                const url = `https://api.github.com/repos/${githubRepo}/contents/error-reports.json`;
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to save error reports: ${response.status} ${response.statusText}`);
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error saving error reports:', error);
+                throw error;
+            }
+        }
+
+        // Load company logo from GitHub
+        async function loadCompanyLogo() {
+            try {
+                const url = `https://api.github.com/repos/${githubRepo}/contents/logo/logo.jpg?ref=${githubBranch}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.status === 404) {
+                    // Logo doesn't exist, use placeholder
+                    companyLogo = null;
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load logo: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                companyLogo = data.download_url;
+                companyLogoImg.src = companyLogo;
+                
+            } catch (error) {
+                console.error('Error loading logo:', error);
+                // Continue without logo
+            }
+        }
+
+        // Update user interface based on current user
+        function updateUserInterface() {
+            if (currentUser) {
+                userName.textContent = currentUser.username;
+                userRole.textContent = currentUser.role;
+                userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+                
+                // Show admin features if user is admin
+                if (currentUser.role === 'admin') {
+                    adminErrorIndicator.style.display = 'block';
+                    
+                    // Update error count badge
+                    const newErrorCount = errorReports.filter(e => e.status === 'new').length;
+                    errorCountBadge.textContent = newErrorCount;
+                }
+                
+                // Show error report button for all users
+                errorReportButton.style.display = 'flex';
+            }
+        }
+
+        // Load a module
+        function loadModule(moduleName) {
+            // Hide module selector and show module content
+            moduleSelector.style.display = 'none';
+            moduleContent.style.display = 'block';
+            moduleContent.classList.add('active');
+            
+            // Load the module in the iframe
+            moduleIframe.src = `${moduleName}.html`;
+            
+            // Show loading state
+            moduleIframe.onload = function() {
+                // Module loaded successfully
             };
-            reader.readAsDataURL(file);
+            
+            moduleIframe.onerror = function() {
+                // Handle module loading error
+                moduleIframe.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                display: flex; 
+                                justify-content: center; 
+                                align-items: center; 
+                                height: 100vh; 
+                                background: #f7f9fc;
+                                color: #333;
+                            }
+                            .error-content { 
+                                text-align: center; 
+                                padding: 20px;
+                            }
+                            .error-icon {
+                                font-size: 3rem;
+                                color: #e74c3c;
+                                margin-bottom: 15px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error-content">
+                            <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <h2>Module Not Available</h2>
+                            <p>The ${moduleName} module could not be loaded. Please try again later.</p>
+                            <button onclick="window.parent.showModuleSelector()" style="
+                                background: #1a3b5d;
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                margin-top: 15px;
+                            ">Return to Modules</button>
+                        </div>
+                    </body>
+                    </html>
+                `;
+            };
         }
 
-        function hideLogoUpload() {
-            document.getElementById('logoUploadContainer').style.display = 'none';
+        // Show module selector
+        function showModuleSelector() {
+            moduleContent.style.display = 'none';
+            moduleSelector.style.display = 'grid';
+            moduleIframe.src = '';
         }
 
-        // Error Reporting
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('githubToken');
+            localStorage.removeItem('githubRepo');
+            localStorage.removeItem('githubBranch');
+            localStorage.removeItem('currentUser');
+            
+            // Reset state
+            currentUser = null;
+            githubToken = null;
+            githubRepo = null;
+            githubBranch = null;
+            usersData = [];
+            errorReports = [];
+            
+            // Show login modal
+            loginModal.style.display = 'flex';
+            mainApp.style.display = 'none';
+            errorReportButton.style.display = 'none';
+            
+            // Clear form fields
+            document.getElementById('githubToken').value = '';
+        }
+
+        // Open error modal
         function openErrorModal() {
-            document.getElementById('errorModal').style.display = 'flex';
+            errorModal.style.display = 'flex';
         }
+
+        // Close error modal
         function closeErrorModal() {
-            document.getElementById('errorModal').style.display = 'none';
+            errorModal.style.display = 'none';
             document.getElementById('errorListContainer').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('errorModule').value = '';
+            document.getElementById('errorCategory').value = '';
+            document.getElementById('errorSeverity').value = '';
+            document.getElementById('errorTitle').value = '';
+            document.getElementById('errorDescription').value = '';
+            document.getElementById('errorScreenshot').value = '';
+            document.getElementById('screenshotPreview').style.display = 'none';
+            document.getElementById('screenshotPreview').src = '';
         }
+
+        // Toggle error list
         function toggleErrorList() {
-            const el = document.getElementById('errorListContainer');
-            el.style.display = el.style.display === 'block' ? 'none' : 'block';
-            if (el.style.display === 'block') loadUserErrorList();
-        }
-        function loadUserErrorList() {
-            const el = document.getElementById('errorList');
-            const userErrs = errorReports.filter(e => e.reportedBy === currentUser.username);
-            el.innerHTML = userErrs.length ? userErrs.map(e => `
-                <div class="error-item">
-                    <div class="error-item-header">
-                        <div class="error-module">${e.module}</div>
-                        <div class="error-date">${new Date(e.date).toLocaleDateString()}</div>
-                    </div>
-                    <div class="error-category">${e.category}</div>
-                    <div class="error-description">${e.title}</div>
-                    <div class="error-status ${e.status}">Status: ${e.status}</div>
-                </div>
-            `).join('') : '<p>No issues reported.</p>';
-        }
-        function previewScreenshot() {
-            const file = document.getElementById('errorScreenshot').files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    document.getElementById('screenshotPreview').src = e.target.result;
-                    document.getElementById('screenshotPreview').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-        async function captureScreenshot() {
-            const canvas = await html2canvas(document.body);
-            const dataUrl = canvas.toDataURL('image/png');
-            const img = document.getElementById('screenshotPreview');
-            img.src = dataUrl;
-            img.style.display = 'block';
-            img.dataset.screenshot = dataUrl;
-        }
-        async function submitErrorReport() {
-            const mod = document.getElementById('errorModule').value;
-            const cat = document.getElementById('errorCategory').value;
-            const sev = document.getElementById('errorSeverity').value;
-            const title = document.getElementById('errorTitle').value;
-            const desc = document.getElementById('errorDescription').value;
-            const screenshotInput = document.getElementById('errorScreenshot');
-            const screenshotData = document.getElementById('screenshotPreview').dataset.screenshot;
-
-            if (!mod || !cat || !sev || !title || !desc) return showNotification('Fill all fields', 'error');
-
-            const report = {
-                id: Date.now().toString(),
-                module: mod, category: cat, severity: sev,
-                title, description: desc,
-                reportedBy: currentUser.username,
-                date: new Date().toISOString(),
-                status: 'new'
-            };
-
-            if (screenshotInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async e => {
-                    report.screenshot = e.target.result;
-                    errorReports.push(report);
-                    await saveData(errorReports, 'data/errors.json', `Report: ${title}`);
-                    updateErrorCountBadge();
-                    closeErrorModal();
-                    showNotification('Report submitted!', 'success');
-                };
-                reader.readAsDataURL(screenshotInput.files[0]);
-            } else if (screenshotData) {
-                report.screenshot = screenshotData;
-                errorReports.push(report);
-                await saveData(errorReports, 'data/errors.json', `Report: ${title}`);
-                updateErrorCountBadge();
-                closeErrorModal();
-                showNotification('Report submitted!', 'success');
+            const errorListContainer = document.getElementById('errorListContainer');
+            if (errorListContainer.style.display === 'block') {
+                errorListContainer.style.display = 'none';
             } else {
-                errorReports.push(report);
-                await saveData(errorReports, 'data/errors.json', `Report: ${title}`);
-                updateErrorCountBadge();
-                closeErrorModal();
-                showNotification('Report submitted!', 'success');
+                errorListContainer.style.display = 'block';
+                loadUserErrorReports();
             }
         }
 
-        // Admin Dashboard
+        // Load user's error reports
+        function loadUserErrorReports() {
+            const errorList = document.getElementById('errorList');
+            errorList.innerHTML = '';
+            
+            const userErrors = errorReports.filter(error => error.reportedBy === currentUser.username);
+            
+            if (userErrors.length === 0) {
+                errorList.innerHTML = '<p>No issues reported yet.</p>';
+                return;
+            }
+            
+            userErrors.forEach(error => {
+                const errorItem = document.createElement('div');
+                errorItem.className = 'error-item';
+                
+                errorItem.innerHTML = `
+                    <div class="error-item-header">
+                        <div class="error-module">${error.module}</div>
+                        <div class="error-date">${new Date(error.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="error-category">${error.category}</div>
+                    <div class="error-description">${error.title}</div>
+                    <div class="error-status status-${error.status}">Status: ${error.status}</div>
+                `;
+                
+                errorList.appendChild(errorItem);
+            });
+        }
+
+        // Preview screenshot
+        function previewScreenshot() {
+            const fileInput = document.getElementById('errorScreenshot');
+            const preview = document.getElementById('screenshotPreview');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        // Capture screenshot of current screen
+        function captureScreenshot() {
+            // For security reasons, we can't directly capture the screen from the browser
+            // Instead, we'll use a library like html2canvas if needed
+            showNotification('Screenshot capture requires additional setup. Please use the file upload option.', 'error');
+        }
+
+        // Submit error report
+        async function submitErrorReport() {
+            const module = document.getElementById('errorModule').value;
+            const category = document.getElementById('errorCategory').value;
+            const severity = document.getElementById('errorSeverity').value;
+            const title = document.getElementById('errorTitle').value;
+            const description = document.getElementById('errorDescription').value;
+            const screenshotFile = document.getElementById('errorScreenshot').files[0];
+            
+            if (!module || !category || !severity || !title || !description) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                // Create error report object
+                const errorReport = {
+                    id: Date.now().toString(),
+                    module,
+                    category,
+                    severity,
+                    title,
+                    description,
+                    status: 'new',
+                    reportedBy: currentUser.username,
+                    date: new Date().toISOString()
+                };
+                
+                // Handle screenshot if provided
+                if (screenshotFile) {
+                    // In a real implementation, we would upload the image to GitHub
+                    // For now, we'll just store a reference
+                    errorReport.screenshot = `screenshot-${errorReport.id}.jpg`;
+                }
+                
+                // Add to error reports
+                errorReports.push(errorReport);
+                
+                // Save to GitHub
+                await saveErrorReports();
+                
+                showNotification('Error report submitted successfully', 'success');
+                closeErrorModal();
+                
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                showNotification('Error submitting report: ' + error.message, 'error');
+            }
+        }
+
+        // Open error dashboard (for admins)
         function openErrorDashboard() {
-            if (currentUser.role !== 'admin') return;
-            document.getElementById('errorDashboardModal').style.display = 'flex';
+            errorDashboardModal.style.display = 'flex';
             loadErrorDashboard();
         }
+
+        // Close error dashboard
         function closeErrorDashboard() {
-            document.getElementById('errorDashboardModal').style.display = 'none';
+            errorDashboardModal.style.display = 'none';
         }
-        function loadErrorDashboard() {
-            const el = document.getElementById('errorDashboardList');
-            const filtered = filterErrorReports();
-            el.innerHTML = filtered.map(e => `
-                <div class="dashboard-error-item ${e.status}">
+
+        // Load error dashboard
+        async function loadErrorDashboard() {
+            const dashboardList = document.getElementById('errorDashboardList');
+            dashboardList.innerHTML = '';
+            
+            // Get filter values
+            const statusFilter = document.getElementById('filterStatus').value;
+            const moduleFilter = document.getElementById('filterModule').value;
+            const severityFilter = document.getElementById('filterSeverity').value;
+            const userFilter = document.getElementById('filterUser').value;
+            
+            // Filter error reports
+            let filteredReports = [...errorReports];
+            
+            if (statusFilter !== 'all') {
+                filteredReports = filteredReports.filter(error => error.status === statusFilter);
+            }
+            
+            if (moduleFilter !== 'all') {
+                filteredReports = filteredReports.filter(error => error.module === moduleFilter);
+            }
+            
+            if (severityFilter !== 'all') {
+                filteredReports = filteredReports.filter(error => error.severity === severityFilter);
+            }
+            
+            if (userFilter !== 'all') {
+                filteredReports = filteredReports.filter(error => error.reportedBy === userFilter);
+            }
+            
+            // Sort by date (newest first)
+            filteredReports.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Display error reports
+            if (filteredReports.length === 0) {
+                dashboardList.innerHTML = '<p>No error reports found with the current filters.</p>';
+                return;
+            }
+            
+            filteredReports.forEach(error => {
+                const errorItem = document.createElement('div');
+                errorItem.className = `dashboard-error-item ${error.status}`;
+                
+                errorItem.innerHTML = `
                     <div class="dashboard-error-header">
-                        <div class="dashboard-error-title">${e.title}</div>
-                        <div class="error-date">${new Date(e.date).toLocaleDateString()}</div>
+                        <div class="dashboard-error-title">${error.title}</div>
+                        <div class="dashboard-error-actions">
+                            <button class="status-btn ${error.status}" onclick="updateErrorStatus('${error.id}', 'new')" ${error.status === 'new' ? 'disabled' : ''}>New</button>
+                            <button class="status-btn ${error.status}" onclick="updateErrorStatus('${error.id}', 'in-progress')" ${error.status === 'in-progress' ? 'disabled' : ''}>In Progress</button>
+                            <button class="status-btn ${error.status}" onclick="updateErrorStatus('${error.id}', 'resolved')" ${error.status === 'resolved' ? 'disabled' : ''}>Resolved</button>
+                        </div>
                     </div>
                     <div class="dashboard-error-meta">
-                        <span>Module: ${e.module}</span>
-                        <span>Severity: ${e.severity}</span>
-                        <span>By: ${e.reportedBy}</span>
+                        <span>Module: ${error.module}</span>
+                        <span>Category: ${error.category}</span>
+                        <span>Severity: ${error.severity}</span>
+                        <span>Reported by: ${error.reportedBy}</span>
+                        <span>Date: ${new Date(error.date).toLocaleDateString()}</span>
                     </div>
-                    <div class="dashboard-error-description">${e.description}</div>
-                    <div class="dashboard-error-actions">
-                        <button class="status-btn" onclick="changeErrorStatus('${e.id}','new')">New</button>
-                        <button class="status-btn" onclick="changeErrorStatus('${e.id}','in-progress')">In Progress</button>
-                        <button class="status-btn" onclick="changeErrorStatus('${e.id}','resolved')">Resolved</button>
-                    </div>
-                </div>
-            `).join('');
+                    <div class="dashboard-error-description">${error.description}</div>
+                `;
+                
+                dashboardList.appendChild(errorItem);
+            });
+            
+            // Populate user filter
+            await populateUserFilter();
         }
+
+        // Filter error reports
         function filterErrorReports() {
-            const status = document.getElementById('filterStatus').value;
-            const module = document.getElementById('filterModule').value;
-            const severity = document.getElementById('filterSeverity').value;
-            const user = document.getElementById('filterUser').value;
-            return errorReports.filter(e => {
-                return (status === 'all' || e.status === status) &&
-                       (module === 'all' || e.module === module) &&
-                       (severity === 'all' || e.severity === severity) &&
-                       (user === 'all' || e.reportedBy === user);
+            loadErrorDashboard();
+        }
+
+        // Populate user filter
+        async function populateUserFilter() {
+            const userFilter = document.getElementById('filterUser');
+            
+            // Clear existing options except "All Users"
+            while (userFilter.options.length > 1) {
+                userFilter.remove(1);
+            }
+            
+            // Get unique users from error reports
+            const users = [...new Set(errorReports.map(error => error.reportedBy))];
+            
+            // Add users to filter
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user;
+                option.textContent = user;
+                userFilter.appendChild(option);
             });
         }
-        async function changeErrorStatus(id, status) {
-            const idx = errorReports.findIndex(e => e.id === id);
-            if (idx !== -1) {
-                errorReports[idx].status = status;
-                await saveData(errorReports, 'data/errors.json', `Status: ${status}`);
+
+        // Update error status
+        async function updateErrorStatus(errorId, newStatus) {
+            try {
+                // Find the error report
+                const errorIndex = errorReports.findIndex(error => error.id === errorId);
+                
+                if (errorIndex === -1) {
+                    showNotification('Error report not found', 'error');
+                    return;
+                }
+                
+                // Update status
+                errorReports[errorIndex].status = newStatus;
+                
+                // Save to GitHub
+                await saveErrorReports();
+                
+                // Reload dashboard
                 loadErrorDashboard();
-                updateErrorCountBadge();
+                
+                // Update error count badge
+                const newErrorCount = errorReports.filter(e => e.status === 'new').length;
+                errorCountBadge.textContent = newErrorCount;
+                
+                showNotification(`Error status updated to ${newStatus}`, 'success');
+                
+            } catch (error) {
+                console.error('Error updating status:', error);
+                showNotification('Error updating status: ' + error.message, 'error');
             }
         }
-        function updateErrorCountBadge() {
-            if (currentUser.role !== 'admin') return;
-            const count = errorReports.filter(e => e.status === 'new').length;
-            document.getElementById('errorCountBadge').textContent = count;
+
+        // Show login form
+        function showLoginForm() {
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'flex';
         }
 
-        // Module Navigation
-        document.querySelectorAll('.module-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const mod = card.getAttribute('data-module');
-                document.getElementById('moduleSelector').style.display = 'none';
-                document.getElementById('moduleContent').classList.add('active');
-                document.getElementById('moduleFrame').src = `${mod}.html`;
-            });
-        });
-        function goBackToModules() {
-            document.getElementById('moduleContent').classList.remove('active');
-            document.getElementById('moduleSelector').style.display = 'grid';
-            document.getElementById('moduleFrame').src = '';
+        // Show register form
+        function showRegisterForm() {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
         }
 
-        // Import/Export
-        function exportData() {
-            const data = { users, errorReports, exportDate: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `apt_export_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showNotification('Exported!', 'success');
-        }
-        async function importData(file) {
-            const reader = new FileReader();
-            reader.onload = async e => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.users) users = data.users;
-                    if (data.errorReports) errorReports = data.errorReports;
-                    await saveData(users, 'data/users.json', 'Import: users');
-                    await saveData(errorReports, 'data/errors.json', 'Import: errors');
-                    updateErrorCountBadge();
-                    showNotification('Imported successfully!', 'success');
-                } catch (err) {
-                    showNotification('Invalid file', 'error');
-                }
-            };
-            reader.readAsText(file);
+        // Register new user
+        async function register() {
+            // This is a placeholder for user registration
+            // In a real implementation, you would validate inputs and create a user account
+            showNotification('User registration requires backend implementation', 'error');
         }
 
-        // Dropdown
-        function toggleDropdown(id) {
-            document.getElementById(id).classList.toggle('show');
-            window.onclick = e => {
-                if (!e.target.matches('.menu-button')) {
-                    document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('show'));
-                }
-            };
+        // Show change password modal
+        function showChangePasswordModal() {
+            changePasswordModal.style.display = 'flex';
         }
 
-        // Notifications
-        function showNotification(msg, type) {
-            const n = document.getElementById('notification');
-            n.textContent = msg;
-            n.className = `notification ${type}`;
-            n.style.display = 'block';
-            setTimeout(() => n.style.display = 'none', 3000);
+        // Change password
+        async function changePassword() {
+            // This is a placeholder for password change
+            // In a real implementation, you would validate inputs and update the password
+            showNotification('Password change requires backend implementation', 'error');
         }
 
-        // Close modals on outside click
-        window.onclick = e => {
-            if (e.target.classList.contains('error-modal')) closeErrorModal();
-            if (e.target.classList.contains('error-dashboard-modal')) closeErrorDashboard();
-        };
-
-        // Password Toggle
-        function togglePassword(id) {
-            const input = document.getElementById(id);
-            const btn = input.parentElement.querySelector('.password-toggle');
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
-            } else {
-                input.type = 'password';
-                btn.innerHTML = '<i class="fas fa-eye"></i>';
-            }
-        }
+        // Initialize the application when the page loads
+        window.onload = initApp;
     </script>
 </body>
 </html>
