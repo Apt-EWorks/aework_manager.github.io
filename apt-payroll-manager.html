@@ -433,6 +433,9 @@
     .sync-status.error {
       border-left-color: #e53e3e;
     }
+    .sync-status.warning {
+      border-left-color: #ed8936;
+    }
     
     /* Contact Selection Modal */
     .modal {
@@ -687,6 +690,10 @@
         </div>
         <div style="margin-top: 15px; font-size: 12px; color: #718096;">
           <p><i class="fas fa-info-circle"></i> Need a token? <a href="https://github.com/settings/tokens" target="_blank">Create a personal access token</a> with repo access.</p>
+          <p style="margin-top: 5px; font-size: 11px;">
+            <i class="fas fa-exclamation-triangle" style="color: #ed8936;"></i> 
+            <strong>Important:</strong> Token must have <code>repo</code> permission to read/write data.
+          </p>
         </div>
       </div>
     </div>
@@ -697,7 +704,7 @@
   </div>
 
   <div class="sync-status" id="syncStatus">
-    <i class="fas fa-sync-alt"></i> <span id="syncStatusText">Data synchronized</span>
+    <i class="fas fa-sync-alt"></i> <span id="syncStatusText">Connecting...</span>
   </div>
 
   <div class="container">
@@ -936,7 +943,7 @@
   <input type="file" id="restoreFileInput" accept=".json" style="display: none;">
 
   <script>
-    // === GitHub Integration ===
+    // === GitHub Integration Configuration ===
     const GITHUB_REPO_OWNER = "Apt-EWorks";
     const GITHUB_REPO_NAME = "aework_manager.github.io";
     const PAYROLL_FILE_PATH = "apt-payroll-manager-data.json";
@@ -945,7 +952,10 @@
     // === User Authentication ===
     let currentUser = null;
     let githubToken = null;
+    let githubDefaultBranch = "main"; // Will be detected on login
     let syncInterval = null;
+    let syncRetryCount = 0;
+    const MAX_SYNC_RETRIES = 3;
     
     // === Edit Lock System ===
     const LOCK_KEY = "aptPayrollEditLock";
@@ -1060,7 +1070,12 @@
       })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Invalid GitHub token');
+          if (response.status === 401) {
+            throw new Error('Invalid GitHub token');
+          } else if (response.status === 403) {
+            throw new Error('Token permission denied. Ensure it has repo access');
+          }
+          throw new Error(`GitHub API error: ${response.status}`);
         }
         return response.json();
       })
@@ -1081,14 +1096,61 @@
           document.getElementById('userAvatar').style.color = 'transparent';
         }
         
-        hideLoginScreen();
-        showNotification(`Welcome, ${currentUser.name}!`, "success");
-        
-        // Start sync process
-        initializeGitHubSync();
+        // Get the default branch
+        getRepoDefaultBranch()
+          .then(branch => {
+            githubDefaultBranch = branch;
+            console.log(`Detected default branch: ${githubDefaultBranch}`);
+            
+            hideLoginScreen();
+            showNotification(`Welcome, ${currentUser.name}!`, "success");
+            
+            // Save user session
+            localStorage.setItem('aptPayrollUser', JSON.stringify(currentUser));
+            localStorage.setItem('aptPayrollToken', githubToken);
+            
+            // Start sync process
+            initializeGitHubSync();
+          })
+          .catch(error => {
+            console.error("Error detecting default branch:", error);
+            githubDefaultBranch = "main"; // Fallback
+            
+            hideLoginScreen();
+            showNotification(`Welcome, ${currentUser.name}! (Using default branch: ${githubDefaultBranch})`, "info");
+            
+            // Save user session
+            localStorage.setItem('aptPayrollUser', JSON.stringify(currentUser));
+            localStorage.setItem('aptPayrollToken', githubToken);
+            
+            // Start sync process
+            initializeGitHubSync();
+          });
       })
       .catch(error => {
         showNotification(error.message, "error");
+      });
+    }
+
+    function getRepoDefaultBranch() {
+      return fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}`, {
+        headers: {
+          'Authorization': `token ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to get repo info: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(repoData => {
+        return repoData.default_branch || "main";
+      })
+      .catch(error => {
+        console.error("Error getting default branch, using 'main' as fallback:", error);
+        return "main";
       });
     }
 
@@ -1096,11 +1158,16 @@
       if (confirm("Are you sure you want to log out?")) {
         currentUser = null;
         githubToken = null;
+        githubDefaultBranch = "main";
         
         if (syncInterval) {
           clearInterval(syncInterval);
           syncInterval = null;
         }
+        
+        // Clear stored session
+        localStorage.removeItem('aptPayrollUser');
+        localStorage.removeItem('aptPayrollToken');
         
         document.getElementById('userName').textContent = 'User';
         document.getElementById('userAvatar').textContent = 'U';
@@ -1113,6 +1180,10 @@
 
     // === GitHub Synchronization ===
     function initializeGitHubSync() {
+      // Update sync status
+      document.getElementById('syncStatusText').textContent = "Connecting to GitHub...";
+      document.getElementById('syncStatus').className = 'sync-status syncing';
+      
       // First, load data from GitHub
       loadFromGitHub()
         .then(() => {
@@ -1125,13 +1196,22 @@
           
           // Initial load complete
           showNotification("Successfully connected to GitHub repository", "success");
+          syncRetryCount = 0;
         })
         .catch(error => {
           console.error("Failed to initialize GitHub sync:", error);
-          showNotification("Connected to GitHub but failed to load data. Using local data.", "info");
+          
+          // Only show notification if it's not a 404 (which is normal for first-time use)
+          if (!error.message.includes("404")) {
+            showNotification("Connected to GitHub but failed to load data. Using local data.", "info");
+          }
           
           // Start periodic sync anyway
           syncInterval = setInterval(syncToGitHub, 300000);
+          
+          // Update sync status with warning
+          document.getElementById('syncStatusText').textContent = "Initial sync failed. Will retry.";
+          document.getElementById('syncStatus').className = 'sync-status warning';
         });
     }
 
@@ -1155,6 +1235,16 @@
             console.log("Payroll data file not found in repository. Will create on next sync.");
             return;
           }
+          
+          // Check rate limit
+          if (response.status === 403) {
+            const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
+            if (rateLimitRemaining === '0') {
+              const resetTime = new Date(parseInt(response.headers.get('X-RateLimit-Reset')) * 1000);
+              throw new Error(`GitHub rate limit exceeded. Try again after ${resetTime.toLocaleTimeString()}`);
+            }
+          }
+          
           throw new Error(`GitHub API error: ${response.status}`);
         }
         
@@ -1223,8 +1313,8 @@
         
         const payload = {
           message: `Update payroll data - ${now}`,
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-          branch: "main"
+          content: base64Encode(JSON.stringify(data, null, 2)),
+          branch: githubDefaultBranch
         };
         
         if (sha) {
@@ -1242,9 +1332,33 @@
           body: JSON.stringify(payload)
         });
         
+        // Check rate limit
+        const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
+        if (rateLimitRemaining && parseInt(rateLimitRemaining) < 10) {
+          const resetTime = new Date(parseInt(response.headers.get('X-RateLimit-Reset')) * 1000);
+          showNotification(`GitHub rate limit almost reached. Reset at ${resetTime.toLocaleTimeString()}`, "warning");
+        }
+        
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || `GitHub API error: ${response.status}`);
+          const errorData = await response.json().catch(() => null);
+          let errorMessage = `GitHub API error: ${response.status}`;
+          
+          if (errorData && errorData.message) {
+            errorMessage = errorData.message;
+            
+            // Add specific handling for common errors
+            if (errorMessage.includes("Must have push access")) {
+              errorMessage = "Permission denied: Your token doesn't have write access to this repository";
+            } else if (errorMessage.includes("Branch not found")) {
+              errorMessage = "Branch not found. Check if the repository uses 'main' or 'master' as the default branch";
+            } else if (errorMessage.includes("rate limit")) {
+              errorMessage = "GitHub API rate limit exceeded. Please try again later";
+            } else if (errorMessage.includes("Validation Failed")) {
+              errorMessage = "Validation error: Check your repository configuration";
+            }
+          }
+          
+          throw new Error(errorMessage);
         }
         
         // Update local sync timestamp
@@ -1255,14 +1369,42 @@
         document.getElementById('syncStatus').className = 'sync-status';
         
         showNotification("Payroll data synchronized with GitHub", "success");
+        syncRetryCount = 0;
       } catch (error) {
         console.error("Error syncing to GitHub:", error);
-        document.getElementById('syncStatusText').textContent = "Sync failed. Click to retry.";
-        document.getElementById('syncStatus').className = 'sync-status error';
-        document.getElementById('syncStatus').onclick = syncToGitHub;
         
-        showNotification(`Sync failed: ${error.message}`, "error");
+        // Handle retry logic
+        syncRetryCount++;
+        if (syncRetryCount > MAX_SYNC_RETRIES) {
+          document.getElementById('syncStatusText').textContent = "Sync failed permanently. Check settings.";
+          document.getElementById('syncStatus').className = 'sync-status error';
+          document.getElementById('syncStatus').onclick = () => {
+            syncRetryCount = 0;
+            syncToGitHub();
+          };
+          
+          showNotification(`Sync failed: ${error.message}. Please check your GitHub settings.`, "error");
+        } else {
+          document.getElementById('syncStatusText').textContent = `Sync failed (${syncRetryCount}/${MAX_SYNC_RETRIES}). Retrying...`;
+          document.getElementById('syncStatus').className = 'sync-status warning';
+          
+          showNotification(`Sync attempt ${syncRetryCount} failed: ${error.message}. Will retry...`, "warning");
+          
+          // Schedule retry after delay
+          setTimeout(syncToGitHub, 10000 * syncRetryCount);
+        }
       }
+    }
+
+    // === Base64 Encoding/Decoding (fixed) ===
+    function base64Encode(str) {
+      // More reliable encoding that handles all characters
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    function base64Decode(str) {
+      // More reliable decoding that handles all characters
+      return decodeURIComponent(escape(atob(str)));
     }
 
     // === UI Functions ===
@@ -1285,29 +1427,63 @@
             document.getElementById('userAvatar').style.color = 'transparent';
           }
           
-          // Start GitHub sync
-          initializeGitHubSync();
-          
-          // Load payroll data
-          acquireEditLock();
-          loadData();
-          document.getElementById('paymentDate').value = currentPaymentDate;
-          renderTable();
-          renderHistory();
-          
-          // Initialize toggles
-          document.getElementById('toggleDeductions').onchange = (e) => {
-            document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
-          };
-          document.getElementById('toggleCalculated').onchange = (e) => {
-            document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
-          };
-          
-          // Load contacts from work manager on startup
-          loadContactsFromWorkManager();
-          
-          // Hide login screen
-          hideLoginScreen();
+          // Detect default branch
+          getRepoDefaultBranch()
+            .then(branch => {
+              githubDefaultBranch = branch;
+              
+              // Start GitHub sync
+              initializeGitHubSync();
+              
+              // Load payroll data
+              acquireEditLock();
+              loadData();
+              document.getElementById('paymentDate').value = currentPaymentDate;
+              renderTable();
+              renderHistory();
+              
+              // Initialize toggles
+              document.getElementById('toggleDeductions').onchange = (e) => {
+                document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
+              };
+              document.getElementById('toggleCalculated').onchange = (e) => {
+                document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
+              };
+              
+              // Load contacts from work manager on startup
+              loadContactsFromWorkManager();
+              
+              // Hide login screen
+              hideLoginScreen();
+            })
+            .catch(error => {
+              console.error("Failed to detect default branch:", error);
+              githubDefaultBranch = "main";
+              
+              // Start GitHub sync
+              initializeGitHubSync();
+              
+              // Load payroll data
+              acquireEditLock();
+              loadData();
+              document.getElementById('paymentDate').value = currentPaymentDate;
+              renderTable();
+              renderHistory();
+              
+              // Initialize toggles
+              document.getElementById('toggleDeductions').onchange = (e) => {
+                document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
+              };
+              document.getElementById('toggleCalculated').onchange = (e) => {
+                document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
+              };
+              
+              // Load contacts from work manager on startup
+              loadContactsFromWorkManager();
+              
+              // Hide login screen
+              hideLoginScreen();
+            });
         } catch (e) {
           console.error("Failed to restore user session:", e);
           showLoginScreen();
@@ -1431,7 +1607,7 @@
             
             if (response.ok) {
               const data = await response.json();
-              availableContacts = JSON.parse(atob(data.content));
+              availableContacts = JSON.parse(base64Decode(data.content));
               showNotification("Contacts loaded from GitHub!", "success");
               return;
             }
@@ -1542,8 +1718,8 @@
         const now = new Date().toISOString();
         const payload = {
           message: `Update contacts data - ${now}`,
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(contacts, null, 2)))),
-          branch: "main"
+          content: base64Encode(JSON.stringify(contacts, null, 2)),
+          branch: githubDefaultBranch
         };
         
         if (sha) {
