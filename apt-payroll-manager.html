@@ -79,9 +79,6 @@
       gap: 10px;
       margin-top: 20px;
     }
-    .login-buttons .btn {
-      flex: 1;
-    }
     .github-login {
       background: #24292e;
       color: white;
@@ -101,7 +98,6 @@
     .github-login i {
       font-size: 20px;
     }
-    
     /* Header Styles */
     header {
       background: linear-gradient(to right, #1a3a6c, #2c5282);
@@ -170,7 +166,6 @@
       width: 20px;
       text-align: center;
     }
-    
     /* Tab Navigation */
     .tab-navigation {
       display: flex;
@@ -195,7 +190,6 @@
       color: #3182ce;
       border-bottom-color: #bee3f8;
     }
-    
     /* Panel Styles */
     .panel {
       background: white;
@@ -221,7 +215,6 @@
     .panel-content {
       margin-top: 15px;
     }
-    
     /* Form Styles */
     .payment-date-selector {
       display: flex;
@@ -290,7 +283,6 @@
       cursor: pointer;
       font-size: 12px;
     }
-    
     /* Button Styles */
     .action-buttons {
       display: flex;
@@ -319,7 +311,6 @@
     .btn-danger { background: linear-gradient(to right, #e53e3e, #c53030); color: white; }
     .btn-info { background: linear-gradient(to right, #00b5d8, #0987a0); color: white; }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-    
     /* Table Styles */
     .table-container {
       overflow-x: auto;
@@ -349,7 +340,6 @@
       font-size: 12px;
     }
     tr:nth-child(even) { background-color: #f8fafc; }
-    
     /* Input Fields */
     .input-field {
       width: 100%;
@@ -369,7 +359,6 @@
       font-size: 12px;
       text-align: center;
     }
-    
     /* Summary Section */
     .summary {
       background: white;
@@ -395,7 +384,6 @@
       color: #2c5282;
       margin-top: 5px;
     }
-    
     /* Edit Lock Warning */
     .edit-lock-warning {
       position: fixed;
@@ -410,7 +398,6 @@
       z-index: 9999;
       display: none;
     }
-    
     /* Sync Status */
     .sync-status {
       position: fixed;
@@ -436,7 +423,6 @@
     .sync-status.warning {
       border-left-color: #ed8936;
     }
-    
     /* Contact Selection Modal */
     .modal {
       display: none;
@@ -498,7 +484,6 @@
       border: 1px solid #cbd5e0;
       border-radius: 4px;
     }
-    
     /* Signature Section */
     .signature-section {
       margin-top: 15px;
@@ -530,12 +515,10 @@
       display: flex;
       gap: 10px;
     }
-    
-    /* Payslip Styles - A4 Landscape, Two A5 Portrait Pages */
+    /* Payslip Styles */
     .payslip-container {
       display: none;
     }
-    
     @media print {
       body { visibility: hidden; }
       .payslip-container { display: block !important; visibility: visible; }
@@ -554,13 +537,6 @@
         display: flex;
         width: 100%;
         height: 100%;
-      }
-      .payslip-copy {
-        width: 50%;
-        height: 100%;
-        padding: 10px;
-        box-sizing: border-box;
-        page-break-inside: avoid;
       }
       .payslip-table {
         font-size: 9px;
@@ -588,7 +564,6 @@
         max-height: 30px;
       }
     }
-    
     .payslip-dual {
       display: flex;
       width: 100%;
@@ -664,6 +639,20 @@
       text-align: center;
       margin-top: 15px;
     }
+    /* History Grid */
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .history-card {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+      border-left: 4px solid #3182ce;
+    }
   </style>
 </head>
 <body>
@@ -698,15 +687,12 @@
       </div>
     </div>
   </div>
-
   <div class="edit-lock-warning" id="editLockWarning">
     ⚠️ Another session is editing this payroll. Avoid concurrent edits.
   </div>
-
   <div class="sync-status" id="syncStatus">
     <i class="fas fa-sync-alt"></i> <span id="syncStatusText">Connecting...</span>
   </div>
-
   <div class="container">
     <header>
       <h1>Apt Engineering Works Ltd</h1>
@@ -723,7 +709,6 @@
         </div>
       </div>
     </header>
-
     <!-- Tab Navigation -->
     <div class="tab-navigation">
       <button class="tab-btn active" onclick="switchTab('current')">
@@ -736,7 +721,6 @@
         <i class="fas fa-cog"></i> Settings
       </button>
     </div>
-
     <!-- Current Payroll Tab -->
     <div id="currentTab" class="tab-content active">
       <div class="panel">
@@ -802,7 +786,6 @@
           </div>
         </div>
       </div>
-
       <div class="panel">
         <div class="panel-header" onclick="togglePanel(this)">
           <h2><i class="fas fa-users"></i> Employee List <span id="employeeCount">0</span></h2>
@@ -825,7 +808,6 @@
           </div>
         </div>
       </div>
-
       <div class="summary" id="summary">
         <div class="summary-item">
           <div><i class="fas fa-users"></i> Total Employees</div>
@@ -845,7 +827,6 @@
         </div>
       </div>
     </div>
-
     <!-- History Tab -->
     <div id="historyTab" class="tab-content">
       <div class="panel">
@@ -865,7 +846,6 @@
         </div>
       </div>
     </div>
-
     <!-- Settings Tab -->
     <div id="settingsTab" class="tab-content">
       <div class="panel">
@@ -877,7 +857,6 @@
             <label for="managerName"><i class="fas fa-signature"></i> Manager Name for Payslips</label>
             <input type="text" id="managerName" value="John Manager" onchange="updateManagerName(this.value)">
           </div>
-          
           <!-- Signature Upload Section -->
           <div class="form-group" style="margin-top: 20px;">
             <label><i class="fas fa-file-signature"></i> Manager Signature</label>
@@ -900,7 +879,6 @@
               Upload a clear image of your signature (PNG, JPG). Recommended size: 300x100 pixels.
             </p>
           </div>
-          
           <div class="action-buttons">
             <button class="btn btn-info" onclick="backupData()">
               <i class="fas fa-file-export"></i> Backup Data
@@ -916,7 +894,6 @@
       </div>
     </div>
   </div>
-
   <!-- Contact Selection Modal -->
   <div class="modal" id="contactModal">
     <div class="modal-content">
@@ -935,13 +912,10 @@
       </div>
     </div>
   </div>
-
   <!-- Payslip Container -->
   <div class="payslip-container" id="payslipContainer"></div>
-
   <!-- Hidden File Input for Restore -->
   <input type="file" id="restoreFileInput" accept=".json" style="display: none;">
-
   <script>
     // === GitHub Integration Configuration ===
     const GITHUB_REPO_OWNER = "Apt-EWorks";
@@ -952,11 +926,11 @@
     // === User Authentication ===
     let currentUser = null;
     let githubToken = null;
-    let githubDefaultBranch = "main"; // Will be detected on login
+    let githubDefaultBranch = "main";
     let syncInterval = null;
     let syncRetryCount = 0;
     const MAX_SYNC_RETRIES = 3;
-    
+
     // === Edit Lock System ===
     const LOCK_KEY = "aptPayrollEditLock";
     const LOCK_TIMEOUT = 5 * 60 * 1000; // 5 minutes
@@ -978,11 +952,11 @@
     let managerName = "John Manager";
     let signatureImage = null;
     let currentPaymentDate = new Date().toISOString().split('T')[0];
+
     const localStorageKey = "aptEngineeringPayrollData";
     const signatureStorageKey = "aptPayrollSignature";
     const lastSyncKey = "aptPayrollLastSync";
 
-    // Default sample data
     function resetToDefault() {
       employees = [
         { name: "Abe Abiola", idNo: "AEWP-001", status: "Permanent", daysWorked: 22, basic: 35000, transport: 15000, housing: 15000, iou: 0 },
@@ -1004,6 +978,7 @@
           employees = data.employees || [];
           payrollHistory = data.payrollHistory || [];
           managerName = data.managerName || "John Manager";
+          signatureImage = data.signatureImage || null;
           currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
           document.getElementById('managerName').value = managerName;
         } catch (e) {
@@ -1013,8 +988,6 @@
       } else {
         resetToDefault();
       }
-      
-      // Load signature
       loadSignature();
     }
 
@@ -1023,6 +996,7 @@
         employees, 
         payrollHistory, 
         managerName, 
+        signatureImage, 
         currentPaymentDate,
         lastSync: localStorage.getItem(lastSyncKey) || ""
       };
@@ -1055,13 +1029,11 @@
     function loginWithGitHub() {
       const username = document.getElementById('username').value;
       const token = document.getElementById('password').value;
-      
       if (!username || !token) {
         showNotification("Please enter both username and token", "error");
         return;
       }
-      
-      // Test the token with a simple GitHub API call
+
       fetch('https://api.github.com/user', {
         headers: {
           'Authorization': `token ${token}`,
@@ -1069,14 +1041,7 @@
         }
       })
       .then(response => {
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Invalid GitHub token');
-          } else if (response.status === 403) {
-            throw new Error('Token permission denied. Ensure it has repo access');
-          }
-          throw new Error(`GitHub API error: ${response.status}`);
-        }
+        if (!response.ok) throw new Error('Invalid GitHub credentials');
         return response.json();
       })
       .then(userData => {
@@ -1086,8 +1051,7 @@
           avatarUrl: userData.avatar_url
         };
         githubToken = token;
-        
-        // Update UI with user info
+
         document.getElementById('userName').textContent = currentUser.name;
         document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
         if (currentUser.avatarUrl) {
@@ -1095,37 +1059,15 @@
           document.getElementById('userAvatar').style.backgroundSize = 'cover';
           document.getElementById('userAvatar').style.color = 'transparent';
         }
-        
-        // Get the default branch
-        getRepoDefaultBranch()
-          .then(branch => {
-            githubDefaultBranch = branch;
-            console.log(`Detected default branch: ${githubDefaultBranch}`);
-            
-            hideLoginScreen();
-            showNotification(`Welcome, ${currentUser.name}!`, "success");
-            
-            // Save user session
-            localStorage.setItem('aptPayrollUser', JSON.stringify(currentUser));
-            localStorage.setItem('aptPayrollToken', githubToken);
-            
-            // Start sync process
-            initializeGitHubSync();
-          })
-          .catch(error => {
-            console.error("Error detecting default branch:", error);
-            githubDefaultBranch = "main"; // Fallback
-            
-            hideLoginScreen();
-            showNotification(`Welcome, ${currentUser.name}! (Using default branch: ${githubDefaultBranch})`, "info");
-            
-            // Save user session
-            localStorage.setItem('aptPayrollUser', JSON.stringify(currentUser));
-            localStorage.setItem('aptPayrollToken', githubToken);
-            
-            // Start sync process
-            initializeGitHubSync();
-          });
+
+        getRepoDefaultBranch().then(branch => {
+          githubDefaultBranch = branch;
+          hideLoginScreen();
+          showNotification(`Welcome, ${currentUser.name}!`, "success");
+          localStorage.setItem('aptPayrollUser', JSON.stringify(currentUser));
+          localStorage.setItem('aptPayrollToken', githubToken);
+          initializeGitHubSync();
+        });
       })
       .catch(error => {
         showNotification(error.message, "error");
@@ -1139,206 +1081,108 @@
           'Accept': 'application/vnd.github.v3+json'
         }
       })
-      .then(response => {
-        if (!response.ok) {
-          // If we get a 404, the repo might be new or empty
-          if (response.status === 404) {
-            console.log("Repository not found or empty. Using 'main' as default branch.");
-            return "main";
-          }
-          throw new Error(`Failed to get repo info: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(repoData => {
-        return repoData.default_branch || "main";
-      })
-      .catch(error => {
-        console.error("Error getting default branch, using 'main' as fallback:", error);
-        return "main";
-      });
+      .then(r => r.json())
+      .then(d => d.default_branch || "main")
+      .catch(() => "main");
     }
 
     function logout() {
-      if (confirm("Are you sure you want to log out?")) {
+      if (confirm("Log out?")) {
         currentUser = null;
         githubToken = null;
-        githubDefaultBranch = "main";
-        
-        if (syncInterval) {
-          clearInterval(syncInterval);
-          syncInterval = null;
-        }
-        
-        // Clear stored session
+        if (syncInterval) clearInterval(syncInterval);
         localStorage.removeItem('aptPayrollUser');
         localStorage.removeItem('aptPayrollToken');
-        
-        document.getElementById('userName').textContent = 'User';
-        document.getElementById('userAvatar').textContent = 'U';
-        document.getElementById('userAvatar').style.backgroundImage = 'none';
-        document.getElementById('userAvatar').style.color = '#4a5568';
-        
         showLoginScreen();
       }
     }
 
     // === GitHub Synchronization ===
     function initializeGitHubSync() {
-      // Update sync status
-      document.getElementById('syncStatusText').textContent = "Connecting to GitHub...";
+      document.getElementById('syncStatusText').textContent = "Syncing...";
       document.getElementById('syncStatus').className = 'sync-status syncing';
-      
-      // First, load data from GitHub
-      loadFromGitHub()
-        .then(() => {
-          // Then start periodic sync
-          syncInterval = setInterval(syncToGitHub, 300000); // Every 5 minutes
-          
-          // Update sync status
-          document.getElementById('syncStatusText').textContent = "Data synchronized";
-          document.getElementById('syncStatus').className = 'sync-status';
-          
-          // Initial load complete
-          showNotification("Successfully connected to GitHub repository", "success");
-          syncRetryCount = 0;
-        })
-        .catch(error => {
-          console.error("Failed to initialize GitHub sync:", error);
-          
-          // Only show notification if it's not a 404 (which is normal for first-time use)
-          if (!error.message.includes("404")) {
-            showNotification("Connected to GitHub but failed to load data. Using local data.", "info");
-          }
-          
-          // Start periodic sync anyway
-          syncInterval = setInterval(syncToGitHub, 300000);
-          
-          // Update sync status with warning
-          document.getElementById('syncStatusText').textContent = "Initial sync failed. Will retry.";
-          document.getElementById('syncStatus').className = 'sync-status warning';
-        });
+      loadFromGitHub().then(() => {
+        syncInterval = setInterval(syncToGitHub, 300000);
+        document.getElementById('syncStatusText').textContent = "Synced";
+        document.getElementById('syncStatus').className = 'sync-status';
+        showNotification("Connected to GitHub", "success");
+        syncRetryCount = 0;
+      }).catch(() => {
+        syncInterval = setInterval(syncToGitHub, 300000);
+        showNotification("Using local data. Will sync later.", "info");
+      });
     }
 
     async function loadFromGitHub() {
-      if (!githubToken) {
-        throw new Error("GitHub token not available");
-      }
-      
+      if (!githubToken) return;
       try {
-        // Get the latest payroll data from GitHub
         const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`, {
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
+          headers: { 'Authorization': `token ${githubToken}` }
         });
-        
-        if (!response.ok) {
-          if (response.status === 404) {
-            // File doesn't exist yet, that's okay
-            console.log("Payroll data file not found in repository. Will create on next sync.");
-            return;
-          }
-          
-          // Check rate limit
-          if (response.status === 403) {
-            const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
-            if (rateLimitRemaining === '0') {
-              const resetTime = new Date(parseInt(response.headers.get('X-RateLimit-Reset')) * 1000);
-              throw new Error(`GitHub rate limit exceeded. Try again after ${resetTime.toLocaleTimeString()}`);
-            }
-          }
-          
-          throw new Error(`GitHub API error: ${response.status}`);
-        }
-        
+        if (!response.ok && response.status !== 404) throw new Error(`GitHub error: ${response.status}`);
+        if (response.status === 404) return;
+
         const data = await response.json();
         const fileContent = JSON.parse(atob(data.content));
-        
-        // Check if this is newer than our local data
-        const lastSync = localStorage.getItem(lastSyncKey);
-        if (!lastSync || new Date(fileContent.lastSync) > new Date(lastSync)) {
-          // Update local data
+
+        if (!fileContent.lastSync || new Date(fileContent.lastSync) > new Date(localStorage.getItem(lastSyncKey) || 0)) {
           employees = fileContent.employees || [];
           payrollHistory = fileContent.payrollHistory || [];
           managerName = fileContent.managerName || "John Manager";
+          signatureImage = fileContent.signatureImage || null;
           currentPaymentDate = fileContent.currentPaymentDate || new Date().toISOString().split('T')[0];
-          
-          // Save to localStorage
+
           localStorage.setItem(lastSyncKey, fileContent.lastSync);
           saveData();
-          
-          // Update UI
+
           renderTable();
           renderHistory();
           document.getElementById('managerName').value = managerName;
-          
-          showNotification("Loaded latest payroll data from GitHub", "success");
+          updateSignaturePreview();
+          showNotification("Loaded from GitHub", "success");
         }
-      } catch (error) {
-        console.error("Error loading from GitHub:", error);
-        throw error;
+      } catch (e) {
+        console.error("Load from GitHub failed:", e);
+        throw e;
       }
     }
 
     async function syncToGitHub() {
-      if (!githubToken || !currentUser) {
-        return;
-      }
-      
+      if (!githubToken || !currentUser) return;
       try {
-        // Update sync status
-        document.getElementById('syncStatusText').textContent = "Syncing with GitHub...";
+        document.getElementById('syncStatusText').textContent = "Syncing...";
         document.getElementById('syncStatus').className = 'sync-status syncing';
-        
-        // Get the current commit SHA (needed for updating)
+
         const shaResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`, {
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
+          headers: { 'Authorization': `token ${githubToken}` }
         });
-        
         let sha = null;
-        if (shaResponse.ok) {
-          const shaData = await shaResponse.json();
-          sha = shaData.sha;
-        } else if (shaResponse.status !== 404) {
-          // Only throw an error if it's not a 404 (which is normal for first-time use)
-          const errorData = await shaResponse.json().catch(() => null);
-          let errorMessage = `Failed to get file SHA: ${shaResponse.status}`;
-          
-          if (errorData && errorData.message) {
-            errorMessage = errorData.message;
-          }
-          
-          throw new Error(errorMessage);
-        }
-        
-        // Prepare the data to send
+        if (shaResponse.ok) sha = (await shaResponse.json()).sha;
+
         const now = new Date().toISOString();
         const data = {
           employees,
           payrollHistory,
           managerName,
+          signatureImage,
           currentPaymentDate,
-          lastSync: now
+          lastSync: now,
+          lastSyncBy: currentUser.name,
+          lastSyncAt: now
         };
-        
+
         const payload = {
-          message: `Update payroll data - ${now}`,
-          content: base64Encode(JSON.stringify(data, null, 2)),
+          message: `Sync payroll data - ${now}`,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
           branch: githubDefaultBranch
         };
-        
-        if (sha) {
-          payload.sha = sha;
-        }
-        
-        // Send the update to GitHub
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`, {
-          method: sha ? 'PUT' : 'POST',
+        if (sha) payload.sha = sha;
+
+        const method = sha ? 'PUT' : 'POST';
+        const url = `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${PAYROLL_FILE_PATH}`;
+
+        const response = await fetch(url, {
+          method,
           headers: {
             'Authorization': `token ${githubToken}`,
             'Accept': 'application/vnd.github.v3+json',
@@ -1346,169 +1190,69 @@
           },
           body: JSON.stringify(payload)
         });
-        
-        // Check rate limit
-        const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
-        if (rateLimitRemaining && parseInt(rateLimitRemaining) < 10) {
-          const resetTime = new Date(parseInt(response.headers.get('X-RateLimit-Reset')) * 1000);
-          showNotification(`GitHub rate limit almost reached. Reset at ${resetTime.toLocaleTimeString()}`, "warning");
-        }
-        
+
         if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          let errorMessage = `GitHub API error: ${response.status}`;
-          
-          if (errorData && errorData.message) {
-            errorMessage = errorData.message;
-            
-            // Add specific handling for common errors
-            if (errorMessage.includes("Must have push access")) {
-              errorMessage = "Permission denied: Your token doesn't have write access to this repository";
-            } else if (errorMessage.includes("Branch not found")) {
-              errorMessage = `Branch not found: "${githubDefaultBranch}". Check if the repository uses the correct branch name.`;
-            } else if (errorMessage.includes("rate limit")) {
-              errorMessage = "GitHub API rate limit exceeded. Please try again later";
-            } else if (errorMessage.includes("Validation Failed")) {
-              errorMessage = "Validation error: Check your repository configuration";
-            } else if (errorMessage.includes("Reference does not exist")) {
-              errorMessage = `Branch "${githubDefaultBranch}" does not exist. Please check your repository settings.`;
-            }
-          }
-          
-          throw new Error(errorMessage);
+          const err = await response.json();
+          throw new Error(err.message || `GitHub error: ${response.status}`);
         }
-        
-        // Update local sync timestamp
+
         localStorage.setItem(lastSyncKey, now);
-        
-        // Update UI
-        document.getElementById('syncStatusText').textContent = "Data synchronized";
+        document.getElementById('syncStatusText').textContent = "Synced";
         document.getElementById('syncStatus').className = 'sync-status';
-        
-        showNotification("Payroll data synchronized with GitHub", "success");
         syncRetryCount = 0;
       } catch (error) {
-        console.error("Error syncing to GitHub:", error);
-        
-        // Handle retry logic
         syncRetryCount++;
-        if (syncRetryCount > MAX_SYNC_RETRIES) {
-          document.getElementById('syncStatusText').textContent = "Sync failed permanently. Check settings.";
-          document.getElementById('syncStatus').className = 'sync-status error';
-          document.getElementById('syncStatus').onclick = () => {
-            syncRetryCount = 0;
-            syncToGitHub();
-          };
-          
-          showNotification(`Sync failed: ${error.message}. Please check your GitHub settings.`, "error");
-        } else {
-          document.getElementById('syncStatusText').textContent = `Sync failed (${syncRetryCount}/${MAX_SYNC_RETRIES}). Retrying...`;
-          document.getElementById('syncStatus').className = 'sync-status warning';
-          
-          showNotification(`Sync attempt ${syncRetryCount} failed: ${error.message}. Will retry...`, "warning");
-          
-          // Schedule retry after delay
+        if (syncRetryCount <= MAX_SYNC_RETRIES) {
           setTimeout(syncToGitHub, 10000 * syncRetryCount);
+        } else {
+          document.getElementById('syncStatusText').textContent = "Sync failed";
+          document.getElementById('syncStatus').className = 'sync-status error';
+          showNotification(`Sync failed: ${error.message}`, "error");
         }
       }
     }
 
-    // === Base64 Encoding/Decoding (fixed) ===
     function base64Encode(str) {
-      // More reliable encoding that handles all characters
       return btoa(unescape(encodeURIComponent(str)));
     }
-
     function base64Decode(str) {
-      // More reliable decoding that handles all characters
       return decodeURIComponent(escape(atob(str)));
     }
 
-    // === UI Functions ===
+    // === UI & Lifecycle ===
     window.onload = () => {
-      // Check if we have a user session
       const savedUser = localStorage.getItem('aptPayrollUser');
       const savedToken = localStorage.getItem('aptPayrollToken');
-      
       if (savedUser && savedToken) {
-        try {
-          currentUser = JSON.parse(savedUser);
-          githubToken = savedToken;
-          
-          // Update UI with user info
-          document.getElementById('userName').textContent = currentUser.name;
-          document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-          if (currentUser.avatarUrl) {
-            document.getElementById('userAvatar').style.backgroundImage = `url(${currentUser.avatarUrl})`;
-            document.getElementById('userAvatar').style.backgroundSize = 'cover';
-            document.getElementById('userAvatar').style.color = 'transparent';
-          }
-          
-          // Detect default branch
-          getRepoDefaultBranch()
-            .then(branch => {
-              githubDefaultBranch = branch;
-              
-              // Start GitHub sync
-              initializeGitHubSync();
-              
-              // Load payroll data
-              acquireEditLock();
-              loadData();
-              document.getElementById('paymentDate').value = currentPaymentDate;
-              renderTable();
-              renderHistory();
-              
-              // Initialize toggles
-              document.getElementById('toggleDeductions').onchange = (e) => {
-                document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
-              };
-              document.getElementById('toggleCalculated').onchange = (e) => {
-                document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
-              };
-              
-              // Load contacts from work manager on startup
-              loadContactsFromWorkManager();
-              
-              // Hide login screen
-              hideLoginScreen();
-            })
-            .catch(error => {
-              console.error("Failed to detect default branch:", error);
-              githubDefaultBranch = "main";
-              
-              // Start GitHub sync
-              initializeGitHubSync();
-              
-              // Load payroll data
-              acquireEditLock();
-              loadData();
-              document.getElementById('paymentDate').value = currentPaymentDate;
-              renderTable();
-              renderHistory();
-              
-              // Initialize toggles
-              document.getElementById('toggleDeductions').onchange = (e) => {
-                document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
-              };
-              document.getElementById('toggleCalculated').onchange = (e) => {
-                document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
-              };
-              
-              // Load contacts from work manager on startup
-              loadContactsFromWorkManager();
-              
-              // Hide login screen
-              hideLoginScreen();
-            });
-        } catch (e) {
-          console.error("Failed to restore user session:", e);
-          showLoginScreen();
-        }
+        currentUser = JSON.parse(savedUser);
+        githubToken = savedToken;
+        getRepoDefaultBranch().then(branch => {
+          githubDefaultBranch = branch;
+          initializeGitHubSync();
+          acquireEditLock();
+          loadData();
+          document.getElementById('paymentDate').value = currentPaymentDate;
+          renderTable();
+          renderHistory();
+          initToggles();
+          loadContactsFromWorkManager();
+          hideLoginScreen();
+        });
       } else {
         showLoginScreen();
       }
     };
+
+    function initToggles() {
+      document.getElementById('toggleDeductions').onchange = (e) => {
+        document.getElementById('deductionsPanel').style.display = e.target.checked ? 'grid' : 'none';
+      };
+      document.getElementById('toggleCalculated').onchange = (e) => {
+        document.getElementById('payrollTable').classList.toggle('hide-calculated', !e.target.checked);
+      };
+      document.getElementById('toggleDeductions').dispatchEvent(new Event('change'));
+      document.getElementById('toggleCalculated').dispatchEvent(new Event('change'));
+    }
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -1528,333 +1272,6 @@
       saveData();
     }
 
-    // === Contact Selection System ===
-    let availableContacts = [];
-    let currentEmployeeIndex = null;
-    let selectedContactIndex = null;
-
-    function openContactModal(employeeIndex) {
-      currentEmployeeIndex = employeeIndex;
-      selectedContactIndex = null;
-      
-      const modal = document.getElementById('contactModal');
-      const contactsList = document.getElementById('contactsList');
-      const contactSearch = document.getElementById('contactSearch');
-      
-      // Reset search
-      contactSearch.value = '';
-      
-      // Populate contacts list
-      contactsList.innerHTML = '';
-      if (availableContacts.length === 0) {
-        contactsList.innerHTML = '<div class="contact-item">No contacts available. Sync from Work Manager first.</div>';
-        return;
-      }
-      
-      availableContacts.forEach((contact, index) => {
-        const contactItem = document.createElement('div');
-        contactItem.className = 'contact-item';
-        contactItem.innerHTML = `
-          <div><strong>${contact.name}</strong></div>
-          <div style="font-size: 12px; color: #718096;">${contact.designation || 'No designation'}</div>
-        `;
-        contactItem.onclick = () => {
-          document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('selected'));
-          contactItem.classList.add('selected');
-          selectedContactIndex = index;
-        };
-        contactsList.appendChild(contactItem);
-      });
-      
-      modal.style.display = 'flex';
-    }
-
-    function closeContactModal() {
-      document.getElementById('contactModal').style.display = 'none';
-      currentEmployeeIndex = null;
-      selectedContactIndex = null;
-    }
-
-    function filterContacts() {
-      const searchTerm = document.getElementById('contactSearch').value.toLowerCase();
-      const contactsList = document.getElementById('contactsList');
-      
-      document.querySelectorAll('.contact-item').forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(searchTerm) ? 'block' : 'none';
-      });
-    }
-
-    function confirmContactSelection() {
-      if (selectedContactIndex === null) {
-        showNotification("Please select a contact first", "error");
-        return;
-      }
-      
-      const contact = availableContacts[selectedContactIndex];
-      const employee = employees[currentEmployeeIndex];
-      
-      // Update employee with contact info
-      employee.name = contact.name;
-      
-      // Update status based on designation
-      if (contact.designation && contact.designation.toLowerCase().includes('contract')) {
-        employee.status = "Contract";
-      } else {
-        employee.status = "Permanent";
-      }
-      
-      renderTable();
-      closeContactModal();
-      showNotification(`Selected contact: ${contact.name}`, "success");
-    }
-
-    // === Sync Contacts from Work Manager ===
-    function loadContactsFromWorkManager() {
-      try {
-        // First try to get contacts from localStorage (same domain)
-        const contactsStr = localStorage.getItem('contacts');
-        if (contactsStr) {
-          availableContacts = JSON.parse(contactsStr);
-          showNotification("Contacts loaded from work manager!", "success");
-          updateEmployeeStatusFromContacts();
-          return;
-        }
-        
-        // If we're logged in to GitHub, try to get contacts from GitHub
-        if (githubToken) {
-          fetchContactsFromGitHub();
-        } else {
-          // Fallback to default contacts
-          setupDefaultContacts();
-        }
-      } catch (error) {
-        console.error("Error loading contacts:", error);
-        setupDefaultContacts();
-        showNotification("Error loading contacts: " + error.message, "error");
-      }
-    }
-
-    async function fetchContactsFromGitHub() {
-      try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONTACTS_FILE_PATH}`, {
-          headers: {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          availableContacts = JSON.parse(base64Decode(data.content));
-          showNotification("Contacts loaded from GitHub!", "success");
-          updateEmployeeStatusFromContacts();
-          return;
-        }
-        
-        // If file not found, try to get contacts from work manager HTML
-        if (response.status === 404) {
-          await fetchContactsFromWorkManagerHtml();
-        }
-      } catch (error) {
-        console.warn("Could not load contacts from GitHub:", error);
-        setupDefaultContacts();
-      }
-    }
-
-    async function fetchContactsFromWorkManagerHtml() {
-      try {
-        // Fetch the work manager HTML
-        const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/main/apt-work-manager.html`);
-        if (!response.ok) throw new Error(`Failed to fetch work manager HTML: ${response.status}`);
-        
-        const html = await response.text();
-        
-        // Try to extract contacts data from the HTML
-        const contactsMatch = html.match(/getData\s*\(\s*['"]contacts['"]\s*\)\s*=\s*(\[[^\]]+\])/);
-        if (contactsMatch) {
-          availableContacts = JSON.parse(contactsMatch[1]);
-          showNotification("Contacts loaded from work manager HTML!", "success");
-          updateEmployeeStatusFromContacts();
-          return;
-        }
-        
-        // Try to find the contacts data in localStorage initialization
-        const localStorageMatch = html.match(/saveData\s*\(\s*['"]contacts['"]\s*,\s*(\[[^\]]+\])\s*\)/);
-        if (localStorageMatch) {
-          availableContacts = JSON.parse(localStorageMatch[1]);
-          showNotification("Contacts loaded from work manager HTML (localStorage init)!", "success");
-          updateEmployeeStatusFromContacts();
-          return;
-        }
-        
-        setupDefaultContacts();
-      } catch (error) {
-        console.error("Error fetching contacts from work manager HTML:", error);
-        setupDefaultContacts();
-      }
-    }
-
-    function setupDefaultContacts() {
-      availableContacts = [
-        { name: "John Manager", designation: "Project Manager" },
-        { name: "Abe Abiola", designation: "Permanent Staff" },
-        { name: "Jeremiah Dennis", designation: "Contract Staff" },
-        { name: "Chinwe Okonkwo", designation: "Permanent Staff" },
-        { name: "Oluwaseun Adebayo", designation: "Contract Staff" }
-      ];
-      updateEmployeeStatusFromContacts();
-      showNotification("Using default contacts. Sync contacts for full functionality.", "info");
-    }
-
-    function updateEmployeeStatusFromContacts() {
-      // Update any existing employees with contact info
-      employees.forEach(emp => {
-        const contact = availableContacts.find(c => c.name === emp.name);
-        if (contact) {
-          // Update status based on designation
-          if (contact.designation && contact.designation.toLowerCase().includes('contract')) {
-            emp.status = "Contract";
-          } else {
-            emp.status = "Permanent";
-          }
-        }
-      });
-      renderTable();
-    }
-
-    // === Sync Payroll Employees to Work Manager Contacts ===
-    function syncEmployeeToWorkManager(employee) {
-      try {
-        // Get current contacts
-        let contacts = [...availableContacts];
-        
-        // Check if contact already exists
-        const exists = contacts.some(c => c.name === employee.name);
-        if (exists) return false;
-        
-        // Add new contact
-        contacts.push({
-          name: employee.name,
-          designation: employee.status + " Staff",
-          phone1: "",
-          email1: ""
-        });
-        
-        // Save to availableContacts
-        availableContacts = contacts;
-        
-        // Save to localStorage
-        localStorage.setItem('contacts', JSON.stringify(contacts));
-        
-        showNotification(`Contact "${employee.name}" added to Work Manager`, "success");
-        return true;
-      } catch (error) {
-        console.error("Error syncing to work manager:", error);
-        return false;
-      }
-    }
-
-    function syncAllEmployeesToWorkManager() {
-      let syncedCount = 0;
-      employees.forEach(employee => {
-        if (syncEmployeeToWorkManager(employee)) {
-          syncedCount++;
-        }
-      });
-      
-      if (syncedCount > 0) {
-        showNotification(`Synced ${syncedCount} new employees to Work Manager`, "success");
-      } else {
-        showNotification("All employees are already in Work Manager contacts", "info");
-      }
-    }
-
-    function renderTable() {
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
-      employees.forEach((emp, index) => {
-        const gross = calculateGross(emp);
-        const deductions = calculateDeductions(emp, gross);
-        const net = calculateNet(emp, gross, deductions);
-        const personnelCost = deductions.staffPension + deductions.companyPension;
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>
-            <div class="contact-selector">
-              <input class="input-field" type="text" value="${emp.name}" onchange="updateField(${index}, 'name', this.value)">
-              <button onclick="openContactModal(${index})" title="Select from contacts">
-                <i class="fas fa-address-book"></i>
-              </button>
-            </div>
-          </td>
-          <td><input class="input-field" type="text" value="${emp.idNo}" onchange="updateField(${index}, 'idNo', this.value)"></td>
-          <td><select class="input-field" onchange="updateField(${index}, 'status', this.value)">
-            <option ${emp.status==='Permanent'?'selected':''}>Permanent</option>
-            <option ${emp.status==='Contract'?'selected':''}>Contract</option>
-          </select></td>
-          <td><input class="input-field" type="number" value="${emp.daysWorked}" onchange="updateField(${index}, 'daysWorked', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.basic}" onchange="updateField(${index}, 'basic', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.transport}" onchange="updateField(${index}, 'transport', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.housing}" onchange="updateField(${index}, 'housing', parseFloat(this.value))"></td>
-          <td><input class="input-field" type="number" value="${emp.iou}" onchange="updateField(${index}, 'iou', parseFloat(this.value))"></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(gross)}</div></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(net)}</div></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(personnelCost)}</div></td>
-          <td class="calculated-cell"><div class="calculated-value">${formatCurrency(net)}</div></td>
-          <td>
-            <button class="btn btn-primary" onclick="generatePayslip(${index})"><i class="fas fa-file-alt"></i> Slip</button>
-            <button class="btn btn-danger" onclick="deleteEmployee(${index})"><i class="fas fa-trash-alt"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      updateSummary();
-      saveData();
-    }
-
-    function updateField(index, field, value) {
-      employees[index][field] = value;
-      renderTable();
-      
-      // If updating name, sync to work manager
-      if (field === 'name') {
-        const employee = employees[index];
-        if (syncEmployeeToWorkManager(employee)) {
-          showNotification(`Updated contact "${employee.name}" in Work Manager`, "success");
-        }
-      }
-    }
-
-    function deleteEmployee(index) {
-      if (confirm("Delete this employee?")) {
-        employees.splice(index, 1);
-        renderTable();
-      }
-    }
-
-    function addEmployee() {
-      const newId = `AEWP-${String(employees.length + 1).padStart(3, '0')}`;
-      const newEmployee = {
-        name: "New Employee",
-        idNo: newId,
-        status: "Permanent",
-        daysWorked: 22,
-        basic: 30000,
-        transport: 10000,
-        housing: 12000,
-        iou: 0
-      };
-      
-      employees.push(newEmployee);
-      renderTable();
-      
-      // Immediately sync the new employee to work manager
-      if (syncEmployeeToWorkManager(newEmployee)) {
-        showNotification(`Employee "${newEmployee.name}" added to Work Manager contacts`, "success");
-      }
-    }
-
     // === Signature Management ===
     function loadSignature() {
       signatureImage = localStorage.getItem(signatureStorageKey);
@@ -1863,11 +1280,8 @@
 
     function updateSignaturePreview() {
       const preview = document.getElementById('signaturePreview');
-      const placeholder = document.getElementById('signaturePlaceholder');
-      
       if (signatureImage) {
-        preview.innerHTML = `<img src="${signatureImage}" alt="Manager Signature">`;
-        placeholder.style.display = 'none';
+        preview.innerHTML = `<img src="${signatureImage}" alt="Signature">`;
       } else {
         preview.innerHTML = `<span id="signaturePlaceholder" style="color: #a0aec0;">No signature uploaded</span>`;
       }
@@ -1876,223 +1290,45 @@
     function handleSignatureUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
-      
-      // Check file type
       if (!file.type.match('image.*')) {
-        showNotification("Please select an image file (PNG, JPG)", "error");
+        showNotification("Image only", "error");
         return;
       }
-      
-      // Check file size (max 1MB)
       if (file.size > 1024 * 1024) {
-        showNotification("File too large. Maximum size is 1MB", "error");
+        showNotification("Max 1MB", "error");
         return;
       }
-      
       const reader = new FileReader();
       reader.onload = function(e) {
         signatureImage = e.target.result;
         localStorage.setItem(signatureStorageKey, signatureImage);
         updateSignaturePreview();
-        showNotification("Signature uploaded successfully", "success");
+        saveData();
+        showNotification("Signature uploaded", "success");
       };
       reader.readAsDataURL(file);
     }
 
     function removeSignature() {
-      if (confirm("Are you sure you want to remove the signature?")) {
+      if (confirm("Remove signature?")) {
         signatureImage = null;
         localStorage.removeItem(signatureStorageKey);
         updateSignaturePreview();
+        saveData();
         showNotification("Signature removed", "success");
       }
     }
 
-    // === Calculations ===
-    function calculateGross(emp) {
-      return emp.status === "Permanent"
-        ? (emp.basic + emp.transport + emp.housing) * emp.daysWorked
-        : (emp.basic + emp.transport) * emp.daysWorked;
-    }
-
-    function calculateDeductions(emp, gross) {
-      const payeRate = emp.status === "Permanent"
-        ? parseFloat(document.getElementById("payePermanent").value) / 100
-        : parseFloat(document.getElementById("payeContract").value) / 100;
-      const staffPensionRate = emp.status === "Permanent"
-        ? parseFloat(document.getElementById("staffPensionPermanent").value) / 100
-        : 0;
-      const companyPensionRate = parseFloat(document.getElementById("companyPension").value) / 100;
-      const medicalsRate = parseFloat(document.getElementById("medicals").value) / 100;
-      const workmenRate = parseFloat(document.getElementById("workmen").value) / 100;
-
-      return {
-        paye: gross * payeRate,
-        staffPension: gross * staffPensionRate,
-        companyPension: gross * companyPensionRate,
-        medicals: gross * medicalsRate,
-        workmen: gross * workmenRate
-      };
-    }
-
-    function calculateNet(emp, gross, deductions) {
-      const totalDeductions = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen + emp.iou;
-      return gross - totalDeductions;
-    }
-
-    function formatCurrency(value) {
-      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(value || 0);
-    }
-
-    function formatDate(dateStr) {
-      return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    function updateSummary() {
-      const totalGross = employees.reduce((sum, e) => sum + calculateGross(e), 0);
-      const totalNet = employees.reduce((sum, e) => {
-        const gross = calculateGross(e);
-        const deductions = calculateDeductions(e, gross);
-        return sum + calculateNet(e, gross, deductions);
-      }, 0);
-      const totalPersonnel = employees.reduce((sum, e) => {
-        const gross = calculateGross(e);
-        const deductions = calculateDeductions(e, gross);
-        return sum + (deductions.staffPension + deductions.companyPension);
-      }, 0);
-
-      document.getElementById("totalEmployees").textContent = employees.length;
-      document.getElementById("totalGross").textContent = formatCurrency(totalGross);
-      document.getElementById("totalNet").textContent = formatCurrency(totalNet);
-      document.getElementById("totalPersonnel").textContent = formatCurrency(totalPersonnel);
-      document.getElementById("employeeCount").textContent = employees.length;
-    }
-
-    // === Payslip Generation ===
-    function generatePayslip(index) {
-      const emp = employees[index];
-      const gross = calculateGross(emp);
-      const deductions = calculateDeductions(emp, gross);
-      const totalDeductions = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen + emp.iou;
-      const net = calculateNet(emp, gross, deductions);
-      const month = new Date().toLocaleString('default', { month: 'long' });
-
-      const container = document.getElementById("payslipContainer");
-      container.innerHTML = `
-        <div class="payslip-page">
-          <div class="payslip-dual">
-            <!-- Personnel Copy -->
-            <div class="payslip-copy">
-              <div class="copy-label">PERSONNEL COPY</div>
-              <h3 style="margin:10px 0;">Apt Engineering Works Ltd</h3>
-              <div style="font-size:11px; margin-bottom:10px;">
-                <strong>Month:</strong> ${month} |
-                <strong>Payment Date:</strong> ${formatDate(currentPaymentDate)}
-              </div>
-              <table class="payslip-table">
-                <tr><th>Employee Name:</th><td>${emp.name}</td></tr>
-                <tr><th>ID Number:</th><td>${emp.idNo}</td></tr>
-                <tr><th>Status:</th><td>${emp.status}</td></tr>
-                <tr><th>Days Worked:</th><td>${emp.daysWorked}</td></tr>
-              </table>
-              <h4>Earnings</h4>
-              <table class="payslip-table">
-                <tr><td>Basic Pay</td><td>${formatCurrency(emp.basic)}</td></tr>
-                <tr><td>Transport</td><td>${formatCurrency(emp.transport)}</td></tr>
-                <tr><td>Housing</td><td>${formatCurrency(emp.housing)}</td></tr>
-                <tr><th>Gross Pay</th><td>${formatCurrency(gross)}</td></tr>
-              </table>
-              <h4>Deductions</h4>
-              <table class="payslip-table">
-                <tr><td>PAYE</td><td>${formatCurrency(deductions.paye)}</td></tr>
-                <tr><td>Staff Pension</td><td>${formatCurrency(deductions.staffPension)}</td></tr>
-                <tr><td>Medicals</td><td>${formatCurrency(deductions.medicals)}</td></tr>
-                <tr><td>Workmen</td><td>${formatCurrency(deductions.workmen)}</td></tr>
-                <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
-                <tr><th>Total Deductions</th><td>${formatCurrency(totalDeductions)}</td></tr>
-              </table>
-              <h4>Net Pay</h4>
-              <h2 style="color:#2c5282; text-align:center;">${formatCurrency(net)}</h2>
-              <div class="signature-section">
-                <div class="signature-box">
-                  <div>Staff Signature</div>
-                  <div class="signature-line"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Company Copy -->
-            <div class="payslip-copy">
-              <div class="copy-label">COMPANY COPY</div>
-              <h3 style="margin:10px 0;">Apt Engineering Works Ltd</h3>
-              <div style="font-size:11px; margin-bottom:10px;">
-                <strong>Month:</strong> ${month} |
-                <strong>Payment Date:</strong> ${formatDate(currentPaymentDate)}
-              </div>
-              <table class="payslip-table">
-                <tr><th>Employee Name:</th><td>${emp.name}</td></tr>
-                <tr><th>ID Number:</th><td>${emp.idNo}</td></tr>
-                <tr><th>Status:</th><td>${emp.status}</td></tr>
-                <tr><th>Days Worked:</th><td>${emp.daysWorked}</td></tr>
-              </table>
-              <h4>Earnings</h4>
-              <table class="payslip-table">
-                <tr><td>Basic Pay</td><td>${formatCurrency(emp.basic)}</td></tr>
-                <tr><td>Transport</td><td>${formatCurrency(emp.transport)}</td></tr>
-                <tr><td>Housing</td><td>${formatCurrency(emp.housing)}</td></tr>
-                <tr><th>Gross Pay</th><td>${formatCurrency(gross)}</td></tr>
-              </table>
-              <h4>Deductions</h4>
-              <table class="payslip-table">
-                <tr><td>PAYE</td><td>${formatCurrency(deductions.paye)}</td></tr>
-                <tr><td>Staff Pension</td><td>${formatCurrency(deductions.staffPension)}</td></tr>
-                <tr><td>Medicals</td><td>${formatCurrency(deductions.medicals)}</td></tr>
-                <tr><td>Workmen</td><td>${formatCurrency(deductions.workmen)}</td></tr>
-                <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
-                <tr><th>Total Deductions</th><td>${formatCurrency(totalDeductions)}</td></tr>
-              </table>
-              <h4>Net Pay</h4>
-              <h2 style="color:#2c5282; text-align:center;">${formatCurrency(net)}</h2>
-              <div class="signature-section">
-                <div class="signature-box">
-                  <div>Manager: ${managerName}</div>
-                  ${signatureImage ? `<img src="${signatureImage}" class="signature-image">` : '<div class="signature-line"></div>'}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="confidential-footer">This document contains confidential information.</div>
-          <div class="print-button">
-            <button class="btn btn-primary" onclick="printPayslip()"><i class="fas fa-print"></i> Print Payslip</button>
-          </div>
-        </div>
-      `;
-      container.style.display = 'block';
-    }
-
-    function printPayslip() {
-      window.print();
-    }
-
-    // === History & Backup ===
+    // === History Functions ===
     function savePayrollRun() {
-      if (!currentPaymentDate) return alert("Select payment date.");
+      if (!currentPaymentDate) return alert("Set payment date.");
       const run = {
         id: Date.now(),
         date: currentPaymentDate,
+        timestamp: new Date().toISOString(),
+        user: currentUser?.name || "Unknown",
         employees: JSON.parse(JSON.stringify(employees)),
-        totals: {
-          employees: employees.length,
-          gross: employees.reduce((s, e) => s + calculateGross(e), 0),
-          net: employees.reduce((s, e) => {
-            const g = calculateGross(e); const d = calculateDeductions(e, g);
-            return s + calculateNet(e, g, d);
-          }, 0),
-          personnelCost: employees.reduce((s, e) => {
-            const g = calculateGross(e); const d = calculateDeductions(e, g);
-            return s + (d.staffPension + d.companyPension);
-          }, 0)
-        },
+        totals: calculateTotals(),
         deductions: {
           payePermanent: parseFloat(document.getElementById("payePermanent").value),
           payeContract: parseFloat(document.getElementById("payeContract").value),
@@ -2105,21 +1341,30 @@
       payrollHistory.unshift(run);
       saveData();
       renderHistory();
-      
-      // Sync to GitHub
-      if (githubToken) {
-        syncToGitHub();
-      }
-      
-      alert(`Payroll saved for ${formatDate(currentPaymentDate)}!`);
+      if (githubToken) syncToGitHub();
+      alert(`Payroll saved for ${new Date(currentPaymentDate).toLocaleDateString()}`);
+    }
+
+    function calculateTotals() {
+      const totalGross = employees.reduce((s, e) => s + calculateGross(e), 0);
+      const totalNet = employees.reduce((s, e) => {
+        const g = calculateGross(e); const d = calculateDeductions(e, g);
+        return s + calculateNet(e, g, d);
+      }, 0);
+      const personnelCost = employees.reduce((s, e) => {
+        const g = calculateGross(e); const d = calculateDeductions(e, g);
+        return s + (d.staffPension + d.companyPension);
+      }, 0);
+      return { gross: totalGross, net: totalNet, personnelCost };
     }
 
     function renderHistory() {
       const container = document.getElementById("historyContainer");
       container.innerHTML = "";
       const filter = document.getElementById("historyFilter").value;
-      let filtered = [...payrollHistory];
       const now = new Date();
+      let filtered = [...payrollHistory];
+
       if (filter === "last3") {
         const d = new Date(); d.setMonth(d.getMonth() - 3);
         filtered = filtered.filter(r => new Date(r.date) >= d);
@@ -2139,15 +1384,16 @@
         const card = document.createElement("div");
         card.className = "history-card";
         card.innerHTML = `
-          <div style="display:flex;justify-content:space-between;"><b>${formatDate(r.date)}</b><span>${r.employees.length} emp</span></div>
+          <div style="display:flex;justify-content:space-between;"><b>${new Date(r.date).toLocaleDateString()}</b><span>${r.employees.length} emp</span></div>
           <div style="margin:10px 0;">
-            <div><b>Total Gross:</b> ${formatCurrency(r.totals.gross)}</div>
-            <div><b>Net Pay:</b> ${formatCurrency(r.totals.net)}</div>
+            <div><b>Gross:</b> ${formatCurrency(r.totals.gross)}</div>
+            <div><b>Net:</b> ${formatCurrency(r.totals.net)}</div>
           </div>
-          <div style="display:flex;gap:5px;">
-            <button class="btn" style="background:#3182ce;color:white;" onclick="viewPayrollRun(${r.id})"><i class="fas fa-eye"></i> View</button>
-            <button class="btn" style="background:#dd6b20;color:white;" onclick="reusePayrollRun(${r.id})"><i class="fas fa-redo"></i> Reuse</button>
-            <button class="btn" style="background:#e53e3e;color:white;" onclick="deletePayrollRun(${r.id})"><i class="fas fa-trash"></i> Delete</button>
+          <div style="font-size:11px;color:#4a5568;">by ${r.user}</div>
+          <div style="display:flex;gap:5px;margin-top:10px;">
+            <button class="btn" style="background:#3182ce;" onclick="viewPayrollRun(${r.id})"><i class="fas fa-eye"></i> View</button>
+            <button class="btn" style="background:#dd6b20;" onclick="reusePayrollRun(${r.id})"><i class="fas fa-redo"></i> Reuse</button>
+            <button class="btn" style="background:#e53e3e;" onclick="deletePayrollRun(${r.id})"><i class="fas fa-trash"></i> Delete</button>
           </div>`;
         container.appendChild(card);
       });
@@ -2164,11 +1410,11 @@
       renderTable();
       switchTab('current');
       setTimeout(() => employees = temp, 100);
-      alert("Viewing historical payroll. Changes not saved unless saved explicitly.");
+      alert("Viewing historical data. Changes not saved.");
     }
 
     function reusePayrollRun(id) {
-      if (!confirm("Replace current data with this run?")) return;
+      if (!confirm("Replace current data?")) return;
       const run = payrollHistory.find(r => r.id === id);
       if (!run) return;
       employees = JSON.parse(JSON.stringify(run.employees));
@@ -2176,6 +1422,7 @@
       document.getElementById('paymentDate').value = currentPaymentDate;
       Object.keys(run.deductions).forEach(k => document.getElementById(k).value = run.deductions[k]);
       renderTable();
+      saveData();
       switchTab('current');
     }
 
@@ -2184,37 +1431,275 @@
         payrollHistory = payrollHistory.filter(r => r.id !== id);
         saveData();
         renderHistory();
+        if (githubToken) syncToGitHub();
       }
     }
 
-    function exportCSV() {
-      let csv = "Name,ID,Status,Days,Basic,Transport,Housing,IOU,Gross,Net,Personnel,External\n";
-      employees.forEach(emp => {
+    // === Contact & Sync ===
+    let availableContacts = [];
+    let currentEmployeeIndex = null;
+    let selectedContactIndex = null;
+
+    function openContactModal(index) {
+      currentEmployeeIndex = index;
+      selectedContactIndex = null;
+      const modal = document.getElementById('contactModal');
+      const list = document.getElementById('contactsList');
+      list.innerHTML = '';
+      if (availableContacts.length === 0) {
+        list.innerHTML = '<div class="contact-item">No contacts. Sync first.</div>';
+        return;
+      }
+      availableContacts.forEach((c, i) => {
+        const item = document.createElement('div');
+        item.className = 'contact-item';
+        item.innerHTML = `<strong>${c.name}</strong><div style="font-size:12px">${c.designation || ''}</div>`;
+        item.onclick = () => {
+          document.querySelectorAll('.contact-item').forEach(x => x.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedContactIndex = i;
+        };
+        list.appendChild(item);
+      });
+      modal.style.display = 'flex';
+    }
+
+    function confirmContactSelection() {
+      if (selectedContactIndex === null) return showNotification("Select a contact", "error");
+      const c = availableContacts[selectedContactIndex];
+      employees[currentEmployeeIndex].name = c.name;
+      employees[currentEmployeeIndex].status = c.designation?.toLowerCase().includes('contract') ? 'Contract' : 'Permanent';
+      renderTable();
+      closeContactModal();
+    }
+
+    function closeContactModal() {
+      document.getElementById('contactModal').style.display = 'none';
+    }
+
+    function filterContacts() {
+      const term = document.getElementById('contactSearch').value.toLowerCase();
+      document.querySelectorAll('.contact-item').forEach(item => {
+        const txt = item.textContent.toLowerCase();
+        item.style.display = txt.includes(term) ? 'block' : 'none';
+      });
+    }
+
+    function loadContactsFromWorkManager() {
+      const local = localStorage.getItem('contacts');
+      if (local) {
+        availableContacts = JSON.parse(local);
+        showNotification("Contacts loaded", "success");
+        return;
+      }
+      if (githubToken) fetchContactsFromGitHub();
+      else setupDefaultContacts();
+    }
+
+    async function fetchContactsFromGitHub() {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONTACTS_FILE_PATH}`, {
+          headers: { 'Authorization': `token ${githubToken}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          availableContacts = JSON.parse(atob(data.content));
+          showNotification("Contacts from GitHub", "success");
+        }
+      } catch (e) {
+        setupDefaultContacts();
+      }
+    }
+
+    function setupDefaultContacts() {
+      availableContacts = [
+        { name: "John Manager", designation: "Project Manager" },
+        { name: "Abe Abiola", designation: "Permanent Staff" },
+        { name: "Jeremiah Dennis", designation: "Contract Staff" }
+      ];
+    }
+
+    // === Employee Management ===
+    function addEmployee() {
+      const newId = `AEWP-${String(employees.length + 1).padStart(3, '0')}`;
+      employees.push({
+        name: "New Employee", idNo: newId, status: "Permanent",
+        daysWorked: 22, basic: 30000, transport: 10000, housing: 12000, iou: 0
+      });
+      renderTable();
+    }
+
+    function updateField(index, field, value) {
+      employees[index][field] = value;
+      renderTable();
+    }
+
+    function deleteEmployee(index) {
+      if (confirm("Delete?")) {
+        employees.splice(index, 1);
+        renderTable();
+      }
+    }
+
+    // === Calculations ===
+    function calculateGross(emp) {
+      return emp.status === "Permanent"
+        ? (emp.basic + emp.transport + emp.housing) * emp.daysWorked
+        : (emp.basic + emp.transport) * emp.daysWorked;
+    }
+
+    function calculateDeductions(emp, gross) {
+      const p = (id) => parseFloat(document.getElementById(id).value) / 100;
+      const paye = gross * (emp.status === "Permanent" ? p("payePermanent") : p("payeContract"));
+      const staffPension = emp.status === "Permanent" ? gross * p("staffPensionPermanent") : 0;
+      return {
+        paye, staffPension,
+        companyPension: gross * p("companyPension"),
+        medicals: gross * p("medicals"),
+        workmen: gross * p("workmen")
+      };
+    }
+
+    function calculateNet(emp, gross, deductions) {
+      const totalDed = deductions.paye + deductions.staffPension + deductions.medicals + deductions.workmen + emp.iou;
+      return gross - totalDed;
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(value || 0);
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+      employees.forEach((emp, i) => {
         const g = calculateGross(emp);
         const d = calculateDeductions(emp, g);
         const n = calculateNet(emp, g, d);
         const p = d.staffPension + d.companyPension;
-        csv += `"${emp.name}","${emp.idNo}","${emp.status}",${emp.daysWorked},${emp.basic},${emp.transport},${emp.housing},${emp.iou},${g},${n},${p},${n}\n`;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><div class="contact-selector">
+            <input class="input-field" value="${emp.name}" onchange="updateField(${i},'name',this.value)">
+            <button onclick="openContactModal(${i})"><i class="fas fa-address-book"></i></button>
+          </div></td>
+          <td><input class="input-field" value="${emp.idNo}" onchange="updateField(${i},'idNo',this.value)"></td>
+          <td><select class="input-field" onchange="updateField(${i},'status',this.value)">
+            <option ${emp.status==='Permanent'?'selected':''}>Permanent</option>
+            <option ${emp.status==='Contract'?'selected':''}>Contract</option>
+          </select></td>
+          <td><input class="input-field" type="number" value="${emp.daysWorked}" onchange="updateField(${i},'daysWorked',+this.value)"></td>
+          <td><input class="input-field" type="number" value="${emp.basic}" onchange="updateField(${i},'basic',+this.value)"></td>
+          <td><input class="input-field" type="number" value="${emp.transport}" onchange="updateField(${i},'transport',+this.value)"></td>
+          <td><input class="input-field" type="number" value="${emp.housing}" onchange="updateField(${i},'housing',+this.value)"></td>
+          <td><input class="input-field" type="number" value="${emp.iou}" onchange="updateField(${i},'iou',+this.value)"></td>
+          <td><div class="calculated-value">${formatCurrency(g)}</div></td>
+          <td><div class="calculated-value">${formatCurrency(n)}</div></td>
+          <td><div class="calculated-value">${formatCurrency(p)}</div></td>
+          <td><div class="calculated-value">${formatCurrency(n)}</div></td>
+          <td>
+            <button class="btn btn-primary" onclick="generatePayslip(${i})"><i class="fas fa-file-alt"></i> Slip</button>
+            <button class="btn btn-danger" onclick="deleteEmployee(${i})"><i class="fas fa-trash-alt"></i></button>
+          </td>`;
+        tbody.appendChild(row);
       });
-      const blob = new Blob([csv], { type: "text/csv" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `payroll_${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
+      updateSummary();
+      saveData();
     }
 
+    function updateSummary() {
+      const totals = calculateTotals();
+      document.getElementById("totalEmployees").textContent = employees.length;
+      document.getElementById("totalGross").textContent = formatCurrency(totals.gross);
+      document.getElementById("totalNet").textContent = formatCurrency(totals.net);
+      document.getElementById("totalPersonnel").textContent = formatCurrency(totals.personnelCost);
+      document.getElementById("employeeCount").textContent = employees.length;
+    }
+
+    // === Payslip Generation ===
+    function generatePayslip(index) {
+      const emp = employees[index];
+      const g = calculateGross(emp);
+      const d = calculateDeductions(emp, g);
+      const n = calculateNet(emp, g, d);
+      const totalDed = d.paye + d.staffPension + d.medicals + d.workmen + emp.iou;
+      const month = new Date().toLocaleString('default', { month: 'long' });
+      const container = document.getElementById("payslipContainer");
+      container.innerHTML = `
+        <div class="payslip-page">
+          <div class="payslip-dual">
+            <div class="payslip-copy"><div class="copy-label">PERSONNEL</div>
+              <h3>Apt Engineering Works Ltd</h3>
+              <div style="font-size:11px;"><strong>Month:</strong> ${month} | <strong>Date:</strong> ${new Date(currentPaymentDate).toLocaleDateString()}</div>
+              <table class="payslip-table">
+                <tr><th>Name:</th><td>${emp.name}</td></tr>
+                <tr><th>ID:</th><td>${emp.idNo}</td></tr>
+                <tr><th>Status:</th><td>${emp.status}</td></tr>
+                <tr><th>Days:</th><td>${emp.daysWorked}</td></tr>
+              </table>
+              <h4>Earnings</h4>
+              <table class="payslip-table">
+                <tr><td>Basic</td><td>${formatCurrency(emp.basic)}</td></tr>
+                <tr><td>Transport</td><td>${formatCurrency(emp.transport)}</td></tr>
+                <tr><td>Housing</td><td>${formatCurrency(emp.housing)}</td></tr>
+                <tr><th>Gross</th><td>${formatCurrency(g)}</td></tr>
+              </table>
+              <h4>Deductions</h4>
+              <table class="payslip-table">
+                <tr><td>PAYE</td><td>${formatCurrency(d.paye)}</td></tr>
+                <tr><td>Pension</td><td>${formatCurrency(d.staffPension)}</td></tr>
+                <tr><td>Medicals</td><td>${formatCurrency(d.medicals)}</td></tr>
+                <tr><td>Workmen</td><td>${formatCurrency(d.workmen)}</td></tr>
+                <tr><td>IOU</td><td>${formatCurrency(emp.iou)}</td></tr>
+                <tr><th>Total</th><td>${formatCurrency(totalDed)}</td></tr>
+              </table>
+              <h4>Net Pay</h4>
+              <h2 style="color:#2c5282;text-align:center;">${formatCurrency(n)}</h2>
+              <div class="signature-section">
+                <div class="signature-box">
+                  <div>Staff Signature</div>
+                  <div class="signature-line"></div>
+                </div>
+              </div>
+            </div>
+            <div class="payslip-copy"><div class="copy-label">COMPANY</div>
+              <h3>Apt Engineering Works Ltd</h3>
+              <div style="font-size:11px;"><strong>Month:</strong> ${month} | <strong>Date:</strong> ${new Date(currentPaymentDate).toLocaleDateString()}</div>
+              <table class="payslip-table">
+                <tr><th>Name:</th><td>${emp.name}</td></tr>
+                <tr><th>ID:</th><td>${emp.idNo}</td></tr>
+                <tr><th>Status:</th><td>${emp.status}</td></tr>
+                <tr><th>Days:</th><td>${emp.daysWorked}</td></tr>
+              </table>
+              <h4>Net Pay</h4>
+              <h2 style="color:#2c5282;text-align:center;">${formatCurrency(n)}</h2>
+              <div class="signature-section">
+                <div class="signature-box">
+                  <div>Manager: ${managerName}</div>
+                  ${signatureImage ? `<img src="${signatureImage}" class="signature-image">` : '<div class="signature-line"></div>'}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="confidential-footer">Confidential payroll document.</div>
+          <div class="print-button">
+            <button class="btn btn-primary" onclick="printPayslip()"><i class="fas fa-print"></i> Print</button>
+          </div>
+        </div>`;
+      container.style.display = 'block';
+    }
+
+    function printPayslip() {
+      window.print();
+    }
+
+    // === Backup & Restore ===
     function backupData() {
-      const data = { 
-        employees, 
-        payrollHistory, 
-        managerName, 
-        currentPaymentDate,
-        signatureImage
-      };
+      const data = { employees, payrollHistory, managerName, signatureImage, currentPaymentDate };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `payroll-backup-${new Date().toISOString().split('T')[0]}.json`;
       a.click();
     }
 
@@ -2233,26 +1718,16 @@
             employees = data.employees || [];
             payrollHistory = data.payrollHistory || [];
             managerName = data.managerName || "John Manager";
-            currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
             signatureImage = data.signatureImage || null;
-            
-            // Save signature to localStorage
-            if (signatureImage) {
-              localStorage.setItem(signatureStorageKey, signatureImage);
-            }
-            
+            currentPaymentDate = data.currentPaymentDate || new Date().toISOString().split('T')[0];
+            if (signatureImage) localStorage.setItem(signatureStorageKey, signatureImage);
             saveData();
             renderTable();
             renderHistory();
-            document.getElementById('paymentDate').value = currentPaymentDate;
             document.getElementById('managerName').value = managerName;
             updateSignaturePreview();
+            if (githubToken) syncToGitHub();
             alert("Data restored.");
-            
-            // If logged in, sync to GitHub
-            if (githubToken) {
-              syncToGitHub();
-            }
           }
         } catch (err) {
           alert("Error: " + err.message);
@@ -2272,12 +1747,8 @@
         document.getElementById('paymentDate').value = currentPaymentDate;
         document.getElementById('managerName').value = managerName;
         updateSignaturePreview();
+        if (githubToken) syncToGitHub();
         alert("Data reset.");
-        
-        // If logged in, sync to GitHub
-        if (githubToken) {
-          syncToGitHub();
-        }
       }
     }
 
