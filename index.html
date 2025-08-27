@@ -99,6 +99,52 @@
         .back-button:hover {
             background: #152e4a;
         }
+        .module-loading {
+            padding: 20px;
+            text-align: center;
+        }
+        .module-error {
+            padding: 20px;
+            text-align: center;
+            color: #e74c3c;
+        }
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .logo-upload-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px dashed #ccc;
+        }
+        .logo-upload-instructions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .logo-upload-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .logo-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .logo-primary {
+            background: #0066cc;
+            color: white;
+        }
+        .logo-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
         .iframe-container {
             position: relative;
             width: 100%;
@@ -112,7 +158,71 @@
             height: 100%;
             border: none;
         }
-        /* Login Modal */
+        .header-actions {
+            margin-left: auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .menu-button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .menu-button:hover {
+            background: #0055aa;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: none;
+            min-width: 180px;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+        .notification.success {
+            background-color: #28a745;
+        }
+        .notification.error {
+            background-color: #dc3545;
+        }
         .login-modal {
             position: fixed;
             top: 0;
@@ -130,28 +240,41 @@
             border-radius: 10px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             padding: 30px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
         }
         .login-header h2 {
             color: #1a3b5d;
             margin-bottom: 10px;
         }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 5px;
-            margin-bottom: 15px;
         }
         .form-group label {
             font-weight: 600;
             color: #555;
         }
-        .form-group input, .form-group select {
+        .form-group input {
             padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a3b5d;
+            box-shadow: 0 0 0 2px rgba(26, 59, 93, 0.2);
         }
         .login-btn {
             background: #1a3b5d;
@@ -162,6 +285,7 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
+            margin-top: 10px;
         }
         .login-btn:hover {
             background: #152e4a;
@@ -193,38 +317,71 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
-        .admin-error-indicator {
-            position: relative;
-            margin-right: 15px;
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
-        .error-count-badge {
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .register-link a {
+            color: #1a3b5d;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .password-toggle {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-        .view-errors-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
             cursor: pointer;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            color: #666;
         }
-        /* Error Reporting */
+        .password-input-container {
+            position: relative;
+        }
+        .password-input-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+        .admin-override {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #1a3b5d;
+        }
+        .admin-override-toggle {
+            color: #1a3b5d;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .admin-override-fields {
+            margin-top: 10px;
+            display: none;
+        }
+        .admin-override-fields.show {
+            display: block;
+        }
+        .change-password-required {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2001;
+        }
         .error-report-button {
             position: fixed;
             bottom: 20px;
@@ -242,8 +399,13 @@
             justify-content: center;
             font-size: 1.5rem;
             z-index: 999;
+            transition: all 0.3s ease;
         }
-        .error-modal, .error-dashboard-modal {
+        .error-report-button:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+        }
+        .error-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -256,24 +418,44 @@
             z-index: 2002;
             display: none;
         }
-        .error-container, .error-dashboard-container {
+        .error-container {
             background: white;
             border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             padding: 30px;
         }
-        .close-error-modal, .close-dashboard-modal {
+        .error-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .error-header h2 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        .close-error-modal {
+            position: absolute;
+            top: -10px;
+            right: -10px;
             background: #e74c3c;
             color: white;
             width: 30px;
             height: 30px;
-            border: none;
             border-radius: 50%;
+            border: none;
             cursor: pointer;
-            float: right;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         .error-form-group {
             display: flex;
@@ -284,11 +466,25 @@
             font-weight: 600;
             color: #555;
         }
-        .error-form-group input, .error-form-group select, .error-form-group textarea {
+        .error-form-group input,
+        .error-form-group select,
+        .error-form-group textarea {
             padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
+            font-family: inherit;
+        }
+        .error-form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .error-form-group input:focus,
+        .error-form-group select:focus,
+        .error-form-group textarea:focus {
+            outline: none;
+            border-color: #1a3b5d;
+            box-shadow: 0 0 0 2px rgba(26, 59, 93, 0.2);
         }
         .error-submit-btn {
             background: #e74c3c;
@@ -299,23 +495,270 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
+            margin-top: 10px;
         }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 4px;
-            color: white;
-            font-weight: bold;
-            z-index: 1000;
+        .error-submit-btn:hover {
+            background: #c0392b;
+        }
+        .error-list-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
             display: none;
         }
-        .notification.success {
-            background-color: #28a745;
+        .error-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
-        .notification.error {
-            background-color: #dc3545;
+        .error-list-title {
+            font-weight: 600;
+            color: #1a3b5d;
+        }
+        .error-item {
+            background: white;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+        .error-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .error-module {
+            font-weight: 600;
+            color: #1a3b5d;
+        }
+        .error-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        .error-category {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        .error-description {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .error-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-new {
+            color: #e74c3c;
+        }
+        .status-in-progress {
+            color: #f39c12;
+        }
+        .status-resolved {
+            color: #27ae60;
+        }
+        .toggle-error-list {
+            background: transparent;
+            border: none;
+            color: #1a3b5d;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .screenshot-preview {
+            margin-top: 10px;
+            max-width: 100%;
+            border-radius: 5px;
+            display: none;
+        }
+        .screenshot-capture-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .screenshot-capture-btn:hover {
+            background: #2980b9;
+        }
+        .error-dashboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2003;
+            display: none;
+        }
+        .error-dashboard-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .error-dashboard-header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .error-dashboard-header h2 {
+            color: #1a3b5d;
+            margin-bottom: 10px;
+        }
+        .close-dashboard-modal {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #1a3b5d;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dashboard-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .dashboard-filter-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .dashboard-filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .error-dashboard-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .dashboard-error-item {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+        .dashboard-error-item.resolved {
+            border-left-color: #27ae60;
+        }
+        .dashboard-error-item.in-progress {
+            border-left-color: #f39c12;
+        }
+        .dashboard-error-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+        .dashboard-error-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1a3b5d;
+            margin-right: 15px;
+        }
+        .dashboard-error-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .dashboard-error-meta span {
+            background: #e0e0e0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        .dashboard-error-description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .dashboard-error-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .status-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .status-btn.new {
+            background: #e74c3c;
+            color: white;
+        }
+        .status-btn.in-progress {
+            background: #f39c12;
+            color: white;
+        }
+        .status-btn.resolved {
+            background: #27ae60;
+            color: white;
+        }
+        .error-count-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .admin-error-indicator {
+            position: relative;
+            margin-right: 15px;
+        }
+        .view-errors-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .view-errors-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -326,7 +769,7 @@
         <div class="login-container">
             <div class="login-header">
                 <h2>Apt Engineering Access</h2>
-                <p>Enter your GitHub Token to continue</p>
+                <p>Enter your GitHub Token</p>
             </div>
             <div class="login-form">
                 <div class="form-group">
@@ -336,7 +779,7 @@
                 </div>
                 <div class="form-group">
                     <label for="githubRepo">Repository (owner/repo)</label>
-                    <input type="text" id="githubRepo" placeholder="your-org/platform-data" value="your-org/platform-data">
+                    <input type="text" id="githubRepo" placeholder="your-org/data-repo" value="your-org/data-repo">
                 </div>
                 <div class="form-group">
                     <label for="dataBranch">Branch</label>
@@ -350,37 +793,121 @@
     <!-- Error Reporting Modal -->
     <div id="errorModal" class="error-modal">
         <div class="error-container">
-            <button class="close-error-modal" onclick="closeErrorModal()">&times;</button>
-            <h2>Report an Issue</h2>
+            <div class="error-header">
+                <h2>Report an Issue</h2>
+                <button class="close-error-modal" onclick="closeErrorModal()">&times;</button>
+            </div>
             <div class="error-form">
                 <div class="error-form-group">
-                    <label>Module</label>
+                    <label for="errorModule">Module</label>
                     <select id="errorModule" required>
+                        <option value="">Select a module</option>
                         <option value="project-board">Project Board</option>
                         <option value="kpi-monitor">KPI Monitor</option>
                         <option value="payroll-manager">Payroll Manager</option>
                         <option value="work-manager">Work Manager</option>
-                        <option value="general">General</option>
+                        <option value="general">General Platform</option>
                     </select>
                 </div>
                 <div class="error-form-group">
-                    <label>Category</label>
+                    <label for="errorCategory">Category</label>
                     <select id="errorCategory" required>
-                        <option value="bug">Bug</option>
-                        <option value="ui-issue">UI Issue</option>
+                        <option value="">Select a category</option>
+                        <option value="bug">Bug/Error</option>
+                        <option value="ui-issue">User Interface Issue</option>
+                        <option value="performance">Performance Problem</option>
                         <option value="feature-request">Feature Request</option>
+                        <option value="security">Security Concern</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="error-form-group">
-                    <label>Title</label>
-                    <input type="text" id="errorTitle" placeholder="Issue title" required>
+                    <label for="errorSeverity">Severity</label>
+                    <select id="errorSeverity" required>
+                        <option value="">Select severity</option>
+                        <option value="low">Low - Minor inconvenience</option>
+                        <option value="medium">Medium - Affects functionality</option>
+                        <option value="high">High - Critical function broken</option>
+                        <option value="critical">Critical - System down/Data loss</option>
+                    </select>
                 </div>
                 <div class="error-form-group">
-                    <label>Description</label>
-                    <textarea id="errorDescription" placeholder="Describe the issue..." required></textarea>
+                    <label for="errorTitle">Title</label>
+                    <input type="text" id="errorTitle" placeholder="Brief description of the issue" required>
                 </div>
-                <button class="error-submit-btn" onclick="submitErrorReport()">Submit</button>
+                <div class="error-form-group">
+                    <label for="errorDescription">Description</label>
+                    <textarea id="errorDescription" placeholder="Please describe the issue in detail. Include steps to reproduce if applicable." required></textarea>
+                </div>
+                <div class="error-form-group">
+                    <label for="errorScreenshot">Screenshot (optional)</label>
+                    <input type="file" id="errorScreenshot" accept="image/*" onchange="previewScreenshot()">
+                    <button type="button" class="screenshot-capture-btn" onclick="captureScreenshot()">
+                        <i class="fas fa-camera"></i> Capture Current Screen
+                    </button>
+                    <img id="screenshotPreview" class="screenshot-preview" alt="Screenshot preview">
+                </div>
+                <button class="error-submit-btn" onclick="submitErrorReport()">Submit Report</button>
+                <button type="button" class="toggle-error-list" onclick="toggleErrorList()">
+                    <i class="fas fa-list"></i> View Previously Reported Issues
+                </button>
+                <div class="error-list-container" id="errorListContainer">
+                    <div class="error-list-header">
+                        <div class="error-list-title">Your Reported Issues</div>
+                        <button class="close-error-modal" onclick="toggleErrorList()">&times;</button>
+                    </div>
+                    <div id="errorList"></div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Admin Error Dashboard Modal -->
+    <div id="errorDashboardModal" class="error-dashboard-modal">
+        <div class="error-dashboard-container">
+            <div class="error-dashboard-header">
+                <h2>Error Reports Dashboard</h2>
+                <button class="close-dashboard-modal" onclick="closeErrorDashboard()">&times;</button>
+            </div>
+            <div class="dashboard-filters">
+                <div class="dashboard-filter-group">
+                    <label for="filterStatus">Status</label>
+                    <select id="filterStatus" onchange="filterErrorReports()">
+                        <option value="all">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="dashboard-filter-group">
+                    <label for="filterModule">Module</label>
+                    <select id="filterModule" onchange="filterErrorReports()">
+                        <option value="all">All Modules</option>
+                        <option value="project-board">Project Board</option>
+                        <option value="kpi-monitor">KPI Monitor</option>
+                        <option value="payroll-manager">Payroll Manager</option>
+                        <option value="work-manager">Work Manager</option>
+                        <option value="general">General Platform</option>
+                    </select>
+                </div>
+                <div class="dashboard-filter-group">
+                    <label for="filterSeverity">Severity</label>
+                    <select id="filterSeverity" onchange="filterErrorReports()">
+                        <option value="all">All Severities</option>
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="dashboard-filter-group">
+                    <label for="filterUser">Reported By</label>
+                    <select id="filterUser" onchange="filterErrorReports()">
+                        <option value="all">All Users</option>
+                    </select>
+                </div>
+            </div>
+            <div class="error-dashboard-list" id="errorDashboardList"></div>
         </div>
     </div>
 
@@ -389,48 +916,84 @@
         <header>
             <img src="https://via.placeholder.com/120x40?text=LOGO" alt="Logo" class="logo" id="companyLogo">
             <h1>Apt Engineering Work Platform</h1>
-            <div class="user-info">
+            <div class="user-info" id="userInfo">
                 <div class="user-avatar" id="userAvatar">U</div>
                 <div>
                     <div id="userName">User</div>
-                    <div id="userRole" style="font-size:0.8rem">Role</div>
+                    <div id="userRole" style="font-size: 0.8rem; opacity: 0.8;">Role</div>
                 </div>
                 <button class="logout-btn" onclick="logout()">Logout</button>
-                <div class="admin-error-indicator" id="adminErrorIndicator" style="display:none">
+                <button class="logout-btn" onclick="showChangePasswordModal()" style="margin-left: 10px;">
+                    <i class="fas fa-key"></i> Change Password
+                </button>
+                <div class="admin-error-indicator" id="adminErrorIndicator" style="display: none;">
                     <button class="view-errors-btn" onclick="openErrorDashboard()">
                         <i class="fas fa-bug"></i> View Errors
                         <span class="error-count-badge" id="errorCountBadge">0</span>
                     </button>
                 </div>
             </div>
+            <div class="header-actions">
+                <button class="menu-button" onclick="toggleDropdown('importExportDropdown')">
+                    <i class="fas fa-file-export"></i> Import/Export
+                </button>
+                <div id="importExportDropdown" class="dropdown-menu">
+                    <button class="dropdown-item" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button class="dropdown-item" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Import Data
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this.files[0])">
+                </div>
+            </div>
         </header>
 
-        <div class="module-selector">
+        <div class="logo-upload-container" id="logoUploadContainer">
+            <div class="logo-upload-instructions">
+                <i class="fas fa-info-circle" style="font-size: 24px;"></i>
+                <div>
+                    <p>To display your company logo, upload it below or place it at <strong>data/logo.png</strong> in your GitHub repo.</p>
+                    <p>Recommended size: 120x40 pixels.</p>
+                </div>
+            </div>
+            <div class="logo-upload-actions">
+                <input type="file" id="logoUpload" accept="image/*" style="display: none;" onchange="handleLogoUpload(this.files[0])">
+                <button class="logo-btn logo-primary" onclick="document.getElementById('logoUpload').click()">
+                    <i class="fas fa-upload"></i> Upload Logo
+                </button>
+                <button class="logo-btn logo-secondary" onclick="hideLogoUpload()">
+                    <i class="fas fa-times"></i> Dismiss
+                </button>
+            </div>
+        </div>
+
+        <div id="moduleSelector" class="module-selector">
             <div class="module-card" data-module="project-board">
-                <i class="fas fa-project-diagram module-icon"></i>
+                <div class="module-icon"><i class="fas fa-project-diagram"></i></div>
                 <h2 class="module-title">Project Board</h2>
-                <p class="module-description">Manage engineering projects.</p>
+                <p class="module-description">Manage engineering projects, track progress, and assign resources to tasks.</p>
             </div>
             <div class="module-card" data-module="kpi-monitor">
-                <i class="fas fa-chart-line module-icon"></i>
+                <div class="module-icon"><i class="fas fa-chart-line"></i></div>
                 <h2 class="module-title">KPI Monitor</h2>
-                <p class="module-description">Track key performance indicators.</p>
+                <p class="module-description">Track key performance indicators and generate reports for management.</p>
             </div>
             <div class="module-card" data-module="payroll-manager">
-                <i class="fas fa-money-check-alt module-icon"></i>
+                <div class="module-icon"><i class="fas fa-money-check-alt"></i></div>
                 <h2 class="module-title">Payroll Manager</h2>
-                <p class="module-description">Process payroll and payslips.</p>
+                <p class="module-description">Process payroll, manage employee compensation, and generate payslips.</p>
             </div>
             <div class="module-card" data-module="work-manager">
-                <i class="fas fa-tasks module-icon"></i>
+                <div class="module-icon"><i class="fas fa-tasks"></i></div>
                 <h2 class="module-title">Work Manager</h2>
-                <p class="module-description">Assign and track tasks.</p>
+                <p class="module-description">Assign and track work assignments, monitor workloads, and schedule tasks.</p>
             </div>
         </div>
 
         <div id="moduleContent" class="module-content">
             <button class="back-button" onclick="goBackToModules()">
-                <i class="fas fa-arrow-left"></i> Back
+                <i class="fas fa-arrow-left"></i> Back to Modules
             </button>
             <div class="iframe-container">
                 <iframe id="moduleFrame" class="module-iframe" frameborder="0"></iframe>
@@ -438,7 +1001,7 @@
         </div>
     </div>
 
-    <!-- Floating Button -->
+    <!-- Floating Error Button -->
     <button class="error-report-button" onclick="openErrorModal()">
         <i class="fas fa-bug"></i>
     </button>
@@ -446,6 +1009,7 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         let currentUser = null;
         let users = [];
@@ -454,7 +1018,7 @@
         let errorSha = null;
         let logoSha = null;
 
-        // Initialize
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             const saved = localStorage.getItem('apt-engineering-session');
             if (saved) {
@@ -465,13 +1029,13 @@
             document.getElementById('loginModal').style.display = 'flex';
         });
 
-        // Login with GitHub
+        // Login with GitHub Token
         async function loginWithGitHub() {
             const token = document.getElementById('githubToken').value.trim();
             const repo = document.getElementById('githubRepo').value.trim();
             const branch = document.getElementById('dataBranch').value.trim();
 
-            if (!token || !repo) return showNotification('Fill all fields', 'error');
+            if (!token || !repo || !branch) return showNotification('Fill all fields', 'error');
 
             try {
                 const userRes = await fetch('https://api.github.com/user', {
@@ -488,7 +1052,6 @@
                     token, repo, branch
                 };
 
-                // Save session
                 localStorage.setItem('apt-engineering-session', JSON.stringify({ repo, branch }));
 
                 await loadData();
@@ -532,6 +1095,17 @@
                     if (file.key === 'errorReports') window.errorReports = [];
                 }
             }
+
+            // Populate user filter
+            const userFilter = document.getElementById('filterUser');
+            userFilter.innerHTML = '<option value="all">All Users</option>';
+            const uniqueUsers = [...new Set(errorReports.map(e => e.reportedBy))];
+            uniqueUsers.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u;
+                opt.textContent = u;
+                userFilter.appendChild(opt);
+            });
         }
 
         // Save data to GitHub
@@ -541,9 +1115,7 @@
             const shaKey = path.replace(/\//g, '_') + 'Sha';
             const sha = window[shaKey];
 
-            const payload = {
-                message, content, branch, sha
-            };
+            const payload = { message, content, branch, sha };
 
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
@@ -560,7 +1132,7 @@
                     window[shaKey] = result.content.sha;
                 }
             } catch (err) {
-                showNotification('Save failed', 'error');
+                showNotification('Save failed: ' + err.message, 'error');
             }
         }
 
@@ -580,29 +1152,189 @@
             location.reload();
         }
 
+        // Logo Upload
+        async function handleLogoUpload(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result.split(',')[1];
+                const path = 'data/logo.png';
+                const message = 'Upload company logo';
+                const sha = logoSha;
+
+                const payload = { content: base64, message, branch: currentUser.branch, sha };
+                const res = await fetch(`https://api.github.com/repos/${currentUser.repo}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${currentUser.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    const result = await res.json();
+                    logoSha = result.content.sha;
+                    document.getElementById('companyLogo').src = e.target.result;
+                    hideLogoUpload();
+                    showNotification('Logo uploaded to GitHub!', 'success');
+                } else {
+                    showNotification('Upload failed', 'error');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function hideLogoUpload() {
+            document.getElementById('logoUploadContainer').style.display = 'none';
+        }
+
         // Error Reporting
         function openErrorModal() {
             document.getElementById('errorModal').style.display = 'flex';
         }
         function closeErrorModal() {
             document.getElementById('errorModal').style.display = 'none';
+            document.getElementById('errorListContainer').style.display = 'none';
+        }
+        function toggleErrorList() {
+            const el = document.getElementById('errorListContainer');
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+            if (el.style.display === 'block') loadUserErrorList();
+        }
+        function loadUserErrorList() {
+            const el = document.getElementById('errorList');
+            const userErrs = errorReports.filter(e => e.reportedBy === currentUser.username);
+            el.innerHTML = userErrs.length ? userErrs.map(e => `
+                <div class="error-item">
+                    <div class="error-item-header">
+                        <div class="error-module">${e.module}</div>
+                        <div class="error-date">${new Date(e.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="error-category">${e.category}</div>
+                    <div class="error-description">${e.title}</div>
+                    <div class="error-status ${e.status}">Status: ${e.status}</div>
+                </div>
+            `).join('') : '<p>No issues reported.</p>';
+        }
+        function previewScreenshot() {
+            const file = document.getElementById('errorScreenshot').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('screenshotPreview').src = e.target.result;
+                    document.getElementById('screenshotPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        async function captureScreenshot() {
+            const canvas = await html2canvas(document.body);
+            const dataUrl = canvas.toDataURL('image/png');
+            const img = document.getElementById('screenshotPreview');
+            img.src = dataUrl;
+            img.style.display = 'block';
+            img.dataset.screenshot = dataUrl;
         }
         async function submitErrorReport() {
+            const mod = document.getElementById('errorModule').value;
+            const cat = document.getElementById('errorCategory').value;
+            const sev = document.getElementById('errorSeverity').value;
+            const title = document.getElementById('errorTitle').value;
+            const desc = document.getElementById('errorDescription').value;
+            const screenshotInput = document.getElementById('errorScreenshot');
+            const screenshotData = document.getElementById('screenshotPreview').dataset.screenshot;
+
+            if (!mod || !cat || !sev || !title || !desc) return showNotification('Fill all fields', 'error');
+
             const report = {
-                id: Date.now(),
-                module: document.getElementById('errorModule').value,
-                category: document.getElementById('errorCategory').value,
-                title: document.getElementById('errorTitle').value,
-                description: document.getElementById('errorDescription').value,
+                id: Date.now().toString(),
+                module: mod, category: cat, severity: sev,
+                title, description: desc,
                 reportedBy: currentUser.username,
                 date: new Date().toISOString(),
                 status: 'new'
             };
-            errorReports.push(report);
-            await saveData(errorReports, 'data/errors.json', `Reported: ${report.title}`);
-            showNotification('Report submitted!', 'success');
-            closeErrorModal();
-            updateErrorCountBadge();
+
+            if (screenshotInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async e => {
+                    report.screenshot = e.target.result;
+                    errorReports.push(report);
+                    await saveData(errorReports, 'data/errors.json', `Report: ${title}`);
+                    updateErrorCountBadge();
+                    closeErrorModal();
+                    showNotification('Report submitted!', 'success');
+                };
+                reader.readAsDataURL(screenshotInput.files[0]);
+            } else if (screenshotData) {
+                report.screenshot = screenshotData;
+                errorReports.push(report);
+                await saveData(errorReports, 'data/errors.json', `Report: ${title}`);
+                updateErrorCountBadge();
+                closeErrorModal();
+                showNotification('Report submitted!', 'success');
+            } else {
+                errorReports.push(report);
+                await saveData(errorReports, 'data/errors.json', `Report: ${title}`);
+                updateErrorCountBadge();
+                closeErrorModal();
+                showNotification('Report submitted!', 'success');
+            }
+        }
+
+        // Admin Dashboard
+        function openErrorDashboard() {
+            if (currentUser.role !== 'admin') return;
+            document.getElementById('errorDashboardModal').style.display = 'flex';
+            loadErrorDashboard();
+        }
+        function closeErrorDashboard() {
+            document.getElementById('errorDashboardModal').style.display = 'none';
+        }
+        function loadErrorDashboard() {
+            const el = document.getElementById('errorDashboardList');
+            const filtered = filterErrorReports();
+            el.innerHTML = filtered.map(e => `
+                <div class="dashboard-error-item ${e.status}">
+                    <div class="dashboard-error-header">
+                        <div class="dashboard-error-title">${e.title}</div>
+                        <div class="error-date">${new Date(e.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="dashboard-error-meta">
+                        <span>Module: ${e.module}</span>
+                        <span>Severity: ${e.severity}</span>
+                        <span>By: ${e.reportedBy}</span>
+                    </div>
+                    <div class="dashboard-error-description">${e.description}</div>
+                    <div class="dashboard-error-actions">
+                        <button class="status-btn" onclick="changeErrorStatus('${e.id}','new')">New</button>
+                        <button class="status-btn" onclick="changeErrorStatus('${e.id}','in-progress')">In Progress</button>
+                        <button class="status-btn" onclick="changeErrorStatus('${e.id}','resolved')">Resolved</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function filterErrorReports() {
+            const status = document.getElementById('filterStatus').value;
+            const module = document.getElementById('filterModule').value;
+            const severity = document.getElementById('filterSeverity').value;
+            const user = document.getElementById('filterUser').value;
+            return errorReports.filter(e => {
+                return (status === 'all' || e.status === status) &&
+                       (module === 'all' || e.module === module) &&
+                       (severity === 'all' || e.severity === severity) &&
+                       (user === 'all' || e.reportedBy === user);
+            });
+        }
+        async function changeErrorStatus(id, status) {
+            const idx = errorReports.findIndex(e => e.id === id);
+            if (idx !== -1) {
+                errorReports[idx].status = status;
+                await saveData(errorReports, 'data/errors.json', `Status: ${status}`);
+                loadErrorDashboard();
+                updateErrorCountBadge();
+            }
         }
         function updateErrorCountBadge() {
             if (currentUser.role !== 'admin') return;
@@ -625,6 +1357,46 @@
             document.getElementById('moduleFrame').src = '';
         }
 
+        // Import/Export
+        function exportData() {
+            const data = { users, errorReports, exportDate: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `apt_export_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Exported!', 'success');
+        }
+        async function importData(file) {
+            const reader = new FileReader();
+            reader.onload = async e => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.users) users = data.users;
+                    if (data.errorReports) errorReports = data.errorReports;
+                    await saveData(users, 'data/users.json', 'Import: users');
+                    await saveData(errorReports, 'data/errors.json', 'Import: errors');
+                    updateErrorCountBadge();
+                    showNotification('Imported successfully!', 'success');
+                } catch (err) {
+                    showNotification('Invalid file', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Dropdown
+        function toggleDropdown(id) {
+            document.getElementById(id).classList.toggle('show');
+            window.onclick = e => {
+                if (!e.target.matches('.menu-button')) {
+                    document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('show'));
+                }
+            };
+        }
+
         // Notifications
         function showNotification(msg, type) {
             const n = document.getElementById('notification');
@@ -632,6 +1404,25 @@
             n.className = `notification ${type}`;
             n.style.display = 'block';
             setTimeout(() => n.style.display = 'none', 3000);
+        }
+
+        // Close modals on outside click
+        window.onclick = e => {
+            if (e.target.classList.contains('error-modal')) closeErrorModal();
+            if (e.target.classList.contains('error-dashboard-modal')) closeErrorDashboard();
+        };
+
+        // Password Toggle
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const btn = input.parentElement.querySelector('.password-toggle');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '<i class="fas fa-eye"></i>';
+            }
         }
     </script>
 </body>
