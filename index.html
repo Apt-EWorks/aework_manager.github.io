@@ -1056,6 +1056,19 @@
             </div>
         </header>
 
+        <!-- Logo Upload Section -->
+        <div class="logo-upload-container" id="logoUploadContainer" style="display: none;">
+            <div class="logo-upload-instructions">
+                <i class="fas fa-info-circle"></i>
+                <span>Upload a company logo (JPG, PNG, or GIF)</span>
+            </div>
+            <div class="logo-upload-actions">
+                <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
+                <button class="logo-btn logo-primary" onclick="document.getElementById('logoFileInput').click()">Choose Logo</button>
+                <button class="logo-btn logo-secondary" onclick="uploadLogo()">Upload</button>
+            </div>
+        </div>
+
         <div class="module-selector" id="moduleSelector">
             <div class="module-card" onclick="loadModule('project-board')">
                 <div class="module-icon"><i class="fas fa-project-diagram"></i></div>
@@ -1123,6 +1136,8 @@
         const adminErrorIndicator = document.getElementById('adminErrorIndicator');
         const errorCountBadge = document.getElementById('errorCountBadge');
         const errorReportButton = document.getElementById('errorReportButton');
+        const logoUploadContainer = document.getElementById('logoUploadContainer');
+        const logoFileInput = document.getElementById('logoFileInput');
 
         // Initialize the application
         function initApp() {
@@ -1171,6 +1186,11 @@
                     changePassword();
                 }
             });
+            
+            // Logo file input change event
+            if (logoFileInput) {
+                logoFileInput.addEventListener('change', handleLogoFileSelect);
+            }
         }
 
         // Toggle password visibility
@@ -1512,6 +1532,7 @@
                 // Show admin features if user is admin
                 if (currentUser.role === 'admin') {
                     adminErrorIndicator.style.display = 'block';
+                    logoUploadContainer.style.display = 'block';
                     
                     // Update error count badge
                     const newErrorCount = errorReports.filter(e => e.status === 'new').length;
@@ -1523,15 +1544,22 @@
             }
         }
 
-        // Load a module
+        // Load a module - FIXED: Use correct module filenames
         function loadModule(moduleName) {
             // Hide module selector and show module content
             moduleSelector.style.display = 'none';
             moduleContent.style.display = 'block';
             moduleContent.classList.add('active');
             
-            // Load the module in the iframe
-            moduleIframe.src = `${moduleName}.html`;
+            // Load the module in the iframe - FIXED: Use correct filename format
+            const moduleFileMap = {
+                'project-board': 'apt-project-board.html',
+                'kpi-monitor': 'apt-kpi-monitor.html',
+                'payroll-manager': 'apt-payroll-manager.html',
+                'work-manager': 'apt-work-manager.html'
+            };
+            
+            moduleIframe.src = moduleFileMap[moduleName] || `${moduleName}.html`;
             
             // Show loading state
             moduleIframe.onload = function() {
@@ -1627,6 +1655,139 @@
             
             // Clear form fields
             document.getElementById('githubToken').value = '';
+        }
+
+        // Handle logo file selection
+        function handleLogoFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                showNotification('Please select an image file', 'error');
+                return;
+            }
+            
+            // Preview the image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                companyLogoImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Upload logo to GitHub
+        async function uploadLogo() {
+            const file = logoFileInput.files[0];
+            if (!file) {
+                showNotification('Please select a logo file first', 'error');
+                return;
+            }
+            
+            try {
+                showNotification('Uploading logo...', 'success');
+                
+                // Read file as base64
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(',')[1];
+                    
+                    // Check if logo directory exists, create if not
+                    let dirSha = null;
+                    try {
+                        const dirCheckUrl = `https://api.github.com/repos/${githubRepo}/contents/logo?ref=${githubBranch}`;
+                        const dirResponse = await fetch(dirCheckUrl, {
+                            headers: {
+                                'Authorization': `token ${githubToken}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
+                        
+                        if (dirResponse.status !== 200) {
+                            // Create logo directory
+                            const createDirBody = {
+                                message: 'Create logo directory',
+                                content: '', // Empty content for directory
+                                branch: githubBranch
+                            };
+                            
+                            const createDirResponse = await fetch(`https://api.github.com/repos/${githubRepo}/contents/logo`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Authorization': `token ${githubToken}`,
+                                    'Accept': 'application/vnd.github.v3+json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(createDirBody)
+                            });
+                            
+                            if (!createDirResponse.ok) {
+                                throw new Error('Failed to create logo directory');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error creating logo directory:', error);
+                    }
+                    
+                    // Upload logo file
+                    const url = `https://api.github.com/repos/${githubRepo}/contents/logo/logo.jpg?ref=${githubBranch}`;
+                    
+                    // Check if logo already exists to get its SHA
+                    let sha = null;
+                    try {
+                        const checkResponse = await fetch(url, {
+                            headers: {
+                                'Authorization': `token ${githubToken}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
+                        
+                        if (checkResponse.ok) {
+                            const data = await checkResponse.json();
+                            sha = data.sha;
+                        }
+                    } catch (e) {
+                        // Logo doesn't exist yet
+                    }
+                    
+                    const body = {
+                        message: 'Upload company logo',
+                        content: base64,
+                        branch: githubBranch
+                    };
+                    
+                    if (sha) {
+                        body.sha = sha;
+                    }
+                    
+                    const response = await fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to upload logo: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    showNotification('Logo uploaded successfully', 'success');
+                    
+                    // Update logo in UI
+                    const data = await response.json();
+                    companyLogo = data.content.download_url;
+                    companyLogoImg.src = companyLogo + '?t=' + new Date().getTime(); // Cache busting
+                };
+                
+            } catch (error) {
+                console.error('Error uploading logo:', error);
+                showNotification('Error uploading logo: ' + error.message, 'error');
+            }
         }
 
         // Open error modal
